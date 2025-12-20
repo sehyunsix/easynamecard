@@ -71,59 +71,37 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedElementId]);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const downloadImage = async (elementId: string, fileName: string) => {
+    const element = document.getElementById(elementId);
+    if (!element) return;
 
-  const handleDownloadPNG = async () => {
-    const frontElement = document.getElementById('card-front');
-    const backElement = document.getElementById('card-back');
+    try {
+      // Temporarily show the element if it's hidden (for flip mode)
+      const wasHidden = element.classList.contains('hidden');
+      if (wasHidden) element.classList.remove('hidden');
 
-    if (frontElement) {
-        const canvas = await html2canvas(frontElement, {
-            scale: 4,
-            backgroundColor: null,
-            logging: false,
-            useCORS: true,
-            allowTaint: true,
-        });
-        const link = document.createElement('a');
-        link.download = `${cardData.name}_front.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    }
+      const canvas = await html2canvas(element, {
+        scale: 4,
+        backgroundColor: null,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
 
-    if (cardData.backSideType !== 'none' && backElement) {
-        // Wait a bit to ensure potential flip animations don't interfere
-        // For split view they are always visible, for flip view we might need to handle visibility
-        // But the user asked to export both. If split view is not active, backElement might not be in DOM or hidden
-        // Ideally we should force split view rendering or use hidden off-screen rendering.
-        // For simplicity, let's just capture what's visible or ensure we are in a state where we can capture.
+      if (wasHidden) element.classList.add('hidden');
 
-        // Actually, let's just capture 'card-back' if it exists.
-        // In 'flip' mode, only one might be visible.
-        // We will improve CardPreview to render both but hide one if in flip mode,
-        // OR we switch to split mode temporarily? No that's jarring.
-
-        // Better approach: modifying CardPreview to expose a ref or method, or
-        // simple hack: The CardPreview will now always render both in DOM but hide one via CSS in flip mode?
-        // Or we just rely on the 'split' view for downloading both.
-        // Let's assume the user switches to 'split' view to see both, or we instruct them.
-        // Or we can just capture the element if it's there.
-
-        const canvas = await html2canvas(backElement, {
-            scale: 4,
-            backgroundColor: null,
-            logging: false,
-            useCORS: true,
-            allowTaint: true,
-        });
-        const link = document.createElement('a');
-        link.download = `${cardData.name}_back.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+      const link = document.createElement('a');
+      link.download = fileName;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('Failed to download image:', error);
     }
   };
+
+  const handleDownloadFront = () => downloadImage('card-front', `${cardData.name}_front.png`);
+  const handleDownloadBack = () => downloadImage('card-back', `${cardData.name}_back.png`);
+
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
@@ -161,20 +139,22 @@ const App: React.FC = () => {
           </button>
 
           <button
-            onClick={handleDownloadPNG}
+            onClick={handleDownloadFront}
             className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm text-slate-700"
           >
             <Download size={18} />
-            PNG 저장
+            앞면 PNG 저장
           </button>
 
-          <button
-            onClick={handlePrint}
-            className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm text-slate-700"
-          >
-            <Printer size={18} />
-            프린트 / PDF
-          </button>
+          {cardData.backSideType !== 'none' && (
+            <button
+              onClick={handleDownloadBack}
+              className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm text-slate-700"
+            >
+              <Download size={18} />
+              뒷면 PNG 저장
+            </button>
+          )}
         </div>
 
         <div className={`preview-container perspective-1000 relative flex gap-8 flex-wrap justify-center items-center ${viewMode === 'split' ? 'w-full max-w-6xl' : ''}`}>
