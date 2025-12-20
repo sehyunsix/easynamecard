@@ -249,9 +249,9 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                    {el.content}
                  </div>
                ) : (
-                 <img 
-                   src={el.content} 
-                   alt="Custom Element" 
+                 <img
+                   src={el.content}
+                   alt="Custom Element"
                    style={{
                      width: el.style.width ? `${el.style.width}px` : 'auto',
                      height: el.style.height ? `${el.style.height}px` : 'auto',
@@ -281,7 +281,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="w-full border-t border-slate-100 mb-4" />
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               <h2 className="text-3xl font-light tracking-tight">{displayData.name}</h2>
-              <p className="text-sm font-medium tracking-widest uppercase opacity-60 mt-1" style={{ color: style.primaryColor }}>{displayData.position}</p>
+              <p className="text-sm font-medium tracking-widest uppercase opacity-60 mt-2" style={{ color: style.primaryColor }}>{displayData.position}</p>
             </div>
             <div className="flex flex-col gap-1 uppercase tracking-wider text-slate-400 font-medium" style={{ fontSize: `${s(10)}px` }}>
               <div className="flex items-center gap-4">
@@ -307,7 +307,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-3xl opacity-20" style={{ backgroundColor: style.accentColor }} />
 
             <div className="flex-1 p-8 flex flex-col justify-center">
-               <h2 className="font-black mb-1 leading-none italic" style={{ color: style.primaryColor, fontSize: `${s(40)}px` }}>{displayData.name}</h2>
+               <h2 className="font-black mb-2 leading-none italic" style={{ color: style.primaryColor, fontSize: `${s(40)}px` }}>{displayData.name}</h2>
                <p className="font-bold tracking-tighter text-slate-400 mb-6" style={{ fontSize: `${s(14)}px` }}>{displayData.position}</p>
                <div className="max-w-[80%]">
                  <p className="leading-relaxed text-slate-600 font-semibold border-l-4 pl-3" style={{ borderColor: style.accentColor, fontSize: `${s(12)}px` }}>{displayData.goal}</p>
@@ -335,7 +335,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="col-span-11 p-10 flex flex-col justify-between">
               <div className="flex justify-between items-start">
                 <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-                  <h2 className="text-3xl font-bold text-slate-900 mb-1">{displayData.name}</h2>
+                  <h2 className="text-3xl font-bold text-slate-900 mb-2">{displayData.name}</h2>
                   <p className="text-sm font-medium tracking-wide text-slate-500">{displayData.position}</p>
                 </div>
                 <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-100" style={{ color: style.primaryColor, transform: `scale(${style.contentScale})` }}>
@@ -364,8 +364,8 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(to right, ${style.primaryColor}, ${style.accentColor})` }} />
 
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              <p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-1 uppercase">{displayData.tagline}</p>
-              <h2 className="text-4xl font-bold tracking-tight mb-1">{displayData.name}</h2>
+              <p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-2 uppercase">{displayData.tagline}</p>
+              <h2 className="text-4xl font-bold tracking-tight mb-2">{displayData.name}</h2>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-[2px]" style={{ backgroundColor: style.primaryColor }} />
                 <p className="text-sm font-medium text-slate-400">{displayData.position}</p>
@@ -393,7 +393,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-30 -left-10 -bottom-10" style={{ backgroundColor: style.accentColor }} />
 
             <div className="space-y-1" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              <h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm">{displayData.name}</h2>
+              <h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm mb-2">{displayData.name}</h2>
               <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
                 {displayData.position}
               </p>
@@ -432,10 +432,10 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
 
             <div className="flex-1 p-8 flex flex-col justify-between">
               <div className="flex justify-between items-start">
-                <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-                  <h2 className="text-4xl font-playfair text-slate-900 mb-0.5">{displayData.name}</h2>
-                  <p className="text-xs tracking-[0.2em] font-bold text-slate-400 uppercase">{displayData.position}</p>
-                </div>
+            <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
+              <h2 className="text-4xl font-playfair text-slate-900 mb-2">{displayData.name}</h2>
+              <p className="text-xs tracking-[0.2em] font-bold text-slate-400 uppercase">{displayData.position}</p>
+            </div>
                 <div className="text-right" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'right top' }}>
                   <p className="text-[10px] font-mono text-slate-400 uppercase tracking-tighter">TAGLINE</p>
                   <p className="text-xs font-bold text-slate-800" style={{ color: style.accentColor }}>{displayData.tagline}</p>
