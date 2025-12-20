@@ -364,8 +364,11 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                     <button
                       key={preset.name}
                       onClick={() => {
-                        updateStyle('primaryColor', preset.primary);
-                        updateStyle('accentColor', preset.accent);
+                        onStyleChange({ 
+                          ...style, 
+                          primaryColor: preset.primary, 
+                          accentColor: preset.accent 
+                        });
                       }}
                       className="flex flex-col items-center gap-1 p-2 border border-slate-200 rounded-lg hover:border-blue-300 transition-all bg-white"
                       title={preset.name}
@@ -384,16 +387,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
               <div className="flex gap-4 pt-2 border-t border-slate-100">
                 <div className="flex-1">
                   <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (주요)</label>
-                  <input 
-                    type="color" value={style.primaryColor} 
+                  <input
+                    type="color" value={style.primaryColor}
                     onChange={(e) => updateStyle('primaryColor', e.target.value)}
                     className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
                   />
                 </div>
                 <div className="flex-1">
                   <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (강조)</label>
-                  <input 
-                    type="color" value={style.accentColor} 
+                  <input
+                    type="color" value={style.accentColor}
                     onChange={(e) => updateStyle('accentColor', e.target.value)}
                     className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
                   />
