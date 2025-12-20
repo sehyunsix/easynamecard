@@ -229,11 +229,29 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                 <InputField label="Tagline (English)" value={data.taglineEn} onChange={(v) => updateData('taglineEn', v)} placeholder="Ex: Crafting Digital Experiences" />
                 <div className="pt-2">
                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Career Goal (English)</label>
-                   <textarea
+                   <textarea 
                       className="w-full text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
                       value={data.goalEn}
                       onChange={(e) => updateData('goalEn', e.target.value)}
                     />
+                </div>
+              </Section>
+              
+              <Section label="뒷면 QR 코드">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <div className="relative flex items-center">
+                      <input 
+                        type="checkbox" 
+                        checked={data.showBackQrCode} 
+                        onChange={(e) => updateData('showBackQrCode', e.target.checked)}
+                        className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-300 bg-white checked:border-blue-600 checked:bg-blue-600 transition-all"
+                      />
+                      <QrCode size={12} className="absolute left-1 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                    </div>
+                    <span className="text-sm font-semibold text-slate-700 group-hover:text-blue-600 transition-colors">뒷면에도 QR 코드 표시</span>
+                  </label>
+                  <p className="text-[10px] text-slate-400 mt-2 pl-8">* 앞면과 동일한 위치/크기로 표시됩니다.</p>
                 </div>
               </Section>
             </div>

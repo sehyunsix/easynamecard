@@ -68,17 +68,29 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   };
 
   const renderQR = () => {
-    // If we are showing back side and it's logo type, don't show QR
-    if (isFlipped && data.backSideType === 'logo') return null;
-    if (!data.showQrCode) return null;
+    // Determine visibility based on side
+    const isBack = isFlipped || (style.theme === 'minimal' && false); // Hacky way to access local scope variable if needed, but actually we need 'side' context
+    // Actually, renderTheme calls renderQR without args, but we can pass args or check context. 
+    // Wait, renderTheme calls renderQR inside it.
+    // Let's modify renderQR to accept 'side' argument.
+    return null; // Implementation moved to new function below
+  };
+
+  const renderQRCodeElement = (side: 'front' | 'back') => {
+    // If back side logo type, never show QR on back
+    if (side === 'back' && data.backSideType === 'logo') return null;
+    
+    // Check toggle for each side
+    const show = side === 'front' ? data.showQrCode : data.showBackQrCode;
+    if (!show) return null;
 
     return (
-      <div
+      <div 
         className={`absolute z-20 cursor-grab active:cursor-grabbing group transition-all duration-75 ${isDragging ? 'shadow-2xl scale-110' : 'shadow-sm'}`}
-        style={{
-          left: `${style.qrX}%`,
-          top: `${style.qrY}%`,
-          width: `${style.qrSize}px`,
+        style={{ 
+          left: `${style.qrX}%`, 
+          top: `${style.qrY}%`, 
+          width: `${style.qrSize}px`, 
           height: `${style.qrSize}px`,
           transform: 'translate(-50%, -50%)',
           userSelect: 'none'
@@ -86,10 +98,10 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
         onMouseDown={handleMouseDown}
       >
         <div className="w-full h-full bg-white p-1 rounded-sm border border-slate-200 overflow-hidden relative">
-          <img
-            src={getQrUrl()}
-            alt="QR Code"
-            className="w-full h-full object-contain pointer-events-none"
+          <img 
+            src={getQrUrl()} 
+            alt="QR Code" 
+            className="w-full h-full object-contain pointer-events-none" 
             loading="lazy"
           />
           {/* Visual indicator for drag area in editor */}
@@ -149,7 +161,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
               </div>
             </div>
             <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: style.primaryColor }} />
-            {!isBack && renderQR()}
+            {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
 
@@ -158,7 +170,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
           <div className="w-full h-full p-0 flex flex-col bg-slate-50 relative overflow-hidden font-montserrat">
             <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl opacity-20" style={{ backgroundColor: style.primaryColor }} />
             <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-3xl opacity-20" style={{ backgroundColor: style.accentColor }} />
-
+            
             <div className="flex-1 p-8 flex flex-col justify-center">
                <h2 className="font-black mb-1 leading-none italic" style={{ color: style.primaryColor, fontSize: `${s(40)}px` }}>{displayData.name}</h2>
                <p className="font-bold tracking-tighter text-slate-400 mb-6" style={{ fontSize: `${s(14)}px` }}>{displayData.position}</p>
@@ -177,7 +189,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 <p className="flex items-center justify-end gap-1" style={{ fontSize: `${s(10)}px` }}><Github size={s(10)} /> {displayData.github}</p>
               </div>
             </div>
-            {!isBack && renderQR()}
+            {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
 
@@ -207,7 +219,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 <p className="italic text-slate-500 font-serif leading-snug" style={{ fontSize: `${s(12)}px` }}>"{displayData.goal}"</p>
               </div>
             </div>
-            {!isBack && renderQR()}
+            {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
 
@@ -215,7 +227,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
         return (
           <div className="w-full h-full p-10 flex flex-col justify-between bg-slate-950 text-white overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(to right, ${style.primaryColor}, ${style.accentColor})` }} />
-
+            
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               <p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-1 uppercase">{displayData.tagline}</p>
               <h2 className="text-4xl font-bold tracking-tight mb-1">{displayData.name}</h2>
@@ -235,7 +247,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 <p className="text-slate-500" style={{ fontSize: `${s(10)}px` }}>{displayData.blog}</p>
               </div>
             </div>
-            {!isBack && renderQR()}
+            {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
 
@@ -244,7 +256,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
           <div className="w-full h-full p-8 flex flex-col justify-between relative overflow-hidden bg-white/10 backdrop-blur-xl border border-white/20">
             <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-40 -right-10 -top-10" style={{ backgroundColor: style.primaryColor }} />
             <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-30 -left-10 -bottom-10" style={{ backgroundColor: style.accentColor }} />
-
+            
             <div className="space-y-1" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               <h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm">{displayData.name}</h2>
               <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
@@ -269,7 +281,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 <Github size={s(11)} /> {displayData.github.replace('github.com/', '')} <ExternalLink size={s(10)} />
               </span>
             </div>
-            {!isBack && renderQR()}
+            {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
 
@@ -282,7 +294,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
               <div className="flex-1" style={{ backgroundColor: style.accentColor }} />
               <div className="flex-1" style={{ backgroundColor: style.primaryColor, opacity: 0.6 }} />
             </div>
-
+            
             <div className="flex-1 p-8 flex flex-col justify-between">
               <div className="flex justify-between items-start">
                 <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
@@ -310,7 +322,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 </div>
               </div>
             </div>
-            {!isBack && renderQR()}
+            {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
     }

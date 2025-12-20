@@ -22,6 +22,7 @@ export interface CardData {
   taglineEn: string;
   goalEn: string;
   logoUrl: string;
+  showBackQrCode: boolean;
 }
 
 export interface CardStyle {
