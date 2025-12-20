@@ -16,7 +16,7 @@ export interface CardData {
   qrUrl: string;
 
   // Back Side Data
-  backSideType: 'none' | 'english' | 'logo';
+  backSideType: 'none' | 'english' | 'logo' | 'custom';
   nameEn: string;
   positionEn: string;
   taglineEn: string;
@@ -24,6 +24,26 @@ export interface CardData {
   logoUrl: string;
   logoText: string;
   showBackQrCode: boolean;
+  
+  // Custom Back Side Data
+  customElements: CardElement[];
+}
+
+export interface CardElement {
+  id: string;
+  type: 'text' | 'image';
+  x: number; // Percentage 0-100
+  y: number; // Percentage 0-100
+  content: string; // Text content or Image URL
+  style: {
+    fontSize?: number;
+    color?: string;
+    width?: number; // px
+    height?: number; // px (for images)
+    fontWeight?: 'normal' | 'bold';
+    fontFamily?: string;
+    align?: 'left' | 'center' | 'right';
+  };
 }
 
 export interface CardStyle {

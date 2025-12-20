@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { CardData, CardStyle, CardTheme, CardSize } from '../types';
-import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode } from 'lucide-react';
+import { CardData, CardStyle, CardTheme, CardSize, CardElement } from '../types';
+import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as ImageIcon, Trash2, AlignLeft, AlignCenter, AlignRight, Bold } from 'lucide-react';
 import { refineContent } from '../services/geminiService';
 
 const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
@@ -11,18 +11,18 @@ const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label
   </div>
 );
 
-const InputField: React.FC<{
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  icon?: React.ReactNode
+const InputField: React.FC<{ 
+  label: string; 
+  value: string; 
+  onChange: (v: string) => void; 
+  placeholder?: string; 
+  icon?: React.ReactNode 
 }> = ({ label, value, onChange, placeholder, icon }) => (
   <div>
     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">{label}</label>
     <div className="relative">
       {icon && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>}
-      <input
+      <input 
         className={`w-full text-sm border border-slate-200 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all ${icon ? 'pl-9' : ''}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -37,9 +37,11 @@ interface EditorPanelProps {
   style: CardStyle;
   onDataChange: (data: CardData) => void;
   onStyleChange: (style: CardStyle) => void;
+  selectedElementId: string | null;
+  onSelectElement: (id: string | null) => void;
 }
 
-const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, onStyleChange }) => {
+const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, onStyleChange, selectedElementId, onSelectElement }) => {
   const [loading, setLoading] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'info' | 'style' | 'back'>('info');
 
@@ -56,6 +58,59 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleAddElement = (type: 'text' | 'image') => {
+    const newElement: CardElement = {
+      id: Math.random().toString(36).substr(2, 9),
+      type,
+      x: 50,
+      y: 50,
+      content: type === 'text' ? 'New Text' : 'https://placehold.co/100x100?text=Image',
+      style: {
+        fontSize: 16,
+        color: '#000000',
+        width: type === 'image' ? 100 : undefined,
+        fontWeight: 'normal',
+        align: 'left'
+      }
+    };
+    
+    // If image, we might want to prompt upload immediately, but for now just placeholder
+    // Or we can reuse the file upload logic if we want
+    
+    updateData('customElements', [...data.customElements, newElement]);
+    onSelectElement(newElement.id);
+  };
+
+  const handleUpdateElement = (id: string, updates: Partial<CardElement> | Partial<CardElement['style']>) => {
+    const updatedElements = data.customElements.map(el => {
+      if (el.id !== id) return el;
+      
+      // Check if updates are for style or top-level properties
+      const styleUpdates: any = {};
+      const propUpdates: any = {};
+      
+      Object.entries(updates).forEach(([key, val]) => {
+        if (['fontSize', 'color', 'width', 'height', 'fontWeight', 'align', 'fontFamily'].includes(key)) {
+          styleUpdates[key] = val;
+        } else {
+          propUpdates[key] = val;
+        }
+      });
+
+      return {
+        ...el,
+        ...propUpdates,
+        style: { ...el.style, ...styleUpdates }
+      };
+    });
+    updateData('customElements', updatedElements);
+  };
+
+  const handleRemoveElement = (id: string) => {
+    updateData('customElements', data.customElements.filter(el => el.id !== id));
+    if (selectedElementId === id) onSelectElement(null);
   };
 
   const updateStyle = (key: keyof CardStyle, value: any) => {
@@ -96,7 +151,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
   return (
     <div className="space-y-6">
       <div className="flex bg-slate-100 p-1 rounded-lg">
-        <button
+        <button 
           onClick={() => setActiveTab('info')}
           className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'info' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
@@ -108,7 +163,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
         >
           뒷면 설정
         </button>
-        <button
+        <button 
           onClick={() => setActiveTab('style')}
           className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'style' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
@@ -134,9 +189,9 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
               <label className="flex items-center gap-3 cursor-pointer group">
                 <div className="relative flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={data.showQrCode}
+                  <input 
+                    type="checkbox" 
+                    checked={data.showQrCode} 
                     onChange={(e) => updateData('showQrCode', e.target.checked)}
                     className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-300 bg-white checked:border-blue-600 checked:bg-blue-600 transition-all"
                   />
@@ -192,12 +247,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             <div className="relative group">
               <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">커리어 목표</label>
               <div className="flex gap-2">
-                <textarea
+                <textarea 
                   className="flex-1 text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
                   value={data.goal}
                   onChange={(e) => updateData('goal', e.target.value)}
                 />
-                <button
+                <button 
                   onClick={() => handleRefine('goal')}
                   disabled={loading === 'goal'}
                   className="p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 disabled:opacity-50 h-10 transition-colors"
@@ -213,11 +268,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
       {activeTab === 'back' && (
         <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-300">
           <Section label="뒷면 타입">
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2 mb-2">
               {[
                 { id: 'none', label: '없음' },
                 { id: 'english', label: '영문' },
-                { id: 'logo', label: '로고/이미지' }
+                { id: 'logo', label: '로고/이미지' },
+                { id: 'custom', label: '커스텀 (PPT형)' }
               ].map((opt) => (
                 <button
                   key={opt.id}
@@ -229,6 +285,136 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
               ))}
             </div>
           </Section>
+
+          {data.backSideType === 'custom' && (
+            <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
+              <Section label="요소 추가">
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handleAddElement('text')}
+                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-xs font-medium text-slate-700"
+                  >
+                    <Type size={14} /> 텍스트 추가
+                  </button>
+                  <button 
+                    onClick={() => handleAddElement('image')}
+                    className="flex-1 flex items-center justify-center gap-2 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-xs font-medium text-slate-700"
+                  >
+                    <ImageIcon size={14} /> 이미지 추가
+                  </button>
+                </div>
+              </Section>
+
+              {selectedElementId ? (
+                (() => {
+                  const selectedEl = data.customElements.find(el => el.id === selectedElementId);
+                  if (!selectedEl) return null;
+                  return (
+                    <Section label="선택된 요소 편집">
+                      <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 space-y-3">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-xs font-bold text-blue-800 uppercase">{selectedEl.type === 'text' ? '텍스트 편집' : '이미지 편집'}</span>
+                          <button 
+                            onClick={() => handleRemoveElement(selectedElementId)}
+                            className="text-red-500 hover:bg-red-100 p-1.5 rounded-md transition-colors"
+                            title="삭제"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+
+                        {selectedEl.type === 'text' && (
+                          <>
+                            <textarea 
+                              className="w-full text-sm border border-blue-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
+                              value={selectedEl.content}
+                              onChange={(e) => handleUpdateElement(selectedElementId, { content: e.target.value })}
+                            />
+                            <div className="flex gap-2">
+                              <input 
+                                type="number" 
+                                className="w-16 text-sm border border-blue-200 rounded-md px-2 py-1" 
+                                value={selectedEl.style.fontSize} 
+                                onChange={(e) => handleUpdateElement(selectedElementId, { fontSize: parseInt(e.target.value) })}
+                                placeholder="Size"
+                              />
+                              <input 
+                                type="color" 
+                                className="w-8 h-8 rounded cursor-pointer border border-blue-200 p-0 overflow-hidden" 
+                                value={selectedEl.style.color} 
+                                onChange={(e) => handleUpdateElement(selectedElementId, { color: e.target.value })}
+                              />
+                              <button 
+                                onClick={() => handleUpdateElement(selectedElementId, { fontWeight: selectedEl.style.fontWeight === 'bold' ? 'normal' : 'bold' })}
+                                className={`p-1.5 rounded border border-blue-200 ${selectedEl.style.fontWeight === 'bold' ? 'bg-blue-200 text-blue-800' : 'bg-white text-slate-600'}`}
+                              >
+                                <Bold size={14} />
+                              </button>
+                            </div>
+                            <div className="flex gap-1 bg-white rounded-md border border-blue-200 p-1">
+                              {['left', 'center', 'right'].map((align) => (
+                                <button
+                                  key={align}
+                                  onClick={() => handleUpdateElement(selectedElementId, { align: align as any })}
+                                  className={`flex-1 flex justify-center py-1 rounded ${selectedEl.style.align === align ? 'bg-blue-100 text-blue-700' : 'text-slate-400 hover:bg-slate-50'}`}
+                                >
+                                  {align === 'left' && <AlignLeft size={14} />}
+                                  {align === 'center' && <AlignCenter size={14} />}
+                                  {align === 'right' && <AlignRight size={14} />}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+
+                        {selectedEl.type === 'image' && (
+                          <div className="space-y-2">
+                            <InputField 
+                              label="이미지 URL" 
+                              value={selectedEl.content} 
+                              onChange={(v) => handleUpdateElement(selectedElementId, { content: v })} 
+                              placeholder="https://..." 
+                            />
+                            <div>
+                               <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">또는 파일 업로드</label>
+                               <input 
+                                  type="file" 
+                                  accept="image/*"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      const reader = new FileReader();
+                                      reader.onloadend = () => {
+                                        handleUpdateElement(selectedElementId, { content: reader.result as string });
+                                      };
+                                      reader.readAsDataURL(file);
+                                    }
+                                  }}
+                                  className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+                                />
+                            </div>
+                            <div className="flex items-center justify-between">
+                               <label className="text-[10px] font-bold text-slate-500 uppercase">너비 (px)</label>
+                               <input 
+                                type="number" 
+                                className="w-20 text-sm border border-blue-200 rounded-md px-2 py-1" 
+                                value={selectedEl.style.width || 100} 
+                                onChange={(e) => handleUpdateElement(selectedElementId, { width: parseInt(e.target.value) })}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Section>
+                  );
+                })()
+              ) : (
+                <div className="text-center p-4 text-xs text-slate-400 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                  요소를 선택하여 편집하세요
+                </div>
+              )}
+            </div>
+          )}
 
           {data.backSideType === 'english' && (
             <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
@@ -271,13 +457,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                <Section label="로고/이미지 및 텍스트 설정">
                  <div className="space-y-3">
                    <InputField label="브랜드 텍스트 (선택)" value={data.logoText} onChange={(v) => updateData('logoText', v)} placeholder="회사명 또는 브랜드명 입력" />
-                   
+
                    <div className="border-t border-slate-100 pt-3">
                      <InputField label="이미지 URL" value={data.logoUrl} onChange={(v) => updateData('logoUrl', v)} placeholder="https://..." />
                      <div className="mt-3">
                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">또는 파일 업로드</label>
-                       <input 
-                          type="file" 
+                       <input
+                          type="file"
                           accept="image/*"
                           onChange={handleLogoUpload}
                           className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -319,23 +505,23 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                    <label className="text-[10px] font-bold text-slate-400 uppercase">전체 요소 스케일</label>
                    <span className="text-[10px] font-mono font-bold text-slate-600">{Math.round(style.contentScale * 100)}%</span>
                 </div>
-                <input
-                  type="range" min="0.5" max="1.5" step="0.1"
-                  value={style.contentScale}
+                <input 
+                  type="range" min="0.5" max="1.5" step="0.1" 
+                  value={style.contentScale} 
                   onChange={(e) => updateStyle('contentScale', parseFloat(e.target.value))}
                   className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                 />
               </div>
-
+              
               {data.showQrCode && (
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
                      <label className="text-[10px] font-bold text-slate-400 uppercase">QR 코드 크기</label>
                      <span className="text-[10px] font-mono font-bold text-slate-600">{style.qrSize}px</span>
                   </div>
-                  <input
-                    type="range" min="30" max="120" step="1"
-                    value={style.qrSize}
+                  <input 
+                    type="range" min="30" max="120" step="1" 
+                    value={style.qrSize} 
                     onChange={(e) => updateStyle('qrSize', parseInt(e.target.value))}
                     className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                   />
@@ -389,21 +575,21 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
 
               {/* Custom Color Pickers */}
               <div className="flex gap-4 pt-2 border-t border-slate-100">
-                <div className="flex-1">
+              <div className="flex-1">
                   <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (주요)</label>
-                  <input
-                    type="color" value={style.primaryColor}
-                    onChange={(e) => updateStyle('primaryColor', e.target.value)}
-                    className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
-                  />
-                </div>
-                <div className="flex-1">
+                <input 
+                  type="color" value={style.primaryColor} 
+                  onChange={(e) => updateStyle('primaryColor', e.target.value)}
+                  className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
+                />
+              </div>
+              <div className="flex-1">
                   <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (강조)</label>
-                  <input
-                    type="color" value={style.accentColor}
-                    onChange={(e) => updateStyle('accentColor', e.target.value)}
-                    className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
-                  />
+                <input 
+                  type="color" value={style.accentColor} 
+                  onChange={(e) => updateStyle('accentColor', e.target.value)}
+                  className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
+                />
                 </div>
               </div>
             </div>

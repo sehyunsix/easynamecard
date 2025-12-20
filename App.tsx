@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { CardData, CardStyle } from './types';
+import { CardData, CardStyle, CardElement } from './types';
 import EditorPanel from './components/EditorPanel';
 import CardPreview from './components/CardPreview';
 import { Sparkles, Printer, Download, Columns } from 'lucide-react';
@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 
 const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<'flip' | 'split'>('flip');
+  const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
   const [cardData, setCardData] = useState<CardData>({
     name: '김철수',
     position: 'Full Stack Engineer',
@@ -28,7 +29,8 @@ const App: React.FC = () => {
     goalEn: 'Building robust software that changes the world.',
     logoUrl: '',
     logoText: '',
-    showBackQrCode: false
+    showBackQrCode: false,
+    customElements: []
   });
 
   const [cardStyle, setCardStyle] = useState<CardStyle>({
@@ -108,11 +110,13 @@ const App: React.FC = () => {
             <p className="text-sm text-slate-500 mt-1">AI로 강화된 맞춤형 명함 제작 도구</p>
           </header>
 
-          <EditorPanel
-            data={cardData}
-            style={cardStyle}
-            onDataChange={setCardData}
-            onStyleChange={setCardStyle}
+          <EditorPanel 
+            data={cardData} 
+            style={cardStyle} 
+            onDataChange={setCardData} 
+            onStyleChange={setCardStyle} 
+            selectedElementId={selectedElementId}
+            onSelectElement={setSelectedElementId}
           />
         </div>
       </aside>
@@ -146,11 +150,21 @@ const App: React.FC = () => {
         </div>
 
         <div className={`preview-container perspective-1000 relative flex gap-8 flex-wrap justify-center items-center ${viewMode === 'split' ? 'w-full max-w-6xl' : ''}`}>
-          <CardPreview
-            data={cardData}
-            style={cardStyle}
+          <CardPreview 
+            data={cardData} 
+            style={cardStyle} 
             viewMode={viewMode}
             onPositionChange={(x, y) => setCardStyle(prev => ({ ...prev, qrX: x, qrY: y }))}
+            selectedElementId={selectedElementId}
+            onSelectElement={setSelectedElementId}
+            onUpdateElement={(id, updates) => {
+              setCardData(prev => ({
+                ...prev,
+                customElements: prev.customElements.map(el => 
+                  el.id === id ? { ...el, ...updates } : el
+                )
+              }));
+            }}
           />
         </div>
 

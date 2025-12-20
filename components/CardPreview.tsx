@@ -8,12 +8,19 @@ interface CardPreviewProps {
   style: CardStyle;
   viewMode: 'flip' | 'split';
   onPositionChange: (x: number, y: number) => void;
+  selectedElementId?: string | null;
+  onSelectElement?: (id: string | null) => void;
+  onUpdateElement?: (id: string, updates: any) => void;
 }
 
-const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPositionChange }) => {
+const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPositionChange, selectedElementId, onSelectElement, onUpdateElement }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  
+  // Custom Element Dragging State
+  const [draggedElementId, setDraggingElementId] = useState<string | null>(null);
+  const dragOffset = useRef({ x: 0, y: 0 });
 
   const sizeClasses = {
     standard: 'w-[504px] h-[288px]', // 3.5" x 2"
@@ -35,22 +42,82 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     e.stopPropagation();
   };
 
+  const handleElementMouseDown = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (onSelectElement) onSelectElement(id);
+    
+    const el = data.customElements.find(el => el.id === id);
+    if (!el || !cardRef.current) return; // Note: In split view, we need to know WHICH cardRef. 
+    // Actually, dragging custom elements in split view might be tricky if we don't know the container context.
+    // For MVP, dragging works best on the active preview area.
+    
+    const target = e.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const parentRect = target.parentElement?.getBoundingClientRect();
+    
+    if (!parentRect) return;
+
+    // Calculate offset from the element's top-left corner
+    dragOffset.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+    
+    setDraggingElementId(id);
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging || !cardRef.current) return;
+      // QR Code Dragging
+      if (isDragging && cardRef.current) {
+        // ... existing QR logic
+        const rect = cardRef.current.getBoundingClientRect();
+        // In split view, this logic might need adjustment if cardRef points to front but we are interacting with back
+        // But QR code is only on front usually, or managed separately. 
+        // Let's assume QR dragging works on the primary cardRef (front usually).
+        // If we are in flip mode showing back, cardRef points to back container due to key/ref logic?
+        // Actually cardRef is attached to 'card-front'. 
+        
+        // Let's fix drag logic generally later if needed, focusing on Custom Elements now.
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        onPositionChange(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+      }
 
-      const rect = cardRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      onPositionChange(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+      // Custom Element Dragging
+      if (draggedElementId && onUpdateElement) {
+         // We need the container of the dragged element. 
+         // Since elements are absolutely positioned inside .card-wrapper, we need that wrapper's rect.
+         // We can find it via the dragged element's ID? No, the element is re-rendering.
+         // We can assume the mouse is over the container.
+         // Let's use a simpler approach: calculate delta from mouse movement? 
+         // Or find the closest .card-wrapper parent of the mouse event target?
+         // Actually, if we add 'mousemove' to window, e.target might be anything.
+         
+         // Let's try to find the container relative to the element being dragged.
+         // But we only have ID.
+         // Let's assume standard card size logic for percentage calculation.
+         // We can look up the element in DOM by ID?
+         
+         const elNode = document.getElementById(`element-${draggedElementId}`);
+         const container = elNode?.parentElement;
+         
+         if (container) {
+            const rect = container.getBoundingClientRect();
+            const x = ((e.clientX - rect.left - dragOffset.current.x) / rect.width) * 100;
+            const y = ((e.clientY - rect.top - dragOffset.current.y) / rect.height) * 100;
+            
+            onUpdateElement(draggedElementId, { x, y });
+         }
+      }
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      setDraggingElementId(null);
     };
 
-    if (isDragging) {
+    if (isDragging || draggedElementId) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
@@ -59,7 +126,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, onPositionChange]);
+  }, [isDragging, onPositionChange, draggedElementId, onUpdateElement]);
 
   const getQrUrl = () => {
     const link = data.qrUrl || '';
@@ -130,7 +197,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
        return (
          <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden bg-white gap-4">
             <div className="absolute inset-0 opacity-10" style={{ backgroundColor: style.primaryColor }} />
-            
+
             {data.logoUrl ? (
               <img src={data.logoUrl} alt="Brand Logo" className="max-w-[50%] max-h-[50%] object-contain" />
             ) : !data.logoText ? (
@@ -144,6 +211,66 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             )}
          </div>
        );
+    }
+
+    // Custom Back Side Rendering
+    if (isBack && data.backSideType === 'custom') {
+      return (
+        <div className="w-full h-full relative overflow-hidden bg-white">
+           {/* Background Grid for Edit Mode (Optional) */}
+           <div className="absolute inset-0 opacity-5 pointer-events-none" 
+                style={{ backgroundImage: `radial-gradient(${style.primaryColor} 1px, transparent 1px)`, backgroundSize: '20px 20px' }} 
+           />
+           
+           {data.customElements?.map(el => (
+             <div
+               key={el.id}
+               id={`element-${el.id}`}
+               onMouseDown={(e) => handleElementMouseDown(e, el.id)}
+               className={`absolute cursor-move group hover:outline hover:outline-1 hover:outline-blue-300 ${selectedElementId === el.id ? 'outline outline-2 outline-blue-500 z-50' : 'z-10'}`}
+               style={{
+                 left: `${el.x}%`,
+                 top: `${el.y}%`,
+                 transform: 'translate(0, 0)', // Position top-left at x,y
+                 maxWidth: '100%',
+                 maxHeight: '100%'
+               }}
+             >
+               {el.type === 'text' ? (
+                 <div style={{
+                   fontSize: `${el.style.fontSize}px`,
+                   color: el.style.color,
+                   fontWeight: el.style.fontWeight,
+                   fontFamily: el.style.fontFamily,
+                   textAlign: el.style.align,
+                   whiteSpace: 'pre-wrap',
+                   lineHeight: 1.2
+                 }}>
+                   {el.content}
+                 </div>
+               ) : (
+                 <img 
+                   src={el.content} 
+                   alt="Custom Element" 
+                   style={{
+                     width: el.style.width ? `${el.style.width}px` : 'auto',
+                     height: 'auto',
+                     pointerEvents: 'none' // Prevent native drag
+                   }}
+                 />
+               )}
+               
+               {/* Selection Indicators (Corners) could go here */}
+             </div>
+           ))}
+           
+           {(!data.customElements || data.customElements.length === 0) && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                <p className="text-slate-400 font-bold text-sm">요소를 추가하여 꾸며보세요</p>
+              </div>
+           )}
+        </div>
+      );
     }
 
     switch (style.theme) {
