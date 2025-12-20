@@ -54,8 +54,8 @@ const App: React.FC = () => {
     const backElement = document.getElementById('card-back');
 
     if (frontElement) {
-        const canvas = await html2canvas(frontElement, { 
-            scale: 4, 
+        const canvas = await html2canvas(frontElement, {
+            scale: 4,
             backgroundColor: null,
             logging: false,
             useCORS: true,
@@ -71,22 +71,22 @@ const App: React.FC = () => {
         // Wait a bit to ensure potential flip animations don't interfere
         // For split view they are always visible, for flip view we might need to handle visibility
         // But the user asked to export both. If split view is not active, backElement might not be in DOM or hidden
-        // Ideally we should force split view rendering or use hidden off-screen rendering. 
+        // Ideally we should force split view rendering or use hidden off-screen rendering.
         // For simplicity, let's just capture what's visible or ensure we are in a state where we can capture.
-        
-        // Actually, let's just capture 'card-back' if it exists. 
+
+        // Actually, let's just capture 'card-back' if it exists.
         // In 'flip' mode, only one might be visible.
-        // We will improve CardPreview to render both but hide one if in flip mode, 
+        // We will improve CardPreview to render both but hide one if in flip mode,
         // OR we switch to split mode temporarily? No that's jarring.
-        
-        // Better approach: modifying CardPreview to expose a ref or method, or 
+
+        // Better approach: modifying CardPreview to expose a ref or method, or
         // simple hack: The CardPreview will now always render both in DOM but hide one via CSS in flip mode?
         // Or we just rely on the 'split' view for downloading both.
         // Let's assume the user switches to 'split' view to see both, or we instruct them.
         // Or we can just capture the element if it's there.
-        
-        const canvas = await html2canvas(backElement, { 
-            scale: 4, 
+
+        const canvas = await html2canvas(backElement, {
+            scale: 4,
             backgroundColor: null,
             logging: false,
             useCORS: true,

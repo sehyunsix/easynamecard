@@ -18,9 +18,12 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Custom Element Dragging State
+  // Custom Element Dragging & Resizing State
   const [draggedElementId, setDraggingElementId] = useState<string | null>(null);
+  const [resizingElementId, setResizingElementId] = useState<string | null>(null);
+  const [resizeDirection, setResizeDirection] = useState<string | null>(null);
   const dragOffset = useRef({ x: 0, y: 0 });
+  const initialResizeState = useRef({ width: 0, height: 0, x: 0, y: 0, mouseX: 0, mouseY: 0 });
 
   const sizeClasses = {
     standard: 'w-[504px] h-[288px]', // 3.5" x 2"
@@ -66,47 +69,103 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     setDraggingElementId(id);
   };
 
+  const handleResizeMouseDown = (e: React.MouseEvent, id: string, direction: string) => {
+    e.stopPropagation();
+    if (onSelectElement) onSelectElement(id);
+    
+    const el = data.customElements.find(el => el.id === id);
+    if (!el) return;
+
+    // We need pixel values for resizing calculations
+    const elementNode = document.getElementById(`element-${id}`);
+    const container = elementNode?.parentElement;
+    if (!elementNode || !container) return;
+
+    const elRect = elementNode.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    initialResizeState.current = {
+      width: elRect.width,
+      height: elRect.height,
+      x: el.x, // keep as percentage
+      y: el.y, // keep as percentage
+      mouseX: e.clientX,
+      mouseY: e.clientY
+    };
+
+    setResizingElementId(id);
+    setResizeDirection(direction);
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // QR Code Dragging
+      // ... existing QR logic
       if (isDragging && cardRef.current) {
-        // ... existing QR logic
+        // ... (keep QR logic same)
         const rect = cardRef.current.getBoundingClientRect();
-        // In split view, this logic might need adjustment if cardRef points to front but we are interacting with back
-        // But QR code is only on front usually, or managed separately.
-        // Let's assume QR dragging works on the primary cardRef (front usually).
-        // If we are in flip mode showing back, cardRef points to back container due to key/ref logic?
-        // Actually cardRef is attached to 'card-front'.
-
-        // Let's fix drag logic generally later if needed, focusing on Custom Elements now.
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
         onPositionChange(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
       }
 
+      // Custom Element Resizing
+      if (resizingElementId && onUpdateElement && resizeDirection) {
+        const elNode = document.getElementById(`element-${resizingElementId}`);
+        const container = elNode?.parentElement;
+        if (!container) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const deltaX = e.clientX - initialResizeState.current.mouseX;
+        const deltaY = e.clientY - initialResizeState.current.mouseY;
+        
+        let newWidth = initialResizeState.current.width;
+        let newHeight = initialResizeState.current.height;
+        let newX = initialResizeState.current.x; // %
+        let newY = initialResizeState.current.y; // %
+
+        // Horizontal Resizing
+        if (resizeDirection.includes('e')) {
+          newWidth += deltaX;
+        } else if (resizeDirection.includes('w')) {
+          newWidth -= deltaX;
+          // When growing left, we need to adjust X to keep right side stationary visually
+          // X is %, Width is px.
+          // New X% = Old X% + (deltaX / containerWidth * 100)
+          newX += (deltaX / containerRect.width) * 100;
+        }
+
+        // Vertical Resizing
+        if (resizeDirection.includes('s')) {
+          newHeight += deltaY;
+        } else if (resizeDirection.includes('n')) {
+          newHeight -= deltaY;
+          newY += (deltaY / containerRect.height) * 100;
+        }
+
+        onUpdateElement(resizingElementId, { 
+          style: { width: Math.max(20, newWidth), height: Math.max(20, newHeight) },
+          x: resizeDirection.includes('w') ? newX : undefined, // Only update position if left resizing
+          y: resizeDirection.includes('n') ? newY : undefined  // Only update position if top resizing
+        });
+        
+        // Note: updating X/Y during W/N resize is tricky because of the mixed units.
+        // For simple MVP, maybe restrict to E/S/SE resizing?
+        // User asked for "corners... sideways... up/down".
+        // Let's support at least SE (corner), E (right), S (bottom) first which is stable.
+        // For full support we need to update X/Y.
+      }
+
       // Custom Element Dragging
-      if (draggedElementId && onUpdateElement) {
-         // We need the container of the dragged element.
-         // Since elements are absolutely positioned inside .card-wrapper, we need that wrapper's rect.
-         // We can find it via the dragged element's ID? No, the element is re-rendering.
-         // We can assume the mouse is over the container.
-         // Let's use a simpler approach: calculate delta from mouse movement?
-         // Or find the closest .card-wrapper parent of the mouse event target?
-         // Actually, if we add 'mousemove' to window, e.target might be anything.
-
-         // Let's try to find the container relative to the element being dragged.
-         // But we only have ID.
-         // Let's assume standard card size logic for percentage calculation.
-         // We can look up the element in DOM by ID?
-
+      if (draggedElementId && onUpdateElement && !resizingElementId) {
+         // ... (existing drag logic)
          const elNode = document.getElementById(`element-${draggedElementId}`);
          const container = elNode?.parentElement;
-
+         
          if (container) {
             const rect = container.getBoundingClientRect();
             const x = ((e.clientX - rect.left - dragOffset.current.x) / rect.width) * 100;
             const y = ((e.clientY - rect.top - dragOffset.current.y) / rect.height) * 100;
-
+            
             onUpdateElement(draggedElementId, { x, y });
          }
       }
@@ -115,9 +174,11 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     const handleMouseUp = () => {
       setIsDragging(false);
       setDraggingElementId(null);
+      setResizingElementId(null);
+      setResizeDirection(null);
     };
 
-    if (isDragging || draggedElementId) {
+    if (isDragging || draggedElementId || resizingElementId) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
@@ -126,7 +187,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, onPositionChange, draggedElementId, onUpdateElement]);
+  }, [isDragging, onPositionChange, draggedElementId, resizingElementId, resizeDirection, onUpdateElement]);
 
   const getQrUrl = () => {
     const link = data.qrUrl || '';
@@ -261,7 +322,46 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                  />
                )}
 
-               {/* Selection Indicators (Corners) could go here */}
+               {/* Selection Indicators (Resize Handles) */}
+               {selectedElementId === el.id && el.type === 'image' && (
+                 <>
+                   {/* Corners */}
+                   <div 
+                     className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-nw-resize z-50"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'nw')}
+                   />
+                   <div 
+                     className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-ne-resize z-50"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'ne')}
+                   />
+                   <div 
+                     className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-sw-resize z-50"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'sw')}
+                   />
+                   <div 
+                     className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-se-resize z-50"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'se')}
+                   />
+                   
+                   {/* Edges */}
+                   <div 
+                     className="absolute top-0 left-1/2 -translate-x-1/2 -mt-1 w-4 h-2 bg-transparent cursor-n-resize z-40"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'n')}
+                   />
+                   <div 
+                     className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-1 w-4 h-2 bg-transparent cursor-s-resize z-40"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 's')}
+                   />
+                   <div 
+                     className="absolute left-0 top-1/2 -translate-y-1/2 -ml-1 h-4 w-2 bg-transparent cursor-w-resize z-40"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'w')}
+                   />
+                   <div 
+                     className="absolute right-0 top-1/2 -translate-y-1/2 -mr-1 h-4 w-2 bg-transparent cursor-e-resize z-40"
+                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'e')}
+                   />
+                 </>
+               )}
              </div>
            ))}
 
