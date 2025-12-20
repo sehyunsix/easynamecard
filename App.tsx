@@ -72,6 +72,13 @@ const App: React.FC = () => {
   }, [selectedElementId]);
 
   const downloadImage = async (elementId: string, fileName: string) => {
+    // Deselect any active element before capturing to remove blue outlines
+    if (selectedElementId) {
+      setSelectedElementId(null);
+      // Wait for state update and re-render
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
     const element = document.getElementById(elementId);
     if (!element) return;
 
