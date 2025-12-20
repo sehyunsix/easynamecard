@@ -51,8 +51,8 @@ const App: React.FC = () => {
       // Check if user is typing in an input or textarea
       const activeElement = document.activeElement;
       const isInputActive = activeElement && (
-        activeElement.tagName === 'INPUT' || 
-        activeElement.tagName === 'TEXTAREA' || 
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
         activeElement.isContentEditable
       );
 

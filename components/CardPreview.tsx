@@ -72,7 +72,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const handleResizeMouseDown = (e: React.MouseEvent, id: string, direction: string) => {
     e.stopPropagation();
     if (onSelectElement) onSelectElement(id);
-    
+
     const el = data.customElements.find(el => el.id === id);
     if (!el) return;
 
@@ -117,7 +117,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
         const containerRect = container.getBoundingClientRect();
         const deltaX = e.clientX - initialResizeState.current.mouseX;
         const deltaY = e.clientY - initialResizeState.current.mouseY;
-        
+
         let newWidth = initialResizeState.current.width;
         let newHeight = initialResizeState.current.height;
         let newX = initialResizeState.current.x; // %
@@ -142,12 +142,12 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
           newY += (deltaY / containerRect.height) * 100;
         }
 
-        onUpdateElement(resizingElementId, { 
+        onUpdateElement(resizingElementId, {
           style: { width: Math.max(20, newWidth), height: Math.max(20, newHeight) },
           x: resizeDirection.includes('w') ? newX : undefined, // Only update position if left resizing
           y: resizeDirection.includes('n') ? newY : undefined  // Only update position if top resizing
         });
-        
+
         // Note: updating X/Y during W/N resize is tricky because of the mixed units.
         // For simple MVP, maybe restrict to E/S/SE resizing?
         // User asked for "corners... sideways... up/down".
@@ -160,12 +160,12 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
          // ... (existing drag logic)
          const elNode = document.getElementById(`element-${draggedElementId}`);
          const container = elNode?.parentElement;
-         
+
          if (container) {
             const rect = container.getBoundingClientRect();
             const x = ((e.clientX - rect.left - dragOffset.current.x) / rect.width) * 100;
             const y = ((e.clientY - rect.top - dragOffset.current.y) / rect.height) * 100;
-            
+
             onUpdateElement(draggedElementId, { x, y });
          }
       }
@@ -317,7 +317,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                      width: el.style.width ? `${el.style.width}px` : 'auto',
                      height: el.style.height ? `${el.style.height}px` : 'auto',
                      pointerEvents: 'none', // Prevent native drag
-                     objectFit: 'contain' // Maintain aspect ratio if both dims set, or 'fill' if desired
+                     objectFit: 'fill' // Stretch to fill dimensions as requested
                    }}
                  />
                )}
@@ -326,37 +326,37 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                {selectedElementId === el.id && el.type === 'image' && (
                  <>
                    {/* Corners */}
-                   <div 
+                   <div
                      className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-nw-resize z-50"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'nw')}
                    />
-                   <div 
+                   <div
                      className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-ne-resize z-50"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'ne')}
                    />
-                   <div 
+                   <div
                      className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-sw-resize z-50"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'sw')}
                    />
-                   <div 
+                   <div
                      className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-se-resize z-50"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'se')}
                    />
-                   
+
                    {/* Edges */}
-                   <div 
+                   <div
                      className="absolute top-0 left-1/2 -translate-x-1/2 -mt-1 w-4 h-2 bg-transparent cursor-n-resize z-40"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'n')}
                    />
-                   <div 
+                   <div
                      className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-1 w-4 h-2 bg-transparent cursor-s-resize z-40"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 's')}
                    />
-                   <div 
+                   <div
                      className="absolute left-0 top-1/2 -translate-y-1/2 -ml-1 h-4 w-2 bg-transparent cursor-w-resize z-40"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'w')}
                    />
-                   <div 
+                   <div
                      className="absolute right-0 top-1/2 -translate-y-1/2 -mr-1 h-4 w-2 bg-transparent cursor-e-resize z-40"
                      onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'e')}
                    />
