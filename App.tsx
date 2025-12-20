@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardData, CardStyle, CardElement } from './types';
 import EditorPanel from './components/EditorPanel';
 import CardPreview from './components/CardPreview';
@@ -44,6 +44,32 @@ const App: React.FC = () => {
     qrX: 85,
     qrY: 20
   });
+
+  // Handle keyboard shortcuts (Delete/Backspace)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if user is typing in an input or textarea
+      const activeElement = document.activeElement;
+      const isInputActive = activeElement && (
+        activeElement.tagName === 'INPUT' || 
+        activeElement.tagName === 'TEXTAREA' || 
+        activeElement.isContentEditable
+      );
+
+      if (isInputActive) return;
+
+      if ((e.key === 'Backspace' || e.key === 'Delete') && selectedElementId) {
+        setCardData(prev => ({
+          ...prev,
+          customElements: prev.customElements.filter(el => el.id !== selectedElementId)
+        }));
+        setSelectedElementId(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedElementId]);
 
   const handlePrint = () => {
     window.print();
