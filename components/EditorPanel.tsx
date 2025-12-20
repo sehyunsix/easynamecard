@@ -84,6 +84,15 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
     { id: 'square', label: '정사각형 (2.5x2.5)' },
   ];
 
+  const colorPresets = [
+    { name: 'Navy & Blue', primary: '#1e3a8a', accent: '#3b82f6' },
+    { name: 'Black & Gray', primary: '#18181b', accent: '#71717a' },
+    { name: 'Forest & Beige', primary: '#14532d', accent: '#d4d4d8' },
+    { name: 'Burgundy & Gold', primary: '#7f1d1d', accent: '#d97706' },
+    { name: 'Charcoal & Teal', primary: '#334155', accent: '#0d9488' },
+    { name: 'Royal & Sky', primary: '#1d4ed8', accent: '#7dd3fc' },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex bg-slate-100 p-1 rounded-lg">
@@ -229,21 +238,21 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                 <InputField label="Tagline (English)" value={data.taglineEn} onChange={(v) => updateData('taglineEn', v)} placeholder="Ex: Crafting Digital Experiences" />
                 <div className="pt-2">
                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Career Goal (English)</label>
-                   <textarea 
+                   <textarea
                       className="w-full text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
                       value={data.goalEn}
                       onChange={(e) => updateData('goalEn', e.target.value)}
                     />
                 </div>
               </Section>
-              
+
               <Section label="뒷면 QR 코드">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <div className="relative flex items-center">
-                      <input 
-                        type="checkbox" 
-                        checked={data.showBackQrCode} 
+                      <input
+                        type="checkbox"
+                        checked={data.showBackQrCode}
                         onChange={(e) => updateData('showBackQrCode', e.target.checked)}
                         className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-300 bg-white checked:border-blue-600 checked:bg-blue-600 transition-all"
                       />
@@ -346,22 +355,49 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
           </Section>
 
           <Section label="색상 설정">
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">주요 색상</label>
-                <input
-                  type="color" value={style.primaryColor}
-                  onChange={(e) => updateStyle('primaryColor', e.target.value)}
-                  className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
-                />
+            <div className="space-y-4">
+              {/* Color Presets */}
+              <div>
+                <label className="text-[10px] font-bold text-slate-400 mb-2 block uppercase">추천 색상 조합</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {colorPresets.map((preset) => (
+                    <button
+                      key={preset.name}
+                      onClick={() => {
+                        updateStyle('primaryColor', preset.primary);
+                        updateStyle('accentColor', preset.accent);
+                      }}
+                      className="flex flex-col items-center gap-1 p-2 border border-slate-200 rounded-lg hover:border-blue-300 transition-all bg-white"
+                      title={preset.name}
+                    >
+                      <div className="flex gap-1">
+                        <div className="w-4 h-4 rounded-full border border-slate-100" style={{ backgroundColor: preset.primary }} />
+                        <div className="w-4 h-4 rounded-full border border-slate-100" style={{ backgroundColor: preset.accent }} />
+                      </div>
+                      <span className="text-[10px] font-medium text-slate-500 truncate w-full text-center">{preset.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex-1">
-                <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">강조 색상</label>
-                <input
-                  type="color" value={style.accentColor}
-                  onChange={(e) => updateStyle('accentColor', e.target.value)}
-                  className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
-                />
+
+              {/* Custom Color Pickers */}
+              <div className="flex gap-4 pt-2 border-t border-slate-100">
+                <div className="flex-1">
+                  <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (주요)</label>
+                  <input 
+                    type="color" value={style.primaryColor} 
+                    onChange={(e) => updateStyle('primaryColor', e.target.value)}
+                    className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (강조)</label>
+                  <input 
+                    type="color" value={style.accentColor} 
+                    onChange={(e) => updateStyle('accentColor', e.target.value)}
+                    className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
+                  />
+                </div>
               </div>
             </div>
           </Section>
