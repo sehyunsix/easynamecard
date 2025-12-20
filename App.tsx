@@ -27,6 +27,7 @@ const App: React.FC = () => {
     taglineEn: 'Crafting Digital Experiences',
     goalEn: 'Building robust software that changes the world.',
     logoUrl: '',
+    logoText: '',
     showBackQrCode: false
   });
 

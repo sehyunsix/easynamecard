@@ -268,23 +268,27 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
 
           {data.backSideType === 'logo' && (
              <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
-               <Section label="로고/이미지 설정">
+               <Section label="로고/이미지 및 텍스트 설정">
                  <div className="space-y-3">
-                   <InputField label="이미지 URL" value={data.logoUrl} onChange={(v) => updateData('logoUrl', v)} placeholder="https://..." />
-                   <div>
-                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">또는 파일 업로드</label>
-                     <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleLogoUpload}
-                        className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                      />
-                   </div>
-                   {data.logoUrl && (
-                     <div className="mt-2 border border-slate-200 rounded-lg p-2 bg-slate-50 text-center">
-                       <img src={data.logoUrl} alt="Preview" className="max-h-32 mx-auto object-contain" />
+                   <InputField label="브랜드 텍스트 (선택)" value={data.logoText} onChange={(v) => updateData('logoText', v)} placeholder="회사명 또는 브랜드명 입력" />
+                   
+                   <div className="border-t border-slate-100 pt-3">
+                     <InputField label="이미지 URL" value={data.logoUrl} onChange={(v) => updateData('logoUrl', v)} placeholder="https://..." />
+                     <div className="mt-3">
+                       <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">또는 파일 업로드</label>
+                       <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={handleLogoUpload}
+                          className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        />
                      </div>
-                   )}
+                     {data.logoUrl && (
+                       <div className="mt-2 border border-slate-200 rounded-lg p-2 bg-slate-50 text-center">
+                         <img src={data.logoUrl} alt="Preview" className="max-h-32 mx-auto object-contain" />
+                       </div>
+                     )}
+                   </div>
                  </div>
                </Section>
              </div>
@@ -364,10 +368,10 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                     <button
                       key={preset.name}
                       onClick={() => {
-                        onStyleChange({ 
-                          ...style, 
-                          primaryColor: preset.primary, 
-                          accentColor: preset.accent 
+                        onStyleChange({
+                          ...style,
+                          primaryColor: preset.primary,
+                          accentColor: preset.accent
                         });
                       }}
                       className="flex flex-col items-center gap-1 p-2 border border-slate-200 rounded-lg hover:border-blue-300 transition-all bg-white"
