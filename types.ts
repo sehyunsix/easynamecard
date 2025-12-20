@@ -12,6 +12,8 @@ export interface CardData {
   blog: string;
   goal: string;
   tagline: string;
+  showQrCode: boolean;
+  qrLinkType: 'blog' | 'github';
 }
 
 export interface CardStyle {
@@ -21,4 +23,7 @@ export interface CardStyle {
   size: CardSize;
   rounded: 'none' | 'sm' | 'md' | 'lg' | 'full';
   contentScale: number;
+  qrSize: number;
+  qrX: number; // Percentage 0-100
+  qrY: number; // Percentage 0-100
 }

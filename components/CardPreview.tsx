@@ -1,14 +1,18 @@
 
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { CardData, CardStyle } from '../types';
 import { Github, Globe, Mail, Phone, Briefcase, Target, ExternalLink } from 'lucide-react';
 
 interface CardPreviewProps {
   data: CardData;
   style: CardStyle;
+  onPositionChange: (x: number, y: number) => void;
 }
 
-const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
+const CardPreview: React.FC<CardPreviewProps> = ({ data, style, onPositionChange }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  
   const sizeClasses = {
     standard: 'w-[504px] h-[288px]', // 3.5" x 2"
     vertical: 'w-[288px] h-[504px]', // 2" x 3.5"
@@ -23,14 +27,75 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
     full: 'rounded-[40px]',
   };
 
-  const scaleStyle = {
-    fontSize: `${style.contentScale}rem`,
-    transform: `scale(${style.contentScale})`,
-    transformOrigin: 'center'
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!data.showQrCode) return;
+    setIsDragging(true);
+    e.stopPropagation();
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !cardRef.current) return;
+      
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      
+      onPositionChange(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, onPositionChange]);
+
+  const getQrUrl = () => {
+    const link = data.qrLinkType === 'blog' ? data.blog : data.github;
+    const cleanLink = link.startsWith('http') ? link : `https://${link}`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(cleanLink)}`;
+  };
+
+  const renderQR = () => {
+    if (!data.showQrCode) return null;
+    return (
+      <div 
+        className={`absolute z-20 cursor-grab active:cursor-grabbing group transition-all duration-75 ${isDragging ? 'shadow-2xl scale-110' : 'shadow-sm'}`}
+        style={{ 
+          left: `${style.qrX}%`, 
+          top: `${style.qrY}%`, 
+          width: `${style.qrSize}px`, 
+          height: `${style.qrSize}px`,
+          transform: 'translate(-50%, -50%)',
+          userSelect: 'none'
+        }}
+        onMouseDown={handleMouseDown}
+      >
+        <div className="w-full h-full bg-white p-1 rounded-sm border border-slate-200 overflow-hidden relative">
+          <img 
+            src={getQrUrl()} 
+            alt="QR Code" 
+            className="w-full h-full object-contain pointer-events-none" 
+            loading="lazy"
+          />
+          {/* Visual indicator for drag area in editor */}
+          <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity no-print" />
+        </div>
+        <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity no-print shadow-sm" />
+      </div>
+    );
   };
 
   const renderTheme = () => {
-    // Helper to apply scaling
     const s = (base: number) => base * style.contentScale;
 
     switch (style.theme) {
@@ -55,6 +120,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
               </div>
             </div>
             <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: style.primaryColor }} />
+            {renderQR()}
           </div>
         );
 
@@ -82,6 +148,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
                 <p className="flex items-center justify-end gap-1" style={{ fontSize: `${s(10)}px` }}><Github size={s(10)} /> {data.github}</p>
               </div>
             </div>
+            {renderQR()}
           </div>
         );
 
@@ -111,6 +178,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
                 <p className="italic text-slate-500 font-serif leading-snug" style={{ fontSize: `${s(12)}px` }}>"{data.goal}"</p>
               </div>
             </div>
+            {renderQR()}
           </div>
         );
 
@@ -138,6 +206,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
                 <p className="text-slate-500" style={{ fontSize: `${s(10)}px` }}>{data.blog}</p>
               </div>
             </div>
+            {renderQR()}
           </div>
         );
 
@@ -171,6 +240,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
                 <Github size={s(11)} /> {data.github.replace('github.com/', '')} <ExternalLink size={s(10)} />
               </span>
             </div>
+            {renderQR()}
           </div>
         );
 
@@ -211,6 +281,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
                 </div>
               </div>
             </div>
+            {renderQR()}
           </div>
         );
     }
@@ -218,7 +289,8 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style }) => {
 
   return (
     <div 
-      className={`card-wrapper transition-all duration-500 ${sizeClasses[style.size]} ${roundedClasses[style.rounded]} shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden bg-white select-none`}
+      ref={cardRef}
+      className={`card-wrapper relative transition-all duration-500 ${sizeClasses[style.size]} ${roundedClasses[style.rounded]} shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden bg-white select-none`}
       style={{ boxShadow: `0 30px 60px -12px rgba(0,0,0,0.15), 0 18px 36px -18px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.1)` }}
     >
       {renderTheme()}

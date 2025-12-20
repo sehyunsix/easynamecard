@@ -14,7 +14,9 @@ const App: React.FC = () => {
     github: 'github.com/chulsoo',
     blog: 'chulsoo.tistory.com',
     goal: '세상을 변화시키는 견고한 소프트웨어를 만듭니다.',
-    tagline: 'Crafting Digital Experiences'
+    tagline: 'Crafting Digital Experiences',
+    showQrCode: true,
+    qrLinkType: 'blog'
   });
 
   const [cardStyle, setCardStyle] = useState<CardStyle>({
@@ -23,7 +25,10 @@ const App: React.FC = () => {
     accentColor: '#1d4ed8',
     size: 'standard',
     rounded: 'md',
-    contentScale: 1.0
+    contentScale: 1.0,
+    qrSize: 64,
+    qrX: 85,
+    qrY: 20
   });
 
   const handlePrint = () => {
@@ -64,13 +69,17 @@ const App: React.FC = () => {
           </button>
         </div>
 
-        <div className="preview-container perspective-1000">
-          <CardPreview data={cardData} style={cardStyle} />
+        <div className="preview-container perspective-1000 relative">
+          <CardPreview 
+            data={cardData} 
+            style={cardStyle} 
+            onPositionChange={(x, y) => setCardStyle(prev => ({ ...prev, qrX: x, qrY: y }))}
+          />
         </div>
 
         <div className="mt-12 text-center no-print text-slate-400 max-w-md">
           <p className="text-sm">
-            💡 TIP: 텍스트 박스 옆의 AI 아이콘을 클릭하여 내용을 더 전문적으로 다듬어 보세요.
+            💡 TIP: 왼쪽 바에서 QR 코드를 활성화하고, 카드 위에서 드래그하여 위치를 자유롭게 옮겨보세요!
           </p>
         </div>
       </main>
