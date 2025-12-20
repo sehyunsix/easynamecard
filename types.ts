@@ -13,7 +13,7 @@ export interface CardData {
   goal: string;
   tagline: string;
   showQrCode: boolean;
-  qrLinkType: 'blog' | 'github';
+  qrUrl: string;
 }
 
 export interface CardStyle {

@@ -16,7 +16,7 @@ const App: React.FC = () => {
     goal: '세상을 변화시키는 견고한 소프트웨어를 만듭니다.',
     tagline: 'Crafting Digital Experiences',
     showQrCode: true,
-    qrLinkType: 'blog'
+    qrUrl: 'https://chulsoo.tistory.com'
   });
 
   const [cardStyle, setCardStyle] = useState<CardStyle>({
@@ -48,11 +48,11 @@ const App: React.FC = () => {
             <p className="text-sm text-slate-500 mt-1">AI로 강화된 맞춤형 명함 제작 도구</p>
           </header>
 
-          <EditorPanel 
-            data={cardData} 
-            style={cardStyle} 
-            onDataChange={setCardData} 
-            onStyleChange={setCardStyle} 
+          <EditorPanel
+            data={cardData}
+            style={cardStyle}
+            onDataChange={setCardData}
+            onStyleChange={setCardStyle}
           />
         </div>
       </aside>
@@ -60,7 +60,7 @@ const App: React.FC = () => {
       {/* Preview Area */}
       <main className="flex-1 p-4 md:p-12 flex flex-col items-center justify-center bg-slate-100/50 min-h-screen">
         <div className="mb-8 no-print flex gap-3">
-          <button 
+          <button
             onClick={handlePrint}
             className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm"
           >
@@ -70,9 +70,9 @@ const App: React.FC = () => {
         </div>
 
         <div className="preview-container perspective-1000 relative">
-          <CardPreview 
-            data={cardData} 
-            style={cardStyle} 
+          <CardPreview
+            data={cardData}
+            style={cardStyle}
             onPositionChange={(x, y) => setCardStyle(prev => ({ ...prev, qrX: x, qrY: y }))}
           />
         </div>

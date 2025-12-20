@@ -11,18 +11,18 @@ const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label
   </div>
 );
 
-const InputField: React.FC<{ 
-  label: string; 
-  value: string; 
-  onChange: (v: string) => void; 
-  placeholder?: string; 
-  icon?: React.ReactNode 
+const InputField: React.FC<{
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  icon?: React.ReactNode
 }> = ({ label, value, onChange, placeholder, icon }) => (
   <div>
     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">{label}</label>
     <div className="relative">
       {icon && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>}
-      <input 
+      <input
         className={`w-full text-sm border border-slate-200 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all ${icon ? 'pl-9' : ''}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -76,13 +76,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
   return (
     <div className="space-y-6">
       <div className="flex bg-slate-100 p-1 rounded-lg">
-        <button 
+        <button
           onClick={() => setActiveTab('info')}
           className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'info' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
           내용 편집
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab('style')}
           className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'style' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
@@ -108,9 +108,9 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
               <label className="flex items-center gap-3 cursor-pointer group">
                 <div className="relative flex items-center">
-                  <input 
-                    type="checkbox" 
-                    checked={data.showQrCode} 
+                  <input
+                    type="checkbox"
+                    checked={data.showQrCode}
                     onChange={(e) => updateData('showQrCode', e.target.checked)}
                     className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-300 bg-white checked:border-blue-600 checked:bg-blue-600 transition-all"
                   />
@@ -120,17 +120,43 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
               </label>
 
               {data.showQrCode && (
-                <div className="space-y-2 animate-in slide-in-from-top-1 duration-200">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">연결할 링크</label>
-                  <select 
-                    value={data.qrLinkType} 
-                    onChange={(e) => updateData('qrLinkType', e.target.value)}
-                    className="w-full text-xs font-medium bg-white border border-slate-200 rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="blog">개인 블로그 / 웹사이트</option>
-                    <option value="github">GitHub 프로필</option>
-                  </select>
-                  <p className="text-[10px] text-slate-500 italic">* QR 코드는 위 입력한 주소로 자동 생성됩니다.</p>
+                <div className="space-y-4 animate-in slide-in-from-top-1 duration-200">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase mb-1 block">연결할 링크 (URL)</label>
+                    <input
+                      className="w-full text-sm border border-slate-200 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                      value={data.qrUrl}
+                      onChange={(e) => updateData('qrUrl', e.target.value)}
+                      placeholder="https://example.com"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                     <div className="space-y-1">
+                       <label className="text-[10px] font-bold text-slate-400 uppercase flex justify-between">
+                         가로 위치 (X)
+                         <span className="text-slate-600">{Math.round(style.qrX)}%</span>
+                       </label>
+                       <input
+                        type="range" min="0" max="100" step="1"
+                        value={style.qrX}
+                        onChange={(e) => updateStyle('qrX', parseInt(e.target.value))}
+                        className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                      />
+                     </div>
+                     <div className="space-y-1">
+                       <label className="text-[10px] font-bold text-slate-400 uppercase flex justify-between">
+                         세로 위치 (Y)
+                         <span className="text-slate-600">{Math.round(style.qrY)}%</span>
+                       </label>
+                       <input
+                        type="range" min="0" max="100" step="1"
+                        value={style.qrY}
+                        onChange={(e) => updateStyle('qrY', parseInt(e.target.value))}
+                        className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                      />
+                     </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -140,12 +166,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             <div className="relative group">
               <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">커리어 목표</label>
               <div className="flex gap-2">
-                <textarea 
+                <textarea
                   className="flex-1 text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
                   value={data.goal}
                   onChange={(e) => updateData('goal', e.target.value)}
                 />
-                <button 
+                <button
                   onClick={() => handleRefine('goal')}
                   disabled={loading === 'goal'}
                   className="p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 disabled:opacity-50 h-10 transition-colors"
@@ -179,23 +205,23 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                    <label className="text-[10px] font-bold text-slate-400 uppercase">전체 요소 스케일</label>
                    <span className="text-[10px] font-mono font-bold text-slate-600">{Math.round(style.contentScale * 100)}%</span>
                 </div>
-                <input 
-                  type="range" min="0.5" max="1.5" step="0.1" 
-                  value={style.contentScale} 
+                <input
+                  type="range" min="0.5" max="1.5" step="0.1"
+                  value={style.contentScale}
                   onChange={(e) => updateStyle('contentScale', parseFloat(e.target.value))}
                   className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                 />
               </div>
-              
+
               {data.showQrCode && (
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
                      <label className="text-[10px] font-bold text-slate-400 uppercase">QR 코드 크기</label>
                      <span className="text-[10px] font-mono font-bold text-slate-600">{style.qrSize}px</span>
                   </div>
-                  <input 
-                    type="range" min="30" max="120" step="1" 
-                    value={style.qrSize} 
+                  <input
+                    type="range" min="30" max="120" step="1"
+                    value={style.qrSize}
                     onChange={(e) => updateStyle('qrSize', parseInt(e.target.value))}
                     className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
                   />
@@ -222,16 +248,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">주요 색상</label>
-                <input 
-                  type="color" value={style.primaryColor} 
+                <input
+                  type="color" value={style.primaryColor}
                   onChange={(e) => updateStyle('primaryColor', e.target.value)}
                   className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
                 />
               </div>
               <div className="flex-1">
                 <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">강조 색상</label>
-                <input 
-                  type="color" value={style.accentColor} 
+                <input
+                  type="color" value={style.accentColor}
                   onChange={(e) => updateStyle('accentColor', e.target.value)}
                   className="w-full h-8 rounded cursor-pointer overflow-hidden border border-slate-200 p-0"
                 />
