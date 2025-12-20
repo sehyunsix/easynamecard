@@ -41,10 +41,21 @@ interface EditorPanelProps {
 
 const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, onStyleChange }) => {
   const [loading, setLoading] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'info' | 'style'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'style' | 'back'>('info');
 
   const updateData = (key: keyof CardData, value: any) => {
     onDataChange({ ...data, [key]: value });
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateData('logoUrl', reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const updateStyle = (key: keyof CardStyle, value: any) => {
@@ -78,19 +89,25 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
       <div className="flex bg-slate-100 p-1 rounded-lg">
         <button
           onClick={() => setActiveTab('info')}
-          className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'info' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'info' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
-          내용 편집
+          기본 정보
+        </button>
+        <button
+          onClick={() => setActiveTab('back')}
+          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'back' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+        >
+          뒷면 설정
         </button>
         <button
           onClick={() => setActiveTab('style')}
-          className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'style' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'style' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
-          디자인 설정
+          디자인
         </button>
       </div>
 
-      {activeTab === 'info' ? (
+      {activeTab === 'info' && (
         <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-300">
           <Section label="기본 정보">
             <InputField label="성명" value={data.name} onChange={(v) => updateData('name', v)} placeholder="이름을 입력하세요" />
@@ -182,7 +199,73 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             </div>
           </Section>
         </div>
-      ) : (
+      )}
+
+      {activeTab === 'back' && (
+        <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-300">
+          <Section label="뒷면 타입">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: 'none', label: '없음' },
+                { id: 'english', label: '영문' },
+                { id: 'logo', label: '로고/이미지' }
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => updateData('backSideType', opt.id)}
+                  className={`px-3 py-2 text-xs font-medium rounded-md border transition-all ${data.backSideType === opt.id ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </Section>
+
+          {data.backSideType === 'english' && (
+            <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
+              <Section label="영문 정보">
+                <InputField label="Name (English)" value={data.nameEn} onChange={(v) => updateData('nameEn', v)} placeholder="Ex: Chulsoo Kim" />
+                <InputField label="Position (English)" value={data.positionEn} onChange={(v) => updateData('positionEn', v)} placeholder="Ex: Software Engineer" />
+                <InputField label="Tagline (English)" value={data.taglineEn} onChange={(v) => updateData('taglineEn', v)} placeholder="Ex: Crafting Digital Experiences" />
+                <div className="pt-2">
+                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Career Goal (English)</label>
+                   <textarea
+                      className="w-full text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
+                      value={data.goalEn}
+                      onChange={(e) => updateData('goalEn', e.target.value)}
+                    />
+                </div>
+              </Section>
+            </div>
+          )}
+
+          {data.backSideType === 'logo' && (
+             <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
+               <Section label="로고/이미지 설정">
+                 <div className="space-y-3">
+                   <InputField label="이미지 URL" value={data.logoUrl} onChange={(v) => updateData('logoUrl', v)} placeholder="https://..." />
+                   <div>
+                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">또는 파일 업로드</label>
+                     <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                   </div>
+                   {data.logoUrl && (
+                     <div className="mt-2 border border-slate-200 rounded-lg p-2 bg-slate-50 text-center">
+                       <img src={data.logoUrl} alt="Preview" className="max-h-32 mx-auto object-contain" />
+                     </div>
+                   )}
+                 </div>
+               </Section>
+             </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'style' && (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
           <Section label="테마 선택">
             <div className="grid grid-cols-2 gap-2">

@@ -14,6 +14,14 @@ export interface CardData {
   tagline: string;
   showQrCode: boolean;
   qrUrl: string;
+
+  // Back Side Data
+  backSideType: 'none' | 'english' | 'logo';
+  nameEn: string;
+  positionEn: string;
+  taglineEn: string;
+  goalEn: string;
+  logoUrl: string;
 }
 
 export interface CardStyle {
