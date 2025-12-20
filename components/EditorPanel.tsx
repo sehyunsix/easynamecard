@@ -75,10 +75,10 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
         align: 'left'
       }
     };
-    
+
     // If image, we might want to prompt upload immediately, but for now just placeholder
     // Or we can reuse the file upload logic if we want
-    
+
     updateData('customElements', [...data.customElements, newElement]);
     onSelectElement(newElement.id);
   };
@@ -86,11 +86,11 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
   const handleUpdateElement = (id: string, updates: Partial<CardElement> | Partial<CardElement['style']>) => {
     const updatedElements = data.customElements.map(el => {
       if (el.id !== id) return el;
-      
+
       // Check if updates are for style or top-level properties
       const styleUpdates: any = {};
       const propUpdates: any = {};
-      
+
       Object.entries(updates).forEach(([key, val]) => {
         if (['fontSize', 'color', 'width', 'height', 'fontWeight', 'align', 'fontFamily'].includes(key)) {
           styleUpdates[key] = val;
@@ -290,13 +290,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
               <Section label="요소 추가">
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={() => handleAddElement('text')}
                     className="flex-1 flex items-center justify-center gap-2 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-xs font-medium text-slate-700"
                   >
                     <Type size={14} /> 텍스트 추가
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleAddElement('image')}
                     className="flex-1 flex items-center justify-center gap-2 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-xs font-medium text-slate-700"
                   >
@@ -314,7 +314,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                       <div className="bg-blue-50 p-3 rounded-lg border border-blue-100 space-y-3">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-xs font-bold text-blue-800 uppercase">{selectedEl.type === 'text' ? '텍스트 편집' : '이미지 편집'}</span>
-                          <button 
+                          <button
                             onClick={() => handleRemoveElement(selectedElementId)}
                             className="text-red-500 hover:bg-red-100 p-1.5 rounded-md transition-colors"
                             title="삭제"
@@ -325,26 +325,26 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
 
                         {selectedEl.type === 'text' && (
                           <>
-                            <textarea 
+                            <textarea
                               className="w-full text-sm border border-blue-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
                               value={selectedEl.content}
                               onChange={(e) => handleUpdateElement(selectedElementId, { content: e.target.value })}
                             />
                             <div className="flex gap-2">
-                              <input 
-                                type="number" 
-                                className="w-16 text-sm border border-blue-200 rounded-md px-2 py-1" 
-                                value={selectedEl.style.fontSize} 
+                              <input
+                                type="number"
+                                className="w-16 text-sm border border-blue-200 rounded-md px-2 py-1"
+                                value={selectedEl.style.fontSize}
                                 onChange={(e) => handleUpdateElement(selectedElementId, { fontSize: parseInt(e.target.value) })}
                                 placeholder="Size"
                               />
-                              <input 
-                                type="color" 
-                                className="w-8 h-8 rounded cursor-pointer border border-blue-200 p-0 overflow-hidden" 
-                                value={selectedEl.style.color} 
+                              <input
+                                type="color"
+                                className="w-8 h-8 rounded cursor-pointer border border-blue-200 p-0 overflow-hidden"
+                                value={selectedEl.style.color}
                                 onChange={(e) => handleUpdateElement(selectedElementId, { color: e.target.value })}
                               />
-                              <button 
+                              <button
                                 onClick={() => handleUpdateElement(selectedElementId, { fontWeight: selectedEl.style.fontWeight === 'bold' ? 'normal' : 'bold' })}
                                 className={`p-1.5 rounded border border-blue-200 ${selectedEl.style.fontWeight === 'bold' ? 'bg-blue-200 text-blue-800' : 'bg-white text-slate-600'}`}
                               >
@@ -369,16 +369,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
 
                         {selectedEl.type === 'image' && (
                           <div className="space-y-2">
-                            <InputField 
-                              label="이미지 URL" 
-                              value={selectedEl.content} 
-                              onChange={(v) => handleUpdateElement(selectedElementId, { content: v })} 
-                              placeholder="https://..." 
+                            <InputField
+                              label="이미지 URL"
+                              value={selectedEl.content}
+                              onChange={(v) => handleUpdateElement(selectedElementId, { content: v })}
+                              placeholder="https://..."
                             />
                             <div>
                                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">또는 파일 업로드</label>
-                               <input 
-                                  type="file" 
+                               <input
+                                  type="file"
                                   accept="image/*"
                                   onChange={(e) => {
                                     const file = e.target.files?.[0];
@@ -393,14 +393,26 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
                                   className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
                                 />
                             </div>
-                            <div className="flex items-center justify-between">
-                               <label className="text-[10px] font-bold text-slate-500 uppercase">너비 (px)</label>
-                               <input 
-                                type="number" 
-                                className="w-20 text-sm border border-blue-200 rounded-md px-2 py-1" 
-                                value={selectedEl.style.width || 100} 
-                                onChange={(e) => handleUpdateElement(selectedElementId, { width: parseInt(e.target.value) })}
-                              />
+                            <div className="flex items-center justify-between gap-2">
+                               <div className="flex-1">
+                                 <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">너비 (px)</label>
+                                 <input 
+                                  type="number" 
+                                  className="w-full text-sm border border-blue-200 rounded-md px-2 py-1" 
+                                  value={selectedEl.style.width || 100} 
+                                  onChange={(e) => handleUpdateElement(selectedElementId, { width: parseInt(e.target.value) })}
+                                />
+                               </div>
+                               <div className="flex-1">
+                                 <label className="text-[10px] font-bold text-slate-500 uppercase block mb-1">높이 (px)</label>
+                                 <input 
+                                  type="number" 
+                                  className="w-full text-sm border border-blue-200 rounded-md px-2 py-1" 
+                                  value={selectedEl.style.height || ''} 
+                                  placeholder="Auto"
+                                  onChange={(e) => handleUpdateElement(selectedElementId, { height: e.target.value ? parseInt(e.target.value) : undefined })}
+                                />
+                               </div>
                             </div>
                           </div>
                         )}

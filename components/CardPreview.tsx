@@ -17,7 +17,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  
+
   // Custom Element Dragging State
   const [draggedElementId, setDraggingElementId] = useState<string | null>(null);
   const dragOffset = useRef({ x: 0, y: 0 });
@@ -45,16 +45,16 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const handleElementMouseDown = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     if (onSelectElement) onSelectElement(id);
-    
+
     const el = data.customElements.find(el => el.id === id);
-    if (!el || !cardRef.current) return; // Note: In split view, we need to know WHICH cardRef. 
+    if (!el || !cardRef.current) return; // Note: In split view, we need to know WHICH cardRef.
     // Actually, dragging custom elements in split view might be tricky if we don't know the container context.
     // For MVP, dragging works best on the active preview area.
-    
+
     const target = e.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
     const parentRect = target.parentElement?.getBoundingClientRect();
-    
+
     if (!parentRect) return;
 
     // Calculate offset from the element's top-left corner
@@ -62,7 +62,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
     };
-    
+
     setDraggingElementId(id);
   };
 
@@ -73,11 +73,11 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
         // ... existing QR logic
         const rect = cardRef.current.getBoundingClientRect();
         // In split view, this logic might need adjustment if cardRef points to front but we are interacting with back
-        // But QR code is only on front usually, or managed separately. 
+        // But QR code is only on front usually, or managed separately.
         // Let's assume QR dragging works on the primary cardRef (front usually).
         // If we are in flip mode showing back, cardRef points to back container due to key/ref logic?
-        // Actually cardRef is attached to 'card-front'. 
-        
+        // Actually cardRef is attached to 'card-front'.
+
         // Let's fix drag logic generally later if needed, focusing on Custom Elements now.
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -86,27 +86,27 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
 
       // Custom Element Dragging
       if (draggedElementId && onUpdateElement) {
-         // We need the container of the dragged element. 
+         // We need the container of the dragged element.
          // Since elements are absolutely positioned inside .card-wrapper, we need that wrapper's rect.
          // We can find it via the dragged element's ID? No, the element is re-rendering.
          // We can assume the mouse is over the container.
-         // Let's use a simpler approach: calculate delta from mouse movement? 
+         // Let's use a simpler approach: calculate delta from mouse movement?
          // Or find the closest .card-wrapper parent of the mouse event target?
          // Actually, if we add 'mousemove' to window, e.target might be anything.
-         
+
          // Let's try to find the container relative to the element being dragged.
          // But we only have ID.
          // Let's assume standard card size logic for percentage calculation.
          // We can look up the element in DOM by ID?
-         
+
          const elNode = document.getElementById(`element-${draggedElementId}`);
          const container = elNode?.parentElement;
-         
+
          if (container) {
             const rect = container.getBoundingClientRect();
             const x = ((e.clientX - rect.left - dragOffset.current.x) / rect.width) * 100;
             const y = ((e.clientY - rect.top - dragOffset.current.y) / rect.height) * 100;
-            
+
             onUpdateElement(draggedElementId, { x, y });
          }
       }
@@ -218,10 +218,10 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       return (
         <div className="w-full h-full relative overflow-hidden bg-white">
            {/* Background Grid for Edit Mode (Optional) */}
-           <div className="absolute inset-0 opacity-5 pointer-events-none" 
-                style={{ backgroundImage: `radial-gradient(${style.primaryColor} 1px, transparent 1px)`, backgroundSize: '20px 20px' }} 
+           <div className="absolute inset-0 opacity-5 pointer-events-none"
+                style={{ backgroundImage: `radial-gradient(${style.primaryColor} 1px, transparent 1px)`, backgroundSize: '20px 20px' }}
            />
-           
+
            {data.customElements?.map(el => (
              <div
                key={el.id}
@@ -254,16 +254,17 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                    alt="Custom Element" 
                    style={{
                      width: el.style.width ? `${el.style.width}px` : 'auto',
-                     height: 'auto',
-                     pointerEvents: 'none' // Prevent native drag
+                     height: el.style.height ? `${el.style.height}px` : 'auto',
+                     pointerEvents: 'none', // Prevent native drag
+                     objectFit: 'contain' // Maintain aspect ratio if both dims set, or 'fill' if desired
                    }}
                  />
                )}
-               
+
                {/* Selection Indicators (Corners) could go here */}
              </div>
            ))}
-           
+
            {(!data.customElements || data.customElements.length === 0) && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
                 <p className="text-slate-400 font-bold text-sm">요소를 추가하여 꾸며보세요</p>

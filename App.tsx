@@ -110,11 +110,11 @@ const App: React.FC = () => {
             <p className="text-sm text-slate-500 mt-1">AI로 강화된 맞춤형 명함 제작 도구</p>
           </header>
 
-          <EditorPanel 
-            data={cardData} 
-            style={cardStyle} 
-            onDataChange={setCardData} 
-            onStyleChange={setCardStyle} 
+          <EditorPanel
+            data={cardData}
+            style={cardStyle}
+            onDataChange={setCardData}
+            onStyleChange={setCardStyle}
             selectedElementId={selectedElementId}
             onSelectElement={setSelectedElementId}
           />
@@ -150,9 +150,9 @@ const App: React.FC = () => {
         </div>
 
         <div className={`preview-container perspective-1000 relative flex gap-8 flex-wrap justify-center items-center ${viewMode === 'split' ? 'w-full max-w-6xl' : ''}`}>
-          <CardPreview 
-            data={cardData} 
-            style={cardStyle} 
+          <CardPreview
+            data={cardData}
+            style={cardStyle}
             viewMode={viewMode}
             onPositionChange={(x, y) => setCardStyle(prev => ({ ...prev, qrX: x, qrY: y }))}
             selectedElementId={selectedElementId}
@@ -160,7 +160,7 @@ const App: React.FC = () => {
             onUpdateElement={(id, updates) => {
               setCardData(prev => ({
                 ...prev,
-                customElements: prev.customElements.map(el => 
+                customElements: prev.customElements.map(el =>
                   el.id === id ? { ...el, ...updates } : el
                 )
               }));

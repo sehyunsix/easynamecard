@@ -24,7 +24,7 @@ export interface CardData {
   logoUrl: string;
   logoText: string;
   showBackQrCode: boolean;
-  
+
   // Custom Back Side Data
   customElements: CardElement[];
 }
