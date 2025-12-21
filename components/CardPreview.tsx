@@ -19,6 +19,15 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Refs for callbacks to avoid re-binding listeners on prop changes
+  const onFieldUpdateRef = useRef(onFieldUpdate);
+  const onUpdateElementRef = useRef(onUpdateElement);
+  const onPositionChangeRef = useRef(onPositionChange);
+
+  useEffect(() => { onFieldUpdateRef.current = onFieldUpdate; }, [onFieldUpdate]);
+  useEffect(() => { onUpdateElementRef.current = onUpdateElement; }, [onUpdateElement]);
+  useEffect(() => { onPositionChangeRef.current = onPositionChange; }, [onPositionChange]);
+
   // Field Dragging State
   const [draggedFieldId, setDraggedFieldId] = useState<string | null>(null);
   const dragStartPos = useRef({ x: 0, y: 0 });
@@ -106,13 +115,13 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const handleFieldMouseDown = (e: React.MouseEvent, fieldId: string) => {
     e.stopPropagation();
     e.preventDefault(); // Prevent text selection
-    
+
     console.log(`MouseDown on field: ${fieldId}`);
     setDraggedFieldId(fieldId);
     dragStartPos.current = { x: e.clientX, y: e.clientY };
-    initialFieldPos.current = { 
-      x: data.fieldSettings?.[fieldId]?.x || 0, 
-      y: data.fieldSettings?.[fieldId]?.y || 0 
+    initialFieldPos.current = {
+      x: data.fieldSettings?.[fieldId]?.x || 0,
+      y: data.fieldSettings?.[fieldId]?.y || 0
     };
     console.log(`Start Pos: ${e.clientX}, ${e.clientY}, Initial Offset: ${initialFieldPos.current.x}, ${initialFieldPos.current.y}`);
   };
