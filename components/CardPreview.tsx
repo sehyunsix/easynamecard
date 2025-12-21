@@ -193,7 +193,30 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, onPositionChange, draggedElementId, resizingElementId, resizeDirection, onUpdateElement]);
+  }, [isDragging, onPositionChange, draggedElementId, resizingElementId, resizeDirection, onUpdateElement, draggedFieldId, onFieldUpdate, style.contentScale]);
+
+  // Helper to render draggable fields
+  const DraggableField = ({ id, children, className = '', style: inlineStyle = {} }: { id: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }) => {
+    const setting = data.fieldSettings?.[id];
+    if (setting && !setting.visible) return null;
+
+    const x = setting?.x || 0;
+    const y = setting?.y || 0;
+
+    return (
+      <div 
+        onMouseDown={(e) => handleFieldMouseDown(e, id)}
+        className={`cursor-move hover:outline hover:outline-1 hover:outline-blue-400 hover:bg-blue-50/10 rounded px-1 -mx-1 transition-colors relative ${className}`}
+        style={{
+          transform: `translate(${x}px, ${y}px)`,
+          ...inlineStyle
+        }}
+        title="드래그하여 위치 이동"
+      >
+        {children}
+      </div>
+    );
+  };
 
   const getQrUrl = () => {
     const link = data.qrUrl || '';
