@@ -106,13 +106,15 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const handleFieldMouseDown = (e: React.MouseEvent, fieldId: string) => {
     e.stopPropagation();
     e.preventDefault(); // Prevent text selection
-
+    
+    console.log(`MouseDown on field: ${fieldId}`);
     setDraggedFieldId(fieldId);
     dragStartPos.current = { x: e.clientX, y: e.clientY };
-    initialFieldPos.current = {
-      x: data.fieldSettings?.[fieldId]?.x || 0,
-      y: data.fieldSettings?.[fieldId]?.y || 0
+    initialFieldPos.current = { 
+      x: data.fieldSettings?.[fieldId]?.x || 0, 
+      y: data.fieldSettings?.[fieldId]?.y || 0 
     };
+    console.log(`Start Pos: ${e.clientX}, ${e.clientY}, Initial Offset: ${initialFieldPos.current.x}, ${initialFieldPos.current.y}`);
   };
 
   useEffect(() => {
@@ -216,7 +218,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     const y = setting?.y || 0;
 
     return (
-      <div 
+      <div
         onMouseDown={(e) => {
           console.log(`Dragging field: ${id}`);
           handleFieldMouseDown(e, id);
