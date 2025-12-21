@@ -24,8 +24,8 @@ const InputField: React.FC<{
     <div className="flex justify-between items-center mb-1">
       <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</label>
       {onToggleVisibility && (
-        <button 
-          onClick={onToggleVisibility} 
+        <button
+          onClick={onToggleVisibility}
           className={`text-slate-400 hover:text-blue-600 transition-colors ${!visible ? 'text-slate-300' : ''}`}
           title={visible ? "숨기기" : "보이기"}
         >
@@ -35,7 +35,7 @@ const InputField: React.FC<{
     </div>
     <div className={`relative transition-opacity ${!visible ? 'opacity-50' : ''}`}>
       {icon && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{icon}</div>}
-      <input 
+      <input
         className={`w-full text-sm border border-slate-200 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all ${icon ? 'pl-9' : ''}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -200,62 +200,62 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
       {activeTab === 'info' && (
         <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-300">
           <Section label="기본 정보">
-            <InputField 
-              label="성명" 
-              value={data.name} 
-              onChange={(v) => updateData('name', v)} 
-              placeholder="이름을 입력하세요" 
+            <InputField
+              label="성명"
+              value={data.name}
+              onChange={(v) => updateData('name', v)}
+              placeholder="이름을 입력하세요"
               visible={data.fieldSettings.name.visible}
               onToggleVisibility={() => toggleVisibility('name')}
             />
-            <InputField 
-              label="직책" 
-              value={data.position} 
-              onChange={(v) => updateData('position', v)} 
-              placeholder="예: Senior Product Designer" 
+            <InputField
+              label="직책"
+              value={data.position}
+              onChange={(v) => updateData('position', v)}
+              placeholder="예: Senior Product Designer"
               visible={data.fieldSettings.position.visible}
               onToggleVisibility={() => toggleVisibility('position')}
             />
           </Section>
 
           <Section label="연락처 및 링크">
-            <InputField 
-              label="전화번호" 
-              value={data.contact} 
-              onChange={(v) => updateData('contact', v)} 
-              icon={<Phone size={14} />} 
+            <InputField
+              label="전화번호"
+              value={data.contact}
+              onChange={(v) => updateData('contact', v)}
+              icon={<Phone size={14} />}
               visible={data.fieldSettings.contact.visible}
               onToggleVisibility={() => toggleVisibility('contact')}
             />
-            <InputField 
-              label="이메일" 
-              value={data.email} 
-              onChange={(v) => updateData('email', v)} 
-              icon={<Mail size={14} />} 
+            <InputField
+              label="이메일"
+              value={data.email}
+              onChange={(v) => updateData('email', v)}
+              icon={<Mail size={14} />}
               visible={data.fieldSettings.email.visible}
               onToggleVisibility={() => toggleVisibility('email')}
             />
-            <InputField 
-              label="거주지 (Address)" 
-              value={data.location} 
-              onChange={(v) => updateData('location', v)} 
-              icon={<MapPin size={14} />} 
+            <InputField
+              label="거주지 (Address)"
+              value={data.location}
+              onChange={(v) => updateData('location', v)}
+              icon={<MapPin size={14} />}
               visible={data.fieldSettings.location.visible}
               onToggleVisibility={() => toggleVisibility('location')}
             />
-            <InputField 
-              label="GitHub" 
-              value={data.github} 
-              onChange={(v) => updateData('github', v)} 
-              icon={<Github size={14} />} 
+            <InputField
+              label="GitHub"
+              value={data.github}
+              onChange={(v) => updateData('github', v)}
+              icon={<Github size={14} />}
               visible={data.fieldSettings.github.visible}
               onToggleVisibility={() => toggleVisibility('github')}
             />
-            <InputField 
-              label="Blog/Website" 
-              value={data.blog} 
-              onChange={(v) => updateData('blog', v)} 
-              icon={<Globe size={14} />} 
+            <InputField
+              label="Blog/Website"
+              value={data.blog}
+              onChange={(v) => updateData('blog', v)}
+              icon={<Globe size={14} />}
               visible={data.fieldSettings.blog.visible}
               onToggleVisibility={() => toggleVisibility('blog')}
             />
@@ -321,31 +321,31 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
 
           <Section label="AI 목표 & 태그라인">
             <div className="relative group space-y-3">
-              <InputField 
-                label="태그라인 (Tagline)" 
-                value={data.tagline} 
-                onChange={(v) => updateData('tagline', v)} 
+              <InputField
+                label="태그라인 (Tagline)"
+                value={data.tagline}
+                onChange={(v) => updateData('tagline', v)}
                 visible={data.fieldSettings.tagline.visible}
                 onToggleVisibility={() => toggleVisibility('tagline')}
               />
-              
+
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">커리어 목표</label>
-                  <button 
-                    onClick={() => toggleVisibility('goal')} 
+                  <button
+                    onClick={() => toggleVisibility('goal')}
                     className={`text-slate-400 hover:text-blue-600 transition-colors ${!data.fieldSettings.goal.visible ? 'text-slate-300' : ''}`}
                   >
                     {data.fieldSettings.goal.visible ? <Eye size={14} /> : <EyeOff size={14} />}
                   </button>
                 </div>
                 <div className={`flex gap-2 transition-opacity ${!data.fieldSettings.goal.visible ? 'opacity-50' : ''}`}>
-                  <textarea 
+                  <textarea
                     className="flex-1 text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
                     value={data.goal}
                     onChange={(e) => updateData('goal', e.target.value)}
                   />
-                  <button 
+                  <button
                     onClick={() => handleRefine('goal')}
                     disabled={loading === 'goal'}
                     className="p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 disabled:opacity-50 h-10 transition-colors"
