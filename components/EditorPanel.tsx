@@ -212,7 +212,62 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     { id: 'creative', label: '크리에이티브' },
     { id: 'dark', label: '다크' },
     { id: 'glassmorphism', label: '글래스모피즘' },
+    { id: 'elegant', label: '엘레강트' },
+    { id: 'tech', label: '테크' },
+    { id: 'bold', label: '볼드' },
+    { id: 'classic', label: '클래식' },
+    { id: 'luxury', label: '럭셔리' },
+    { id: 'geometric', label: '지오메트릭' },
+    { id: 'retro', label: '레트로' },
+    { id: 'organic', label: '오가닉' },
+    { id: 'pop', label: '팝' },
+    { id: 'cyber', label: '사이버' },
+    { id: 'eco', label: '에코' },
+    { id: 'blueprint', label: '블루프린트' },
+    { id: 'neon', label: '네온' },
+    { id: 'newspaper', label: '신문' },
+    { id: 'sketch', label: '스케치' },
+    { id: 'brutalist', label: '브루탈리스트' },
+    { id: 'pastel', label: '파스텔' },
+    { id: 'gradient', label: '그라디언트' },
+    { id: 'architect', label: '아키텍트' },
+    { id: 'comic', label: '코믹' },
+    { id: 'midnight', label: '미드나잇' },
+    { id: 'vintage', label: '빈티지' },
+    { id: 'pixel', label: '픽셀' },
+    { id: 'soft', label: '소프트' },
   ];
+
+  const updateStyleWithLayout = (theme: CardTheme) => {
+    // Define default positions for each theme to "naturally align" elements
+    const defaultPositions: Record<string, { x: number; y: number; visible: boolean }> = {
+      name: { x: 0, y: 0, visible: true },
+      position: { x: 0, y: 0, visible: true },
+      contact: { x: 0, y: 0, visible: true },
+      email: { x: 0, y: 0, visible: true },
+      location: { x: 0, y: 0, visible: true },
+      github: { x: 0, y: 0, visible: true },
+      blog: { x: 0, y: 0, visible: true },
+      goal: { x: 0, y: 0, visible: true },
+    };
+
+    // Reset offsets when changing themes to allow the theme's natural layout to take over
+    const newFieldSettings = { ...data.fieldSettings };
+    Object.keys(defaultPositions).forEach(field => {
+      newFieldSettings[field] = {
+        ...newFieldSettings[field],
+        x: 0,
+        y: 0,
+      };
+    });
+
+    onDataChange({
+      ...data,
+      fieldSettings: newFieldSettings
+    });
+
+    onStyleChange({ ...style, theme });
+  };
 
   const sizes: { id: CardSize; label: string }[] = [
     { id: 'standard', label: '표준 (3.5x2)' },
@@ -839,7 +894,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
               {themes.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => updateStyle('theme', t.id)}
+                  onClick={() => updateStyleWithLayout(t.id)}
                   className={`px-3 py-2 text-xs font-medium rounded-md border transition-all ${style.theme === t.id ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'}`}
                 >
                   {t.label}

@@ -1,5 +1,5 @@
 
-export type CardTheme = 'modern' | 'minimal' | 'creative' | 'professional' | 'dark' | 'glassmorphism';
+export type CardTheme = 'modern' | 'minimal' | 'creative' | 'professional' | 'dark' | 'glassmorphism' | 'elegant' | 'tech' | 'bold' | 'classic' | 'luxury' | 'geometric' | 'retro' | 'organic' | 'pop' | 'cyber' | 'eco' | 'blueprint' | 'neon' | 'newspaper' | 'sketch' | 'brutalist' | 'pastel' | 'gradient' | 'architect' | 'comic' | 'midnight' | 'vintage' | 'pixel' | 'soft';
 
 export type CardSize = 'standard' | 'vertical' | 'square';
 
