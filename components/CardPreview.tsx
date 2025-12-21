@@ -208,7 +208,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   }, [isDragging, onPositionChange, draggedElementId, resizingElementId, resizeDirection, onUpdateElement, draggedFieldId, onFieldUpdate, style.contentScale]);
 
   // Helper to render draggable fields - defined as a regular function to avoid component remount issues
-  const renderDraggableField = (id: string, children: React.ReactNode, className: string = '', style: React.CSSProperties = {}) => {
+  const renderDraggableField = (id: string, children: React.ReactNode, className: string = '', customStyle: React.CSSProperties = {}) => {
     const setting = data.fieldSettings?.[id];
     if (setting && !setting.visible) return null;
 
@@ -217,11 +217,14 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
 
     return (
       <div 
-        onMouseDown={(e) => handleFieldMouseDown(e, id)}
-        className={`cursor-move hover:outline hover:outline-1 hover:outline-blue-400 hover:bg-blue-50/10 rounded px-1 -mx-1 transition-colors relative ${className}`}
+        onMouseDown={(e) => {
+          console.log(`Dragging field: ${id}`);
+          handleFieldMouseDown(e, id);
+        }}
+        className={`cursor-move hover:outline hover:outline-1 hover:outline-blue-400 hover:bg-blue-50/10 rounded px-1 -mx-1 transition-colors relative z-10 ${className}`}
         style={{
           transform: `translate(${x}px, ${y}px)`,
-          ...style
+          ...customStyle
         }}
         title="드래그하여 위치 이동"
       >
@@ -446,8 +449,8 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       case 'creative':
         return (
           <div className="w-full h-full p-0 flex flex-col bg-slate-50 relative overflow-hidden font-montserrat">
-            <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl opacity-20" style={{ backgroundColor: style.primaryColor }} />
-            <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-3xl opacity-20" style={{ backgroundColor: style.accentColor }} />
+            <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none" style={{ backgroundColor: style.primaryColor }} />
+            <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none" style={{ backgroundColor: style.accentColor }} />
 
             <div className="flex-1 p-8 flex flex-col justify-center">
                {renderDraggableField('name', <h2 className="font-black mb-2 leading-none italic" style={{ color: style.primaryColor, fontSize: `${s(40)}px` }}>{displayData.name}</h2>)}
@@ -535,12 +538,12 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       case 'glassmorphism':
         return (
           <div className="w-full h-full p-8 flex flex-col justify-between relative overflow-hidden bg-white/10 backdrop-blur-xl border border-white/20">
-            <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-40 -right-10 -top-10" style={{ backgroundColor: style.primaryColor }} />
-            <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-30 -left-10 -bottom-10" style={{ backgroundColor: style.accentColor }} />
+            <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-40 -right-10 -top-10 pointer-events-none" style={{ backgroundColor: style.primaryColor }} />
+            <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-30 -left-10 -bottom-10 pointer-events-none" style={{ backgroundColor: style.accentColor }} />
 
             <div className="space-y-1" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               {renderDraggableField('name', <h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm mb-2">{displayData.name}</h2>)}
-              {renderDraggableField('position', 
+              {renderDraggableField('position',
                 <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
                   {displayData.position}
                 </p>
@@ -548,7 +551,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             </div>
 
             <div className="bg-white/30 backdrop-blur-md p-4 rounded-xl border border-white/50 space-y-2" style={{ transform: `scale(${style.contentScale})` }}>
-               {renderDraggableField('goal', 
+               {renderDraggableField('goal',
                  <p className="text-xs text-slate-700 leading-relaxed font-medium">
                    <Target size={12} className="inline mr-2 text-slate-500" />
                    {displayData.goal}
@@ -564,7 +567,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 <span className="w-[1px] h-3 bg-slate-300/50" />
                 {renderDraggableField('location', <span className="flex items-center gap-1"><MapPin size={s(11)} /> {displayData.location}</span>)}
               </div>
-              {renderDraggableField('github', 
+              {renderDraggableField('github',
                 <span className="flex items-center gap-1 hover:text-slate-900 transition-colors">
                   <Github size={s(11)} /> {displayData.github.replace('github.com/', '')} <ExternalLink size={s(10)} />
                 </span>
