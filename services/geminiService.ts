@@ -35,7 +35,7 @@ Name: ${data.name}
 Position: ${data.position}
 Goal: ${data.goal}
 
-Suggest a business card design. Choose from themes: 'modern', 'minimal', 'creative', 'professional', 'dark', 'glassmorphism', 'elegant', 'tech', 'bold', 'classic', 'luxury', 'geometric', 'retro', 'organic', 'pop', 'cyber', 'eco', 'blueprint', 'neon', 'newspaper', 'sketch', 'brutalist', 'pastel', 'gradient', 'architect', 'comic', 'midnight', 'vintage', 'pixel', 'soft'.
+Suggest a business card design. Choose from themes: 'modern', 'minimal', 'creative', 'professional', 'dark', 'glassmorphism', 'elegant', 'tech', 'bold', 'classic', 'luxury', 'geometric', 'retro', 'organic', 'pop', 'cyber', 'eco', 'blueprint', 'neon', 'newspaper', 'sketch', 'brutalist', 'pastel', 'gradient', 'architect', 'comic', 'midnight', 'vintage', 'pixel', 'soft', 'industrial', 'futuristic', 'holographic', 'swiss', 'botanical', 'artdeco', 'minimalblack', 'cardboard', 'zen', 'magical', 'chalk', 'magazine', 'sticker', 'space', 'marble', 'wood', 'paper', 'techno', 'glitch', 'bauhaus'.
 Provide hex colors for primary and accent that suit this profile.
 Return ONLY a JSON object with: { "theme": "...", "primaryColor": "#...", "accentColor": "#...", "contentScale": 1.0 }`;
 

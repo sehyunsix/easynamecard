@@ -611,6 +611,449 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
           </div>
         );
 
+              case 'chalk':
+                return (
+                  <div className="w-full h-full p-10 bg-[#1a1a1a] text-white relative overflow-hidden flex flex-col justify-center items-center text-center" style={{ border: '4px solid #fff', borderRadius: '4px', boxShadow: 'inset 0 0 50px #000' }}>
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/black-board.png')]" />
+                    <div className="z-10 space-y-4">
+                      {renderDraggableField('name', <h2 className="text-5xl font-bold" style={{ fontFamily: 'Chalkboard, Comic Sans MS, sans-serif' }}>{displayData.name}</h2>)}
+                      <div className="w-32 h-1 bg-white mx-auto opacity-50" style={{ borderRadius: '50% / 100%' }} />
+                      {renderDraggableField('position', <p className="text-lg italic opacity-80">{displayData.position}</p>)}
+                      <div className="pt-6 space-y-1 text-sm opacity-60">
+                        {renderDraggableField('email', <p>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'magazine':
+                return (
+                  <div className="w-full h-full p-0 flex flex-col bg-white text-black font-serif relative overflow-hidden">
+                    <div className="h-1/4 bg-slate-900 flex items-center justify-center">
+                      <div className="text-[10px] text-white font-black tracking-[1em] uppercase">ISSUE NO. 01 // 2025</div>
+                    </div>
+                    <div className="flex-1 p-10 flex flex-col justify-between items-start">
+                      <div className="space-y-[-10px]">
+                        {renderDraggableField('name', <h2 className="text-7xl font-black italic tracking-tighter leading-none">{displayData.name}</h2>)}
+                      </div>
+                      <div className="w-full flex justify-between items-end border-t-4 border-black pt-4">
+                        {renderDraggableField('position', <p className="text-xl font-bold uppercase">{displayData.position}</p>)}
+                        <div className="text-right text-[10px] font-bold leading-tight">
+                          {renderDraggableField('email', <p>{displayData.email}</p>)}
+                          {renderDraggableField('location', <p>{displayData.location}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'sticker':
+                return (
+                  <div className="w-full h-full p-8 bg-[#f0f0f0] relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/diagonal-striped-brick.png')]" />
+                    <div className="z-10 relative flex flex-col h-full gap-4">
+                      <div className="bg-white p-6 rounded-2xl border-4 border-slate-900 shadow-[8px_8px_0px_0px_#000] rotate-[-2deg] self-start">
+                        {renderDraggableField('name', <h2 className="text-4xl font-black text-slate-900 uppercase">{displayData.name}</h2>)}
+                      </div>
+                      <div className="bg-blue-500 text-white p-3 rounded-xl border-4 border-slate-900 shadow-[6px_6px_0px_0px_#000] rotate-[3deg] self-end mt-4">
+                        {renderDraggableField('position', <p className="text-lg font-bold">{displayData.position}</p>)}
+                      </div>
+                      <div className="mt-auto space-y-2">
+                        <div className="bg-yellow-400 p-2 rounded-lg border-2 border-slate-900 shadow-[4px_4px_0px_0px_#000] inline-block">
+                          {renderDraggableField('email', <p className="text-[10px] font-bold">{displayData.email}</p>)}
+                        </div>
+                        <br/>
+                        <div className="bg-pink-400 p-2 rounded-lg border-2 border-slate-900 shadow-[4px_4px_0px_0px_#000] inline-block">
+                          {renderDraggableField('contact', <p className="text-[10px] font-bold">{displayData.contact}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'space':
+                return (
+                  <div className="w-full h-full p-12 bg-slate-950 text-white relative overflow-hidden flex flex-col justify-center items-center text-center">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-60" />
+                    <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white rounded-full animate-ping" />
+                    <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-white rounded-full animate-ping delay-500" />
+                    <div className="z-10 space-y-6">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-white/10 blur-2xl rounded-full" />
+                        {renderDraggableField('name', <h2 className="text-5xl font-black tracking-widest uppercase relative">{displayData.name}</h2>)}
+                      </div>
+                      <div className="h-px w-24 bg-gradient-to-r from-transparent via-white to-transparent mx-auto opacity-30" />
+                      {renderDraggableField('position', <p className="text-sm font-bold tracking-[0.5em] text-slate-400 uppercase">{displayData.position}</p>)}
+                      <div className="pt-8 text-[9px] font-bold tracking-[0.2em] text-slate-500 flex gap-4">
+                        {renderDraggableField('email', <span>{displayData.email}</span>)}
+                        {renderDraggableField('contact', <span>{displayData.contact}</span>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'marble':
+                return (
+                  <div className="w-full h-full p-12 bg-white text-slate-900 relative overflow-hidden border-[20px] border-slate-50 shadow-inner">
+                    <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/marble.png')]" />
+                    <div className="h-full border border-slate-200 p-8 flex flex-col justify-between items-center text-center">
+                      <div className="space-y-2">
+                        {renderDraggableField('name', <h2 className="text-4xl font-serif font-bold tracking-tight text-slate-800">{displayData.name}</h2>)}
+                        <div className="w-8 h-px bg-slate-300 mx-auto" />
+                        {renderDraggableField('position', <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400">{displayData.position}</p>)}
+                      </div>
+                      <div className="space-y-1 text-[9px] font-medium text-slate-500 uppercase tracking-widest">
+                        {renderDraggableField('email', <p>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                        {renderDraggableField('location', <p>{displayData.location}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'wood':
+                return (
+                  <div className="w-full h-full p-12 bg-[#5d4037] text-[#fbe9e7] relative overflow-hidden shadow-inner border-8 border-[#4e342e]">
+                    <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
+                    <div className="h-full border-2 border-white/10 p-8 flex flex-col justify-between">
+                      <div>
+                        {renderDraggableField('name', <h2 className="text-5xl font-black tracking-tighter leading-none opacity-90">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-sm font-bold uppercase tracking-widest text-[#d7ccc8] mt-2 italic">{displayData.position}</p>)}
+                      </div>
+                      <div className="flex justify-between items-end text-[10px] font-bold opacity-70">
+                        <div className="space-y-1">
+                          {renderDraggableField('email', <p>{displayData.email}</p>)}
+                          {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                        </div>
+                        <div className="text-right">
+                          <p className="opacity-30">SINCE 2025</p>
+                          {renderDraggableField('location', <p>{displayData.location}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'paper':
+                return (
+                  <div className="w-full h-full p-12 bg-[#fdfdfd] text-[#2c3e50] relative overflow-hidden shadow-inner">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
+                    <div className="absolute top-0 left-0 w-full h-full border-t-[40px] border-l-[40px] border-transparent border-t-white border-l-white drop-shadow-md" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
+                    <div className="relative z-10 h-full flex flex-col justify-center items-center text-center space-y-6">
+                      <div className="space-y-1">
+                        {renderDraggableField('name', <h2 className="text-4xl font-bold tracking-tight">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-xs font-semibold text-slate-400 uppercase tracking-[0.2em]">{displayData.position}</p>)}
+                      </div>
+                      <div className="w-12 h-px bg-slate-200" />
+                      <div className="space-y-1 text-[10px] font-bold text-slate-500">
+                        {renderDraggableField('email', <p>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'techno':
+                return (
+                  <div className="w-full h-full p-8 bg-slate-900 text-purple-400 font-mono relative overflow-hidden border-2 border-purple-500/20">
+                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#a855f7_1px,_transparent_1px)] bg-[size:20px_20px]" />
+                    <div className="relative z-10 flex flex-col h-full justify-between">
+                      <div className="flex justify-between items-start">
+                        <div className="border-l-4 border-purple-500 pl-4">
+                          {renderDraggableField('name', <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">{displayData.name}</h2>)}
+                          {renderDraggableField('position', <p className="text-[10px] font-bold mt-1 text-purple-300 tracking-widest">{`// USER_ROLE: ${displayData.position}`}</p>)}
+                        </div>
+                        <div className="text-[8px] text-purple-900 font-black px-2 py-1 bg-purple-400 rounded-sm">TECH_OS_v4.0</div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-[9px] font-black uppercase">
+                        <div className="bg-slate-800/50 p-2 border border-purple-500/30">
+                          <p className="text-purple-600 mb-1">CONTACT_INFO</p>
+                          {renderDraggableField('email', <p>{displayData.email}</p>)}
+                          {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                        </div>
+                        <div className="bg-slate-800/50 p-2 border border-purple-500/30">
+                          <p className="text-purple-600 mb-1">LOCATION_DATA</p>
+                          {renderDraggableField('location', <p>{displayData.location}</p>)}
+                          {renderDraggableField('github', <p>{displayData.github.replace('github.com/', 'G://')}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'glitch':
+                return (
+                  <div className="w-full h-full p-10 bg-black text-white relative overflow-hidden flex flex-col justify-center items-center text-center">
+                    <div className="absolute top-0 left-0 w-full h-full opacity-30 bg-[url('https://www.transparenttextures.com/patterns/asfalt-dark.png')]" />
+                    <div className="relative z-10">
+                      <div className="relative inline-block">
+                        <div className="absolute -top-1 -left-1 w-full h-full text-red-500 opacity-70 translate-x-1 translate-y-1 select-none pointer-events-none text-5xl font-black tracking-tighter italic">{displayData.name}</div>
+                        <div className="absolute -top-1 -left-1 w-full h-full text-cyan-500 opacity-70 -translate-x-1 -translate-y-1 select-none pointer-events-none text-5xl font-black tracking-tighter italic">{displayData.name}</div>
+                        {renderDraggableField('name', <h2 className="text-5xl font-black italic tracking-tighter relative">{displayData.name}</h2>)}
+                      </div>
+                      <div className="mt-4 bg-white text-black px-4 py-1 font-bold text-sm uppercase tracking-[0.3em]">
+                        {renderDraggableField('position', <p>{displayData.position}</p>)}
+                      </div>
+                      <div className="mt-12 space-y-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        {renderDraggableField('email', <p>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'bauhaus':
+                return (
+                  <div className="w-full h-full bg-[#e5e5e5] text-black font-sans relative overflow-hidden grid grid-cols-12 h-full">
+                    <div className="col-span-4 bg-yellow-400 h-full flex items-center justify-center border-r-8 border-black">
+                      {renderDraggableField('name', <h2 className="text-6xl font-black -rotate-90 tracking-tighter uppercase">{displayData.name}</h2>)}
+                    </div>
+                    <div className="col-span-8 flex flex-col justify-between p-12">
+                      <div className="flex gap-4">
+                        <div className="w-12 h-12 bg-red-600 rounded-full border-4 border-black" />
+                        <div className="w-12 h-12 bg-blue-600 border-4 border-black" />
+                      </div>
+                      <div className="space-y-6">
+                        <div className="bg-black text-white p-4">
+                          {renderDraggableField('position', <p className="text-2xl font-black uppercase italic leading-none">{displayData.position}</p>)}
+                        </div>
+                        <div className="space-y-1 text-xs font-black uppercase tracking-tighter border-l-8 border-red-600 pl-4">
+                          {renderDraggableField('email', <p>{displayData.email}</p>)}
+                          {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                          {renderDraggableField('location', <p>{displayData.location}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'industrial':
+                return (
+                  <div className="w-full h-full p-8 bg-[#333] text-[#ddd] relative overflow-hidden font-sans uppercase">
+                    <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)', backgroundSize: '10px 10px' }} />
+                    <div className="relative z-10 h-full flex flex-col justify-between">
+                      <div className="border-4 border-[#555] p-6 inline-block">
+                        {renderDraggableField('name', <h2 className="text-5xl font-black tracking-tighter leading-none">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-xs font-bold text-yellow-500 mt-2">UNIT // {displayData.position}</p>)}
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-[9px] font-mono">
+                        <div className="space-y-1">
+                          {renderDraggableField('contact', <p>PH: {displayData.contact}</p>)}
+                          {renderDraggableField('email', <p>EM: {displayData.email}</p>)}
+                        </div>
+                        <div className="text-right flex flex-col justify-end">
+                          <p className="opacity-30 mb-1">SPEC_01 // 2025</p>
+                          {renderDraggableField('location', <p>{displayData.location}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'futuristic':
+                return (
+                  <div className="w-full h-full p-10 bg-[#050505] text-blue-400 relative overflow-hidden font-mono">
+                    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_#1e3a8a_0%,_transparent_80%)] opacity-20" />
+                    <div className="absolute top-0 right-0 w-1/3 h-1/3 border-t border-r border-blue-500/30" />
+                    <div className="absolute bottom-0 left-0 w-1/3 h-1/3 border-b border-l border-blue-500/30" />
+                    <div className="relative z-10 flex flex-col h-full justify-center">
+                      <div className="mb-8">
+                        <div className="text-[8px] opacity-50 mb-1 tracking-[0.5em] uppercase">IDENTIFICATION_SIGNAL</div>
+                        {renderDraggableField('name', <h2 className="text-5xl font-light tracking-[0.2em] text-white uppercase">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-xs text-blue-300 mt-2 bg-blue-900/30 px-2 py-0.5 inline-block border-l-2 border-blue-400">{displayData.position}</p>)}
+                      </div>
+                      <div className="space-y-1 text-[9px] tracking-widest uppercase">
+                        {renderDraggableField('email', <p><span className="text-white">LINK:</span> {displayData.email}</p>)}
+                        {renderDraggableField('contact', <p><span className="text-white">FREQ:</span> {displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'holographic':
+                return (
+                  <div className="w-full h-full p-10 relative overflow-hidden flex flex-col items-center justify-center text-white"
+                       style={{ background: 'linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)' }}>
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-20 mix-blend-overlay animate-pulse" />
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/glass-dots.png')] opacity-10" />
+                    <div className="bg-white/20 backdrop-blur-xl p-12 rounded-[50px] border border-white/30 shadow-2xl text-center space-y-4">
+                      {renderDraggableField('name', <h2 className="text-4xl font-black tracking-tight drop-shadow-lg" style={{ color: style.primaryColor }}>{displayData.name}</h2>)}
+                      <div className="h-px w-12 bg-white/50 mx-auto" />
+                      {renderDraggableField('position', <p className="text-sm font-bold opacity-80" style={{ color: style.accentColor }}>{displayData.position}</p>)}
+                      <div className="pt-4 flex flex-col gap-1 text-[10px] font-bold text-white/70">
+                        {renderDraggableField('email', <p>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'swiss':
+                return (
+                  <div className="w-full h-full bg-[#f3f4f6] text-black font-sans relative overflow-hidden grid grid-cols-12 grid-rows-12">
+                    <div className="col-span-12 row-span-1 bg-red-600" />
+                    <div className="col-span-1 row-span-11 bg-black" />
+                    <div className="col-span-11 row-span-11 p-12 flex flex-col justify-between">
+                      <div>
+                        {renderDraggableField('name', <h2 className="text-6xl font-black tracking-tighter uppercase leading-[0.8]">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-xl font-bold mt-4 lowercase opacity-40">{displayData.position}</p>)}
+                      </div>
+                      <div className="flex justify-between items-end border-t-2 border-black pt-6">
+                        <div className="space-y-1 text-xs font-bold uppercase tracking-tighter">
+                          {renderDraggableField('email', <p>{displayData.email}</p>)}
+                          {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                        </div>
+                        <div className="text-[10px] font-black leading-none text-right">
+                          <p>CH-2025</p>
+                          <p>DESIGN_STD</p>
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'botanical':
+                return (
+                  <div className="w-full h-full p-12 bg-[#faf9f6] text-[#2d3a2d] relative overflow-hidden font-serif">
+                    <div className="absolute -top-12 -right-12 w-48 h-48 opacity-10 rotate-12 pointer-events-none">
+                      <Globe size={200} strokeWidth={1} />
+                    </div>
+                    <div className="absolute -bottom-12 -left-12 w-48 h-48 opacity-10 -rotate-12 pointer-events-none">
+                      <Target size={200} strokeWidth={1} />
+                    </div>
+                    <div className="h-full border-2 border-[#2d3a2d]/10 flex flex-col justify-between p-8">
+                      <div className="text-center">
+                        {renderDraggableField('name', <h2 className="text-4xl font-bold italic mb-1">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-xs uppercase tracking-[0.3em] opacity-60 font-sans">{displayData.position}</p>)}
+                      </div>
+                      <div className="grid grid-cols-1 gap-2 text-center text-[10px] font-medium opacity-70 italic">
+                        {renderDraggableField('location', <p>{displayData.location}</p>)}
+                        <div className="flex justify-center gap-4">
+                          {renderDraggableField('email', <p>{displayData.email}</p>)}
+                          {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'artdeco':
+                return (
+                  <div className="w-full h-full p-12 bg-[#1a1a1a] text-[#c5a059] relative overflow-hidden">
+                    <div className="absolute inset-0 border-[16px] border-[#c5a059]/20 pointer-events-none" />
+                    <div className="absolute inset-4 border border-[#c5a059]/40 pointer-events-none" />
+                    <div className="h-full border-2 border-[#c5a059]/60 flex flex-col justify-center items-center text-center p-8">
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          {renderDraggableField('name', <h2 className="text-5xl font-bold tracking-[0.1em] uppercase leading-none">{displayData.name}</h2>)}
+                          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#c5a059] to-transparent" />
+                        </div>
+                        {renderDraggableField('position', <p className="text-xs uppercase tracking-[0.5em] font-light italic">{displayData.position}</p>)}
+                      </div>
+                      <div className="absolute bottom-16 w-full px-12 flex justify-between text-[8px] uppercase tracking-[0.2em] font-bold">
+                        {renderDraggableField('contact', <span>{displayData.contact}</span>)}
+                        {renderDraggableField('email', <span>{displayData.email}</span>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'minimalblack':
+                return (
+                  <div className="w-full h-full p-12 bg-black text-white flex flex-col items-center justify-center text-center relative">
+                    <div className="space-y-6">
+                      {renderDraggableField('name', <h2 className="text-4xl font-extralight tracking-[0.4em] uppercase">{displayData.name}</h2>)}
+                      <div className="w-8 h-px bg-white/30 mx-auto" />
+                      {renderDraggableField('position', <p className="text-[10px] font-bold uppercase tracking-[0.6em] opacity-40">{displayData.position}</p>)}
+                    </div>
+                    <div className="absolute bottom-12 space-y-1 text-[8px] font-bold uppercase tracking-widest opacity-30">
+                      {renderDraggableField('email', <p>{displayData.email}</p>)}
+                      {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'cardboard':
+                return (
+                  <div className="w-full h-full p-10 bg-[#c2a38e] text-[#4a3728] relative overflow-hidden" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cardboard.png")' }}>
+                    <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-black/5" />
+                    <div className="h-full border-4 border-[#4a3728]/20 flex flex-col justify-between p-8 border-dashed">
+                      <div className="space-y-2">
+                        {renderDraggableField('name', <h2 className="text-5xl font-black uppercase tracking-tighter bg-[#4a3728] text-[#c2a38e] px-4 py-1 inline-block">{displayData.name}</h2>)}
+                        {renderDraggableField('position', <p className="text-sm font-bold border-2 border-[#4a3728] px-2 py-0.5 inline-block">{displayData.position}</p>)}
+                      </div>
+                      <div className="space-y-1 text-xs font-bold font-mono">
+                        {renderDraggableField('email', <p>E: {displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>T: {displayData.contact}</p>)}
+                        {renderDraggableField('location', <p>L: {displayData.location}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'zen':
+                return (
+                  <div className="w-full h-full p-16 bg-white text-slate-900 relative overflow-hidden flex justify-between items-center">
+                    <div className="absolute top-0 right-0 w-1 h-full bg-slate-100" />
+                    <div className="flex flex-col gap-8">
+                      <div className="space-y-2">
+                        {renderDraggableField('name', <h2 className="text-5xl font-light tracking-widest" style={{ writingMode: 'vertical-rl' }}>{displayData.name}</h2>)}
+                      </div>
+                    </div>
+                    <div className="flex flex-col h-full justify-between items-end text-[9px] font-bold uppercase tracking-[0.3em] text-slate-400">
+                      <div className="space-y-4 pt-12" style={{ writingMode: 'vertical-rl' }}>
+                        {renderDraggableField('position', <p>{displayData.position}</p>)}
+                      </div>
+                      <div className="space-y-4 pb-4">
+                        {renderDraggableField('email', <p style={{ writingMode: 'vertical-rl' }}>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p style={{ writingMode: 'vertical-rl' }}>{displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
+              case 'magical':
+                return (
+                  <div className="w-full h-full p-12 bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 text-white relative overflow-hidden flex flex-col justify-center items-center text-center">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40" />
+                    <div className="absolute -top-20 -left-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-[100px]" />
+                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]" />
+                    <div className="relative z-10 space-y-6">
+                      <div className="relative">
+                        <Sparkles className="absolute -top-8 -left-8 text-yellow-400 opacity-50 animate-pulse" size={32} />
+                        <Sparkles className="absolute -bottom-8 -right-8 text-yellow-400 opacity-50 animate-pulse delay-700" size={24} />
+                        {renderDraggableField('name', <h2 className="text-5xl font-black italic tracking-tighter bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent">{displayData.name}</h2>)}
+                      </div>
+                      {renderDraggableField('position', <p className="text-xs font-bold uppercase tracking-[0.4em] text-purple-300 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">{displayData.position}</p>)}
+                      <div className="pt-8 space-y-1 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                        {renderDraggableField('email', <p>{displayData.email}</p>)}
+                        {renderDraggableField('contact', <p>{displayData.contact}</p>)}
+                      </div>
+                    </div>
+                    {renderQRCodeElement(isBack ? 'back' : 'front')}
+                  </div>
+                );
+
               case 'comic':
                 return (
                   <div className="w-full h-full p-8 bg-white text-black font-black relative overflow-hidden border-4 border-black">
@@ -1232,7 +1675,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 border-2 border-dashed border-slate-300 text-slate-400 p-8 text-center">
               <p className="font-bold text-lg mb-2">뒷면이 비활성화되었습니다</p>
               <p className="text-sm">왼쪽 '뒷면 설정' 탭에서<br/>타입을 선택해주세요.</p>
-            </div>
+    </div>
           )}
 
           {viewMode === 'flip' && (

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { CardData, CardStyle, CardTheme, CardSize, CardElement } from '../types';
 import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as ImageIcon, Trash2, AlignLeft, AlignCenter, AlignRight, Bold, MapPin, Eye, EyeOff, Wand2, History, Save } from 'lucide-react';
 import { refineContent, suggestDesign, translateToEnglish } from '../services/geminiService';
+import CardPreview from './CardPreview';
 
 const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <div className="pt-2">
@@ -236,6 +237,26 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     { id: 'vintage', label: '빈티지' },
     { id: 'pixel', label: '픽셀' },
     { id: 'soft', label: '소프트' },
+    { id: 'industrial', label: '인더스트리얼' },
+    { id: 'futuristic', label: '퓨처리스틱' },
+    { id: 'holographic', label: '홀로그래픽' },
+    { id: 'swiss', label: '스위스' },
+    { id: 'botanical', label: '보타니컬' },
+    { id: 'artdeco', label: '아르데코' },
+    { id: 'minimalblack', label: '미니멀블랙' },
+    { id: 'cardboard', label: '카드보드' },
+    { id: 'zen', label: '젠' },
+    { id: 'magical', label: '매지컬' },
+    { id: 'chalk', label: '초크' },
+    { id: 'magazine', label: '매거진' },
+    { id: 'sticker', label: '스티커' },
+    { id: 'space', label: '스페이스' },
+    { id: 'marble', label: '마블' },
+    { id: 'wood', label: '우드' },
+    { id: 'paper', label: '페이퍼' },
+    { id: 'techno', label: '테크노' },
+    { id: 'glitch', label: '글리치' },
+    { id: 'bauhaus', label: '바우하우스' },
   ];
 
   const updateStyleWithLayout = (theme: CardTheme) => {
@@ -890,14 +911,48 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
 
           <Section label="테마 선택">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               {themes.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => updateStyleWithLayout(t.id)}
-                  className={`px-3 py-2 text-xs font-medium rounded-md border transition-all ${style.theme === t.id ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'}`}
+                  className={`group relative flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all ${style.theme === t.id ? 'bg-blue-50 border-blue-500 shadow-md ring-2 ring-blue-200' : 'bg-white border-slate-200 hover:border-blue-300 hover:shadow-sm'}`}
                 >
-                  {t.label}
+                  <div className="w-full aspect-[1.75/1] bg-slate-50 rounded-xl overflow-hidden border border-slate-100 flex items-center justify-center pointer-events-none mb-1">
+                    <div className="scale-[0.14] transform origin-center">
+                       <CardPreview
+                          data={{
+                            ...data,
+                            name: 'NAME',
+                            position: 'POSITION',
+                            fieldSettings: {
+                              name: { visible: true, x: 0, y: 0 },
+                              position: { visible: true, x: 0, y: 0 },
+                              contact: { visible: true, x: 0, y: 0 },
+                              email: { visible: true, x: 0, y: 0 },
+                              github: { visible: true, x: 0, y: 0 },
+                              blog: { visible: true, x: 0, y: 0 },
+                              location: { visible: true, x: 0, y: 0 },
+                              goal: { visible: true, x: 0, y: 0 },
+                            }
+                          }}
+                          style={{
+                            ...style,
+                            theme: t.id,
+                            contentScale: 1.0,
+                            qrSize: 40,
+                            qrX: 85,
+                            qrY: 20
+                          }}
+                          viewMode="flip"
+                          onPositionChange={() => {}}
+                       />
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className={`text-[10px] font-bold tracking-tight ${style.theme === t.id ? 'text-blue-600' : 'text-slate-600'}`}>{t.label}</span>
+                    <div className={`h-1 w-4 rounded-full mt-1 transition-all ${style.theme === t.id ? 'bg-blue-500 w-8' : 'bg-transparent'}`} />
+                  </div>
                 </button>
               ))}
             </div>
