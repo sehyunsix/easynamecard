@@ -103,6 +103,18 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     setResizeDirection(direction);
   };
 
+  const handleFieldMouseDown = (e: React.MouseEvent, fieldId: string) => {
+    e.stopPropagation();
+    e.preventDefault(); // Prevent text selection
+    
+    setDraggedFieldId(fieldId);
+    dragStartPos.current = { x: e.clientX, y: e.clientY };
+    initialFieldPos.current = { 
+      x: data.fieldSettings?.[fieldId]?.x || 0, 
+      y: data.fieldSettings?.[fieldId]?.y || 0 
+    };
+  };
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       // ... existing QR logic
