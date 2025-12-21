@@ -19,7 +19,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Refs for callbacks to avoid re-binding listeners on prop changes
+  // Refs for callbacks
   const onFieldUpdateRef = useRef(onFieldUpdate);
   const onUpdateElementRef = useRef(onUpdateElement);
   const onPositionChangeRef = useRef(onPositionChange);
@@ -29,7 +29,8 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   useEffect(() => { onPositionChangeRef.current = onPositionChange; }, [onPositionChange]);
 
   // Field Dragging State
-  const [draggedFieldId, setDraggedFieldId] = useState<string | null>(null);
+  const [isFieldDragging, setIsFieldDragging] = useState(false);
+  const draggedFieldIdRef = useRef<string | null>(null);
   const dragStartPos = useRef({ x: 0, y: 0 });
   const initialFieldPos = useRef({ x: 0, y: 0 });
 
