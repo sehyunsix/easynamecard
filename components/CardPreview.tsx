@@ -204,7 +204,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     const y = setting?.y || 0;
 
     return (
-      <div 
+      <div
         onMouseDown={(e) => handleFieldMouseDown(e, id)}
         className={`cursor-move hover:outline hover:outline-1 hover:outline-blue-400 hover:bg-blue-50/10 rounded px-1 -mx-1 transition-colors relative ${className}`}
         style={{
