@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { CardData, CardStyle, CardTheme, CardSize, CardElement } from '../types';
-import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as ImageIcon, Trash2, AlignLeft, AlignCenter, AlignRight, Bold, MapPin, Eye, EyeOff } from 'lucide-react';
-import { refineContent } from '../services/geminiService';
+import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as ImageIcon, Trash2, AlignLeft, AlignCenter, AlignRight, Bold, MapPin, Eye, EyeOff, Wand2, History, Save } from 'lucide-react';
+import { refineContent, suggestDesign, translateToEnglish } from '../services/geminiService';
 
 const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <div className="pt-2">
@@ -52,11 +52,64 @@ interface EditorPanelProps {
   onStyleChange: (style: CardStyle) => void;
   selectedElementId: string | null;
   onSelectElement: (id: string | null) => void;
+  savedCards?: any[];
+  onLoadCard?: (card: any) => void;
+  onDeleteCard?: (id: string) => void;
+  userProfiles?: any[];
+  onSaveProfile?: (name: string) => void;
+  onDeleteProfile?: (id: string) => void;
+  onApplyProfile?: (profile: any) => void;
 }
 
-const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, onStyleChange, selectedElementId, onSelectElement }) => {
+const EditorPanel: React.FC<EditorPanelProps> = ({
+  data,
+  style,
+  onDataChange,
+  onStyleChange,
+  selectedElementId,
+  onSelectElement,
+  savedCards = [],
+  onLoadCard,
+  onDeleteCard,
+  userProfiles = [],
+  onSaveProfile,
+  onDeleteProfile,
+  onApplyProfile
+}) => {
   const [loading, setLoading] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'info' | 'style' | 'back'>('info');
+  const [isMagicLoading, setIsMagicLoading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [profileName, setProfileName] = useState('');
+  const [activeTab, setActiveTab] = useState<'info' | 'style' | 'back' | 'history'>('info');
+
+  const handleTranslate = async () => {
+    setIsTranslating(true);
+    const result = await translateToEnglish(data.name, data.goal, data.position);
+    if (result) {
+      onDataChange({
+        ...data,
+        nameEn: result.nameEn || data.nameEn,
+        positionEn: result.positionEn || data.positionEn,
+        goalEn: result.goalEn || data.goalEn
+      });
+    }
+    setIsTranslating(false);
+  };
+
+  const handleMagicDesign = async () => {
+    setIsMagicLoading(true);
+    const suggestion = await suggestDesign(data);
+    if (suggestion) {
+      onStyleChange({
+        ...style,
+        theme: suggestion.theme as CardTheme,
+        primaryColor: suggestion.primaryColor,
+        accentColor: suggestion.accentColor,
+        contentScale: suggestion.contentScale || style.contentScale
+      });
+    }
+    setIsMagicLoading(false);
+  };
 
   const updateData = (key: keyof CardData, value: any) => {
     onDataChange({ ...data, [key]: value });
@@ -143,9 +196,11 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
     onStyleChange({ ...style, [key]: value });
   };
 
-  const handleRefine = async (type: 'goal' | 'tagline') => {
+  const handleRefine = async (type: 'goal' | 'goalEn') => {
     setLoading(type);
-    const result = await refineContent(type, data[type as keyof CardData] as string || '', data.position);
+    // If we're refining/generating the English goal, use the Korean goal as the source for translation
+    const sourceContent = type === 'goalEn' ? data.goal : (data[type as keyof CardData] as string || '');
+    const result = await refineContent(type, sourceContent, data.positionEn || data.position);
     updateData(type, result);
     setLoading(null);
   };
@@ -179,43 +234,211 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
       <div className="flex bg-slate-100 p-1 rounded-lg">
         <button
           onClick={() => setActiveTab('info')}
-          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'info' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'info' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
-          기본 정보
+          정보
         </button>
         <button
           onClick={() => setActiveTab('back')}
-          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'back' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'back' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
-          뒷면 설정
+          뒷면
         </button>
         <button
           onClick={() => setActiveTab('style')}
-          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all ${activeTab === 'style' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'style' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
           디자인
         </button>
+        <button
+          onClick={() => setActiveTab('history')}
+          className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'history' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+        >
+          기록
+        </button>
       </div>
+
+      {activeTab === 'history' && (
+        <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-300">
+          <Section label="저장된 명함 함">
+            {savedCards.length > 0 ? (
+              <div className="grid grid-cols-1 gap-3">
+                {savedCards.map((card, idx) => (
+                  <div
+                    key={card.id || idx}
+                    className="group relative bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-blue-400 hover:shadow-md transition-all"
+                  >
+                    <div
+                      onClick={() => onLoadCard && onLoadCard(card)}
+                      className="cursor-pointer"
+                    >
+                              <div className="h-24 bg-slate-50 flex items-center justify-center overflow-hidden border-b border-slate-100">
+                                 <div className="scale-[0.2] transform origin-center">
+                                    <div
+                                      className={`relative transition-all duration-500 w-[504px] h-[288px] rounded-md shadow-sm overflow-hidden bg-white`}
+                                    >
+                                      {/* Simplified Actual Preview */}
+                                      <div className="w-full h-full pointer-events-none">
+                                        {(() => {
+                                          // We can't easily import CardPreview here due to circular dependency or complexity
+                                          // but we can at least reflect the theme's colors and basic structure
+                                          const primaryColor = card.style.primaryColor;
+                                          const accentColor = card.style.accentColor;
+                                          const theme = card.style.theme;
+
+                                          return (
+                                            <div className="w-full h-full relative">
+                                              {/* Theme-specific background highlights */}
+                                              {theme === 'modern' && <div className="h-2 w-full flex"><div className="flex-1" style={{backgroundColor: primaryColor}}/><div className="flex-1" style={{backgroundColor: accentColor}}/></div>}
+                                              {theme === 'minimal' && <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{backgroundColor: primaryColor}}/>}
+                                              {theme === 'professional' && <div className="absolute left-0 top-0 bottom-0 w-4" style={{backgroundColor: primaryColor}}/>}
+                                              {theme === 'dark' && (
+                                                <>
+                                                  <div className="absolute inset-0 bg-slate-950"/>
+                                                  <div className="absolute top-0 left-0 w-full h-1" style={{background: `linear-gradient(to right, ${primaryColor}, ${accentColor})`}}/>
+                                                </>
+                                              )}
+
+                                              <div className="p-8 flex flex-col justify-center items-center h-full text-center">
+                                                <h3 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{card.data.name}</h3>
+                                                <p className={`text-xl ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{card.data.position}</p>
+                                              </div>
+                                            </div>
+                                          );
+                                        })()}
+                                      </div>
+                                    </div>
+                                 </div>
+                              </div>
+                      <div className="p-2.5">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-xs font-bold text-slate-700">{card.data.name}</p>
+                            <p className="text-[10px] text-slate-400 mt-0.5">{new Date(card.createdAt).toLocaleDateString()} {new Date(card.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteCard && onDeleteCard(card.id);
+                      }}
+                      className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full shadow-sm text-slate-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all border border-slate-100"
+                      title="삭제"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <History size={32} className="mx-auto text-slate-200 mb-2" />
+                <p className="text-xs text-slate-400">저장된 명함이 없습니다.</p>
+              </div>
+            )}
+          </Section>
+        </div>
+      )}
 
       {activeTab === 'info' && (
         <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-300">
+          <Section label="내 프로필 관리">
+             <div className="space-y-3">
+                {/* Profile Save Input */}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="프로필 이름 (예: 개발자, 매니저)"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                  />
+                  <button
+                    onClick={() => {
+                      onSaveProfile && onSaveProfile(profileName);
+                      setProfileName('');
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2"
+                  >
+                    <Save size={14} />
+                    저장
+                  </button>
+                </div>
+
+                {/* Profile List */}
+                {userProfiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {userProfiles.map((profile) => (
+                      <div
+                        key={profile.id}
+                        className="group relative flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-full pl-3 pr-1 py-1 hover:border-blue-300 transition-all"
+                      >
+                        <button
+                          onClick={() => onApplyProfile && onApplyProfile(profile)}
+                          className="text-[10px] font-bold text-slate-600 hover:text-blue-600"
+                        >
+                          {profile.name}
+                        </button>
+                        <button
+                          onClick={() => onDeleteProfile && onDeleteProfile(profile.id)}
+                          className="p-1 text-slate-300 hover:text-red-500 transition-colors"
+                        >
+                          <Trash2 size={10} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <p className="text-[10px] text-slate-400 text-center">프로필을 저장하면 앞/뒷면 모든 정보가 한꺼번에 저장됩니다.</p>
+             </div>
+          </Section>
+
           <Section label="기본 정보">
-            <InputField
-              label="성명"
-              value={data.name}
-              onChange={(v) => updateData('name', v)}
-              placeholder="이름을 입력하세요"
-              visible={data.fieldSettings.name.visible}
-              onToggleVisibility={() => toggleVisibility('name')}
-            />
-            <InputField
-              label="직책"
-              value={data.position}
-              onChange={(v) => updateData('position', v)}
-              placeholder="예: Senior Product Designer"
-              visible={data.fieldSettings.position.visible}
-              onToggleVisibility={() => toggleVisibility('position')}
-            />
+            <div className="flex justify-end mb-2">
+               <button
+                 onClick={handleTranslate}
+                 disabled={isTranslating}
+                 className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold hover:bg-blue-100 transition-all disabled:opacity-50"
+               >
+                 {isTranslating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                 AI 영문 자동 변환
+               </button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <InputField
+                label="성명 (국문)"
+                value={data.name}
+                onChange={(v) => updateData('name', v)}
+                placeholder="이름"
+                visible={data.fieldSettings.name.visible}
+                onToggleVisibility={() => toggleVisibility('name')}
+              />
+              <InputField
+                label="성명 (영문)"
+                value={data.nameEn}
+                onChange={(v) => updateData('nameEn', v)}
+                placeholder="Name"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <InputField
+                label="직책 (국문)"
+                value={data.position}
+                onChange={(v) => updateData('position', v)}
+                placeholder="예: Senior Product Designer"
+                visible={data.fieldSettings.position.visible}
+                onToggleVisibility={() => toggleVisibility('position')}
+              />
+              <InputField
+                label="직책 (영문)"
+                value={data.positionEn}
+                onChange={(v) => updateData('positionEn', v)}
+                placeholder="Ex: Software Engineer"
+              />
+            </div>
           </Section>
 
           <Section label="연락처 및 링크">
@@ -319,39 +542,52 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
             </div>
           </Section>
 
-          <Section label="AI 목표 & 태그라인">
+          <Section label="AI 목표">
             <div className="relative group space-y-3">
-              <InputField
-                label="태그라인 (Tagline)"
-                value={data.tagline}
-                onChange={(v) => updateData('tagline', v)}
-                visible={data.fieldSettings.tagline.visible}
-                onToggleVisibility={() => toggleVisibility('tagline')}
-              />
-
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">커리어 목표</label>
-                  <button
-                    onClick={() => toggleVisibility('goal')}
-                    className={`text-slate-400 hover:text-blue-600 transition-colors ${!data.fieldSettings.goal.visible ? 'text-slate-300' : ''}`}
-                  >
-                    {data.fieldSettings.goal.visible ? <Eye size={14} /> : <EyeOff size={14} />}
-                  </button>
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">커리어 목표 (국문)</label>
+                    <button
+                      onClick={() => toggleVisibility('goal')}
+                      className={`text-slate-400 hover:text-blue-600 transition-colors ${!data.fieldSettings.goal.visible ? 'text-slate-300' : ''}`}
+                    >
+                      {data.fieldSettings.goal.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+                    </button>
+                  </div>
+                  <div className={`flex gap-2 transition-opacity ${!data.fieldSettings.goal.visible ? 'opacity-50' : ''}`}>
+                <textarea
+                  className="flex-1 text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
+                  value={data.goal}
+                  onChange={(e) => updateData('goal', e.target.value)}
+                />
+                <button
+                  onClick={() => handleRefine('goal')}
+                  disabled={loading === 'goal'}
+                  className="p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 disabled:opacity-50 h-10 transition-colors"
+                >
+                  {loading === 'goal' ? <Loader2 className="animate-spin" size={18} /> : <Sparkles size={18} />}
+                </button>
+                  </div>
                 </div>
-                <div className={`flex gap-2 transition-opacity ${!data.fieldSettings.goal.visible ? 'opacity-50' : ''}`}>
-                  <textarea
-                    className="flex-1 text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
-                    value={data.goal}
-                    onChange={(e) => updateData('goal', e.target.value)}
-                  />
-                  <button
-                    onClick={() => handleRefine('goal')}
-                    disabled={loading === 'goal'}
-                    className="p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 disabled:opacity-50 h-10 transition-colors"
-                  >
-                    {loading === 'goal' ? <Loader2 className="animate-spin" size={18} /> : <Sparkles size={18} />}
-                  </button>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">커리어 목표 (영문)</label>
+                  <div className="flex gap-2">
+                    <textarea
+                      className="flex-1 text-sm border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-20"
+                      value={data.goalEn}
+                      onChange={(e) => updateData('goalEn', e.target.value)}
+                      placeholder="English career goal..."
+                    />
+                    <button
+                      onClick={() => handleRefine('goalEn')}
+                      disabled={loading === 'goalEn'}
+                      className="p-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 disabled:opacity-50 h-10 transition-colors"
+                    >
+                      {loading === 'goalEn' ? <Loader2 className="animate-spin" size={18} /> : <Sparkles size={18} />}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -527,7 +763,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
               <Section label="영문 정보">
                 <InputField label="Name (English)" value={data.nameEn} onChange={(v) => updateData('nameEn', v)} placeholder="Ex: Chulsoo Kim" />
                 <InputField label="Position (English)" value={data.positionEn} onChange={(v) => updateData('positionEn', v)} placeholder="Ex: Software Engineer" />
-                <InputField label="Tagline (English)" value={data.taglineEn} onChange={(v) => updateData('taglineEn', v)} placeholder="Ex: Crafting Digital Experiences" />
                 <div className="pt-2">
                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">Career Goal (English)</label>
                    <textarea
@@ -590,6 +825,15 @@ const EditorPanel: React.FC<EditorPanelProps> = ({ data, style, onDataChange, on
 
       {activeTab === 'style' && (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
+          <button
+            onClick={handleMagicDesign}
+            disabled={isMagicLoading}
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {isMagicLoading ? <Loader2 size={18} className="animate-spin" /> : <Wand2 size={18} />}
+            AI 매직 디자인 추천
+          </button>
+
           <Section label="테마 선택">
             <div className="grid grid-cols-2 gap-2">
               {themes.map((t) => (

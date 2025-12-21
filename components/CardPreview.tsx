@@ -116,15 +116,15 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
   const handleFieldMouseDown = (e: React.MouseEvent, fieldId: string) => {
     e.stopPropagation();
     e.preventDefault();
-    
+
     console.log(`MouseDown on field: ${fieldId}`);
     draggedFieldIdRef.current = fieldId;
     setIsFieldDragging(true);
-    
+
     dragStartPos.current = { x: e.clientX, y: e.clientY };
-    initialFieldPos.current = { 
-      x: data.fieldSettings?.[fieldId]?.x || 0, 
-      y: data.fieldSettings?.[fieldId]?.y || 0 
+    initialFieldPos.current = {
+      x: data.fieldSettings?.[fieldId]?.x || 0,
+      y: data.fieldSettings?.[fieldId]?.y || 0
     };
   };
 
@@ -132,9 +132,9 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     const handleMouseMove = (e: MouseEvent) => {
       // QR Code Dragging
       if (isDragging && cardRef.current) {
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
         onPositionChangeRef.current(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
       }
 
@@ -142,7 +142,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       if (isFieldDragging && draggedFieldIdRef.current) {
         const deltaX = e.clientX - dragStartPos.current.x;
         const deltaY = e.clientY - dragStartPos.current.y;
-        
+
         const scale = style.contentScale || 1;
 
         if (onFieldUpdateRef.current) {
@@ -187,11 +187,14 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
           newY += (deltaY / containerRect.height) * 100;
         }
 
-        onUpdateElement(resizingElementId, {
-          style: { width: Math.max(20, newWidth), height: Math.max(20, newHeight) },
-          x: resizeDirection.includes('w') ? newX : undefined, // Only update position if left resizing
-          y: resizeDirection.includes('n') ? newY : undefined  // Only update position if top resizing
-        });
+        const updates: any = {
+          style: { width: Math.max(20, newWidth), height: Math.max(20, newHeight) }
+        };
+
+        if (resizeDirection.includes('w')) updates.x = newX;
+        if (resizeDirection.includes('n')) updates.y = newY;
+
+        onUpdateElement(resizingElementId, updates);
 
         // Note: updating X/Y during W/N resize is tricky because of the mixed units.
         // For simple MVP, maybe restrict to E/S/SE resizing?
@@ -318,13 +321,16 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
     const isBack = side === 'back';
 
     // Data to use based on side
-    const displayData = isBack ? {
-      ...data,
-      name: data.nameEn || data.name,
-      position: data.positionEn || data.position,
-      tagline: data.taglineEn || data.tagline,
-      goal: data.goalEn || data.goal,
-    } : data;
+    const displayData = {
+      name: (isBack && data.nameEn) ? data.nameEn : data.name,
+      position: (isBack && data.positionEn) ? data.positionEn : data.position,
+      goal: (isBack && data.goalEn) ? data.goalEn : data.goal,
+      contact: data.contact,
+      email: data.email,
+      github: data.github,
+      blog: data.blog,
+      location: data.location,
+    };
 
     // Logo Back Side Special Rendering
     if (isBack && data.backSideType === 'logo') {
@@ -398,41 +404,41 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                {/* Selection Indicators (Resize Handles) */}
                {selectedElementId === el.id && el.type === 'image' && (
                  <>
-                   {/* Corners */}
-                   <div
-                     className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-nw-resize z-50"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'nw')}
-                   />
-                   <div
-                     className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-ne-resize z-50"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'ne')}
-                   />
-                   <div
-                     className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-sw-resize z-50"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'sw')}
-                   />
-                   <div
-                     className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-se-resize z-50"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'se')}
-                   />
+                           {/* Corners */}
+                           <div
+                             className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-nw-resize z-50 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'nw')}
+                           />
+                           <div
+                             className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-ne-resize z-50 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'ne')}
+                           />
+                           <div
+                             className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-sw-resize z-50 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'sw')}
+                           />
+                           <div
+                             className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-blue-500 rounded-full cursor-se-resize z-50 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'se')}
+                           />
 
-                   {/* Edges */}
-                   <div
-                     className="absolute top-0 left-1/2 -translate-x-1/2 -mt-1 w-4 h-2 bg-transparent cursor-n-resize z-40"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'n')}
-                   />
-                   <div
-                     className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-1 w-4 h-2 bg-transparent cursor-s-resize z-40"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 's')}
-                   />
-                   <div
-                     className="absolute left-0 top-1/2 -translate-y-1/2 -ml-1 h-4 w-2 bg-transparent cursor-w-resize z-40"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'w')}
-                   />
-                   <div
-                     className="absolute right-0 top-1/2 -translate-y-1/2 -mr-1 h-4 w-2 bg-transparent cursor-e-resize z-40"
-                     onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'e')}
-                   />
+                           {/* Edges */}
+                           <div
+                             className="absolute top-0 left-1/2 -translate-x-1/2 -mt-1 w-4 h-2 bg-transparent cursor-n-resize z-40 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'n')}
+                           />
+                           <div
+                             className="absolute bottom-0 left-1/2 -translate-x-1/2 -mb-1 w-4 h-2 bg-transparent cursor-s-resize z-40 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 's')}
+                           />
+                           <div
+                             className="absolute left-0 top-1/2 -translate-y-1/2 -ml-1 h-4 w-2 bg-transparent cursor-w-resize z-40 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'w')}
+                           />
+                           <div
+                             className="absolute right-0 top-1/2 -translate-y-1/2 -mr-1 h-4 w-2 bg-transparent cursor-e-resize z-40 no-print"
+                             onMouseDown={(e) => handleResizeMouseDown(e, el.id, 'e')}
+                           />
                  </>
                )}
              </div>
@@ -451,10 +457,11 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       case 'minimal':
         return (
           <div className="relative w-full h-full p-8 flex flex-col justify-between bg-white text-slate-900 overflow-hidden">
+            <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: style.primaryColor }} />
             <div className="w-full border-t border-slate-100 mb-4" />
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               {renderDraggableField('name', <h2 className="text-3xl font-light tracking-tight">{displayData.name}</h2>)}
-              {renderDraggableField('position', <p className="text-sm font-medium tracking-widest uppercase opacity-60 mt-2" style={{ color: style.primaryColor }}>{displayData.position}</p>)}
+              {renderDraggableField('position', <p className="text-sm font-medium opacity-60 mt-2" style={{ color: style.primaryColor }}>{displayData.position}</p>)}
             </div>
             <div className="flex flex-col gap-1 uppercase tracking-wider text-slate-400 font-medium" style={{ fontSize: `${s(10)}px` }}>
               <div className="flex items-center gap-4 flex-wrap">
@@ -470,7 +477,6 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 {renderDraggableField('blog', <span className="flex items-center gap-1"><Globe size={s(10)} /> {displayData.blog}</span>)}
               </div>
             </div>
-            <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: style.primaryColor }} />
             {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
         );
@@ -541,7 +547,6 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(to right, ${style.primaryColor}, ${style.accentColor})` }} />
 
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              {renderDraggableField('tagline', <p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-2 uppercase">{displayData.tagline}</p>)}
               {renderDraggableField('name', <h2 className="text-4xl font-bold tracking-tight mb-2">{displayData.name}</h2>)}
               <div className="flex items-center gap-2">
                 <div className="w-4 h-[2px]" style={{ backgroundColor: style.primaryColor }} />
@@ -573,18 +578,18 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="space-y-1" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               {renderDraggableField('name', <h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm mb-2">{displayData.name}</h2>)}
               {renderDraggableField('position',
-                <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
+              <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
                   {displayData.position}
-                </p>
+              </p>
               )}
             </div>
 
             <div className="bg-white/30 backdrop-blur-md p-4 rounded-xl border border-white/50 space-y-2" style={{ transform: `scale(${style.contentScale})` }}>
                {renderDraggableField('goal',
-                 <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                   <Target size={12} className="inline mr-2 text-slate-500" />
+               <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                 <Target size={12} className="inline mr-2 text-slate-500" />
                    {displayData.goal}
-                 </p>
+               </p>
                )}
             </div>
 
@@ -597,9 +602,9 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
                 {renderDraggableField('location', <span className="flex items-center gap-1"><MapPin size={s(11)} /> {displayData.location}</span>)}
               </div>
               {renderDraggableField('github',
-                <span className="flex items-center gap-1 hover:text-slate-900 transition-colors">
+              <span className="flex items-center gap-1 hover:text-slate-900 transition-colors">
                   <Github size={s(11)} /> {displayData.github.replace('github.com/', '')} <ExternalLink size={s(10)} />
-                </span>
+              </span>
               )}
             </div>
             {renderQRCodeElement(isBack ? 'back' : 'front')}
@@ -618,13 +623,9 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
 
             <div className="flex-1 p-8 flex flex-col justify-between">
               <div className="flex justify-between items-start">
-            <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
+                <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
               {renderDraggableField('name', <h2 className="text-4xl font-playfair text-slate-900 mb-2">{displayData.name}</h2>)}
-              {renderDraggableField('position', <p className="text-xs tracking-[0.2em] font-bold text-slate-400 uppercase">{displayData.position}</p>)}
-            </div>
-                <div className="text-right" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'right top' }}>
-                  <p className="text-[10px] font-mono text-slate-400 uppercase tracking-tighter">TAGLINE</p>
-                  {renderDraggableField('tagline', <p className="text-xs font-bold text-slate-800" style={{ color: style.accentColor }}>{displayData.tagline}</p>)}
+              {renderDraggableField('position', <p className="text-xs font-bold text-slate-400">{displayData.position}</p>)}
                 </div>
               </div>
 
@@ -655,6 +656,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       <div
         id="card-front"
         ref={cardRef}
+        onMouseDown={() => onSelectElement?.(null)}
         className={`card-wrapper relative transition-all duration-500 ${sizeClasses[style.size]} ${roundedClasses[style.rounded]} shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden bg-white select-none ${viewMode === 'flip' && isFlipped ? 'hidden' : ''}`}
         style={{ boxShadow: `0 30px 60px -12px rgba(0,0,0,0.15), 0 18px 36px -18px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.1)` }}
       >
@@ -674,6 +676,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       {(viewMode === 'split' || (viewMode === 'flip' && isFlipped)) && (
         <div
           id="card-back"
+          onMouseDown={() => onSelectElement?.(null)}
           className={`card-wrapper relative transition-all duration-500 ${sizeClasses[style.size]} ${roundedClasses[style.rounded]} shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden bg-white select-none`}
           style={{ boxShadow: `0 30px 60px -12px rgba(0,0,0,0.15), 0 18px 36px -18px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.1)` }}
         >
@@ -695,7 +698,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
               <Repeat size={18} className="text-blue-600" />
             </button>
           )}
-        </div>
+    </div>
       )}
     </>
   );

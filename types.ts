@@ -11,7 +11,6 @@ export interface CardData {
   github: string;
   blog: string;
   goal: string;
-  tagline: string;
   showQrCode: boolean;
   qrUrl: string;
 
@@ -29,7 +28,6 @@ export interface CardData {
   backSideType: 'none' | 'english' | 'logo' | 'custom';
   nameEn: string;
   positionEn: string;
-  taglineEn: string;
   goalEn: string;
   logoUrl: string;
   logoText: string;
