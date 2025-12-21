@@ -317,6 +317,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     { id: 'slate', label: '슬레이트' },
     { id: 'gothic', label: '고딕' },
     { id: 'bento', label: '벤토' },
+    { id: 'cyber-grid', label: '사이버그리드' },
+    { id: 'botanical-art', label: '보타니컬아트' },
+    { id: 'luxury-marble', label: '럭셔리마블' },
+    { id: 'retro-terminal', label: '레트로터미널' },
+    { id: 'modern-scandi', label: '스칸디나비안' },
+    { id: 'vibrant-blob', label: '바이브런트블롭' },
+    { id: 'tech-blueprint', label: '테크블루프린트' },
+    { id: 'elegant-damask', label: '엘레강트다마스크' },
+    { id: 'creative-collage', label: '크리에이티브콜라주' },
+    { id: 'professional-navy', label: '프로페셔널네이비' },
   ];
 
   const updateStyleWithLayout = (theme: CardTheme) => {
