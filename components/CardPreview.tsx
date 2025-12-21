@@ -115,27 +115,42 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
 
   const handleFieldMouseDown = (e: React.MouseEvent, fieldId: string) => {
     e.stopPropagation();
-    e.preventDefault(); // Prevent text selection
-
+    e.preventDefault();
+    
     console.log(`MouseDown on field: ${fieldId}`);
-    setDraggedFieldId(fieldId);
+    draggedFieldIdRef.current = fieldId;
+    setIsFieldDragging(true);
+    
     dragStartPos.current = { x: e.clientX, y: e.clientY };
-    initialFieldPos.current = {
-      x: data.fieldSettings?.[fieldId]?.x || 0,
-      y: data.fieldSettings?.[fieldId]?.y || 0
+    initialFieldPos.current = { 
+      x: data.fieldSettings?.[fieldId]?.x || 0, 
+      y: data.fieldSettings?.[fieldId]?.y || 0 
     };
-    console.log(`Start Pos: ${e.clientX}, ${e.clientY}, Initial Offset: ${initialFieldPos.current.x}, ${initialFieldPos.current.y}`);
   };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // ... existing QR logic
+      // QR Code Dragging
       if (isDragging && cardRef.current) {
-        // ... (keep QR logic same)
         const rect = cardRef.current.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        onPositionChange(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+        onPositionChangeRef.current(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+      }
+
+      // Field Dragging
+      if (isFieldDragging && draggedFieldIdRef.current) {
+        const deltaX = e.clientX - dragStartPos.current.x;
+        const deltaY = e.clientY - dragStartPos.current.y;
+        
+        const scale = style.contentScale || 1;
+
+        if (onFieldUpdateRef.current) {
+          onFieldUpdateRef.current(draggedFieldIdRef.current, {
+            x: initialFieldPos.current.x + (deltaX / scale),
+            y: initialFieldPos.current.y + (deltaY / scale)
+          });
+        }
       }
 
       // Custom Element Resizing
@@ -203,12 +218,14 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      setIsFieldDragging(false);
       setDraggingElementId(null);
       setResizingElementId(null);
       setResizeDirection(null);
+      draggedFieldIdRef.current = null;
     };
 
-    if (isDragging || draggedElementId || resizingElementId) {
+    if (isDragging || draggedElementId || resizingElementId || isFieldDragging) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
@@ -217,7 +234,7 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, onPositionChange, draggedElementId, resizingElementId, resizeDirection, onUpdateElement, draggedFieldId, onFieldUpdate, style.contentScale]);
+  }, [isDragging, draggedElementId, resizingElementId, resizeDirection, isFieldDragging, style.contentScale]);
 
   // Helper to render draggable fields - defined as a regular function to avoid component remount issues
   const renderDraggableField = (id: string, children: React.ReactNode, className: string = '', customStyle: React.CSSProperties = {}) => {
