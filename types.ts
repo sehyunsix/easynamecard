@@ -15,6 +15,16 @@ export interface CardData {
   showQrCode: boolean;
   qrUrl: string;
 
+  // New: Field Configuration (Visibility & Positioning)
+  location: string;
+  fieldSettings: {
+    [key: string]: {
+      visible: boolean;
+      x: number; // Offset X in pixels
+      y: number; // Offset Y in pixels
+    };
+  };
+
   // Back Side Data
   backSideType: 'none' | 'english' | 'logo' | 'custom';
   nameEn: string;

@@ -18,6 +18,18 @@ const App: React.FC = () => {
     blog: 'chulsoo.tistory.com',
     goal: '세상을 변화시키는 견고한 소프트웨어를 만듭니다.',
     tagline: 'Crafting Digital Experiences',
+    location: 'Seoul, Korea',
+    fieldSettings: {
+      name: { visible: true, x: 0, y: 0 },
+      position: { visible: true, x: 0, y: 0 },
+      contact: { visible: true, x: 0, y: 0 },
+      email: { visible: true, x: 0, y: 0 },
+      github: { visible: true, x: 0, y: 0 },
+      blog: { visible: true, x: 0, y: 0 },
+      location: { visible: true, x: 0, y: 0 },
+      goal: { visible: true, x: 0, y: 0 },
+      tagline: { visible: true, x: 0, y: 0 },
+    },
     showQrCode: true,
     qrUrl: 'https://chulsoo.tistory.com',
 
@@ -178,6 +190,18 @@ const App: React.FC = () => {
                 customElements: prev.customElements.map(el =>
                   el.id === id ? { ...el, ...updates } : el
                 )
+              }));
+            }}
+            onFieldUpdate={(field, updates) => {
+              setCardData(prev => ({
+                ...prev,
+                fieldSettings: {
+                  ...prev.fieldSettings,
+                  [field]: {
+                    ...prev.fieldSettings[field],
+                    ...updates
+                  }
+                }
               }));
             }}
           />

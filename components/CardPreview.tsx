@@ -1,7 +1,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { CardData, CardStyle } from '../types';
-import { Github, Globe, Mail, Phone, Briefcase, Target, ExternalLink, Repeat } from 'lucide-react';
+import { Github, Globe, Mail, Phone, Briefcase, Target, ExternalLink, Repeat, MapPin } from 'lucide-react';
 
 interface CardPreviewProps {
   data: CardData;
@@ -11,12 +11,18 @@ interface CardPreviewProps {
   selectedElementId?: string | null;
   onSelectElement?: (id: string | null) => void;
   onUpdateElement?: (id: string, updates: any) => void;
+  onFieldUpdate?: (field: string, updates: { x: number; y: number }) => void; // New prop for field positioning
 }
 
-const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPositionChange, selectedElementId, onSelectElement, onUpdateElement }) => {
+const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPositionChange, selectedElementId, onSelectElement, onUpdateElement, onFieldUpdate }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  // Field Dragging State
+  const [draggedFieldId, setDraggedFieldId] = useState<string | null>(null);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  const initialFieldPos = useRef({ x: 0, y: 0 });
 
   // Custom Element Dragging & Resizing State
   const [draggedElementId, setDraggingElementId] = useState<string | null>(null);
@@ -380,19 +386,25 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
           <div className="relative w-full h-full p-8 flex flex-col justify-between bg-white text-slate-900 overflow-hidden">
             <div className="w-full border-t border-slate-100 mb-4" />
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              <h2 className="text-3xl font-light tracking-tight">{displayData.name}</h2>
-              <p className="text-sm font-medium tracking-widest uppercase opacity-60 mt-2" style={{ color: style.primaryColor }}>{displayData.position}</p>
+              <DraggableField id="name">
+                <h2 className="text-3xl font-light tracking-tight">{displayData.name}</h2>
+              </DraggableField>
+              <DraggableField id="position">
+                <p className="text-sm font-medium tracking-widest uppercase opacity-60 mt-2" style={{ color: style.primaryColor }}>{displayData.position}</p>
+              </DraggableField>
             </div>
             <div className="flex flex-col gap-1 uppercase tracking-wider text-slate-400 font-medium" style={{ fontSize: `${s(10)}px` }}>
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1"><Mail size={s(10)} /> {displayData.email}</span>
+              <div className="flex items-center gap-4 flex-wrap">
+                <DraggableField id="email"><span className="flex items-center gap-1"><Mail size={s(10)} /> {displayData.email}</span></DraggableField>
                 <span className="w-1 h-1 rounded-full bg-slate-200" />
-                <span className="flex items-center gap-1"><Phone size={s(10)} /> {displayData.contact}</span>
+                <DraggableField id="contact"><span className="flex items-center gap-1"><Phone size={s(10)} /> {displayData.contact}</span></DraggableField>
+                <span className="w-1 h-1 rounded-full bg-slate-200" />
+                <DraggableField id="location"><span className="flex items-center gap-1"><MapPin size={s(10)} /> {displayData.location}</span></DraggableField>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1"><Github size={s(10)} /> {displayData.github}</span>
+              <div className="flex items-center gap-4 flex-wrap">
+                <DraggableField id="github"><span className="flex items-center gap-1"><Github size={s(10)} /> {displayData.github}</span></DraggableField>
                 <span className="w-1 h-1 rounded-full bg-slate-200" />
-                <span className="flex items-center gap-1"><Globe size={s(10)} /> {displayData.blog}</span>
+                <DraggableField id="blog"><span className="flex items-center gap-1"><Globe size={s(10)} /> {displayData.blog}</span></DraggableField>
               </div>
             </div>
             <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{ backgroundColor: style.primaryColor }} />
@@ -407,21 +419,22 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-3xl opacity-20" style={{ backgroundColor: style.accentColor }} />
 
             <div className="flex-1 p-8 flex flex-col justify-center">
-               <h2 className="font-black mb-2 leading-none italic" style={{ color: style.primaryColor, fontSize: `${s(40)}px` }}>{displayData.name}</h2>
-               <p className="font-bold tracking-tighter text-slate-400 mb-6" style={{ fontSize: `${s(14)}px` }}>{displayData.position}</p>
+               <DraggableField id="name"><h2 className="font-black mb-2 leading-none italic" style={{ color: style.primaryColor, fontSize: `${s(40)}px` }}>{displayData.name}</h2></DraggableField>
+               <DraggableField id="position"><p className="font-bold tracking-tighter text-slate-400 mb-6" style={{ fontSize: `${s(14)}px` }}>{displayData.position}</p></DraggableField>
                <div className="max-w-[80%]">
-                 <p className="leading-relaxed text-slate-600 font-semibold border-l-4 pl-3" style={{ borderColor: style.accentColor, fontSize: `${s(12)}px` }}>{displayData.goal}</p>
+                 <DraggableField id="goal"><p className="leading-relaxed text-slate-600 font-semibold border-l-4 pl-3" style={{ borderColor: style.accentColor, fontSize: `${s(12)}px` }}>{displayData.goal}</p></DraggableField>
                </div>
             </div>
 
             <div className="bg-slate-900 p-6 flex justify-between items-center text-white">
               <div className="space-y-1">
-                <p className="flex items-center gap-2" style={{ fontSize: `${s(10)}px` }}><Phone size={s(10)} className="text-slate-400"/> {displayData.contact}</p>
-                <p className="flex items-center gap-2" style={{ fontSize: `${s(10)}px` }}><Mail size={s(10)} className="text-slate-400"/> {displayData.email}</p>
+                <DraggableField id="contact"><p className="flex items-center gap-2" style={{ fontSize: `${s(10)}px` }}><Phone size={s(10)} className="text-slate-400"/> {displayData.contact}</p></DraggableField>
+                <DraggableField id="email"><p className="flex items-center gap-2" style={{ fontSize: `${s(10)}px` }}><Mail size={s(10)} className="text-slate-400"/> {displayData.email}</p></DraggableField>
+                <DraggableField id="location"><p className="flex items-center gap-2" style={{ fontSize: `${s(10)}px` }}><MapPin size={s(10)} className="text-slate-400"/> {displayData.location}</p></DraggableField>
               </div>
               <div className="text-right">
                 <p className="font-bold text-slate-400" style={{ fontSize: `${s(10)}px` }}>CONNECT</p>
-                <p className="flex items-center justify-end gap-1" style={{ fontSize: `${s(10)}px` }}><Github size={s(10)} /> {displayData.github}</p>
+                <DraggableField id="github"><p className="flex items-center justify-end gap-1" style={{ fontSize: `${s(10)}px` }}><Github size={s(10)} /> {displayData.github}</p></DraggableField>
               </div>
             </div>
             {renderQRCodeElement(isBack ? 'back' : 'front')}
@@ -435,8 +448,8 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="col-span-11 p-10 flex flex-col justify-between">
               <div className="flex justify-between items-start">
                 <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-                  <h2 className="text-3xl font-bold text-slate-900 mb-2">{displayData.name}</h2>
-                  <p className="text-sm font-medium tracking-wide text-slate-500">{displayData.position}</p>
+                  <DraggableField id="name"><h2 className="text-3xl font-bold text-slate-900 mb-2">{displayData.name}</h2></DraggableField>
+                  <DraggableField id="position"><p className="text-sm font-medium tracking-wide text-slate-500">{displayData.position}</p></DraggableField>
                 </div>
                 <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-100" style={{ color: style.primaryColor, transform: `scale(${style.contentScale})` }}>
                   <Briefcase size={24} />
@@ -444,14 +457,15 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
               </div>
 
               <div className="grid grid-cols-2 gap-y-3 mt-6">
-                <InfoItem icon={<Phone size={s(14)} />} text={displayData.contact} scale={style.contentScale} />
-                <InfoItem icon={<Github size={s(14)} />} text={displayData.github} scale={style.contentScale} />
-                <InfoItem icon={<Mail size={s(14)} />} text={displayData.email} scale={style.contentScale} />
-                <InfoItem icon={<Globe size={s(14)} />} text={displayData.blog} scale={style.contentScale} />
+                <DraggableField id="contact"><InfoItem icon={<Phone size={s(14)} />} text={displayData.contact} scale={style.contentScale} /></DraggableField>
+                <DraggableField id="github"><InfoItem icon={<Github size={s(14)} />} text={displayData.github} scale={style.contentScale} /></DraggableField>
+                <DraggableField id="email"><InfoItem icon={<Mail size={s(14)} />} text={displayData.email} scale={style.contentScale} /></DraggableField>
+                <DraggableField id="blog"><InfoItem icon={<Globe size={s(14)} />} text={displayData.blog} scale={style.contentScale} /></DraggableField>
+                <DraggableField id="location"><InfoItem icon={<MapPin size={s(14)} />} text={displayData.location} scale={style.contentScale} /></DraggableField>
               </div>
 
               <div className="mt-6 pt-4 border-t border-slate-100">
-                <p className="italic text-slate-500 font-serif leading-snug" style={{ fontSize: `${s(12)}px` }}>"{displayData.goal}"</p>
+                <DraggableField id="goal"><p className="italic text-slate-500 font-serif leading-snug" style={{ fontSize: `${s(12)}px` }}>"{displayData.goal}"</p></DraggableField>
               </div>
             </div>
             {renderQRCodeElement(isBack ? 'back' : 'front')}
@@ -464,22 +478,23 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(to right, ${style.primaryColor}, ${style.accentColor})` }} />
 
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              <p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-2 uppercase">{displayData.tagline}</p>
-              <h2 className="text-4xl font-bold tracking-tight mb-2">{displayData.name}</h2>
+              <DraggableField id="tagline"><p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 mb-2 uppercase">{displayData.tagline}</p></DraggableField>
+              <DraggableField id="name"><h2 className="text-4xl font-bold tracking-tight mb-2">{displayData.name}</h2></DraggableField>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-[2px]" style={{ backgroundColor: style.primaryColor }} />
-                <p className="text-sm font-medium text-slate-400">{displayData.position}</p>
+                <DraggableField id="position"><p className="text-sm font-medium text-slate-400">{displayData.position}</p></DraggableField>
               </div>
             </div>
 
             <div className="flex justify-between items-end">
               <div className="space-y-1.5" style={{ fontSize: `${s(12)}px` }}>
-                <p className="font-mono text-slate-300 flex items-center gap-2"><Mail size={s(12)} /> {displayData.email}</p>
-                <p className="font-mono text-slate-300 flex items-center gap-2"><Phone size={s(12)} /> {displayData.contact}</p>
+                <DraggableField id="email"><p className="font-mono text-slate-300 flex items-center gap-2"><Mail size={s(12)} /> {displayData.email}</p></DraggableField>
+                <DraggableField id="contact"><p className="font-mono text-slate-300 flex items-center gap-2"><Phone size={s(12)} /> {displayData.contact}</p></DraggableField>
+                <DraggableField id="location"><p className="font-mono text-slate-300 flex items-center gap-2"><MapPin size={s(12)} /> {displayData.location}</p></DraggableField>
               </div>
               <div className="text-right space-y-0.5" style={{ fontSize: `${s(12)}px` }}>
-                <p className="font-bold flex items-center justify-end gap-2" style={{ color: style.accentColor }}><Github size={s(12)} /> {displayData.github}</p>
-                <p className="text-slate-500" style={{ fontSize: `${s(10)}px` }}>{displayData.blog}</p>
+                <DraggableField id="github"><p className="font-bold flex items-center justify-end gap-2" style={{ color: style.accentColor }}><Github size={s(12)} /> {displayData.github}</p></DraggableField>
+                <DraggableField id="blog"><p className="text-slate-500" style={{ fontSize: `${s(10)}px` }}>{displayData.blog}</p></DraggableField>
               </div>
             </div>
             {renderQRCodeElement(isBack ? 'back' : 'front')}
@@ -493,28 +508,36 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="absolute -z-10 w-48 h-48 rounded-full blur-3xl opacity-30 -left-10 -bottom-10" style={{ backgroundColor: style.accentColor }} />
 
             <div className="space-y-1" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              <h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm mb-2">{displayData.name}</h2>
-              <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
-                {displayData.position}
-              </p>
+              <DraggableField id="name"><h2 className="text-3xl font-montserrat font-extrabold text-slate-800 drop-shadow-sm mb-2">{displayData.name}</h2></DraggableField>
+              <DraggableField id="position">
+                <p className="inline-block px-3 py-1 bg-white/40 rounded-full text-xs font-bold text-slate-600 border border-white/40 backdrop-blur-sm">
+                  {displayData.position}
+                </p>
+              </DraggableField>
             </div>
 
             <div className="bg-white/30 backdrop-blur-md p-4 rounded-xl border border-white/50 space-y-2" style={{ transform: `scale(${style.contentScale})` }}>
-               <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                 <Target size={12} className="inline mr-2 text-slate-500" />
-                 {displayData.goal}
-               </p>
+               <DraggableField id="goal">
+                 <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                   <Target size={12} className="inline mr-2 text-slate-500" />
+                   {displayData.goal}
+                 </p>
+               </DraggableField>
             </div>
 
             <div className="flex justify-between items-center font-bold text-slate-600" style={{ fontSize: `${s(11)}px` }}>
-              <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1"><Mail size={s(11)} /> {displayData.email.split('@')[0]}</span>
+              <div className="flex items-center gap-3 flex-wrap">
+                <DraggableField id="email"><span className="flex items-center gap-1"><Mail size={s(11)} /> {displayData.email.split('@')[0]}</span></DraggableField>
                 <span className="w-[1px] h-3 bg-slate-300/50" />
-                <span className="flex items-center gap-1"><Phone size={s(11)} /> {displayData.contact}</span>
+                <DraggableField id="contact"><span className="flex items-center gap-1"><Phone size={s(11)} /> {displayData.contact}</span></DraggableField>
+                <span className="w-[1px] h-3 bg-slate-300/50" />
+                <DraggableField id="location"><span className="flex items-center gap-1"><MapPin size={s(11)} /> {displayData.location}</span></DraggableField>
               </div>
-              <span className="flex items-center gap-1 hover:text-slate-900 transition-colors">
-                <Github size={s(11)} /> {displayData.github.replace('github.com/', '')} <ExternalLink size={s(10)} />
-              </span>
+              <DraggableField id="github">
+                <span className="flex items-center gap-1 hover:text-slate-900 transition-colors">
+                  <Github size={s(11)} /> {displayData.github.replace('github.com/', '')} <ExternalLink size={s(10)} />
+                </span>
+              </DraggableField>
             </div>
             {renderQRCodeElement(isBack ? 'back' : 'front')}
           </div>
@@ -533,27 +556,28 @@ const CardPreview: React.FC<CardPreviewProps> = ({ data, style, viewMode, onPosi
             <div className="flex-1 p-8 flex flex-col justify-between">
               <div className="flex justify-between items-start">
             <div style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'left top' }}>
-              <h2 className="text-4xl font-playfair text-slate-900 mb-2">{displayData.name}</h2>
-              <p className="text-xs tracking-[0.2em] font-bold text-slate-400 uppercase">{displayData.position}</p>
+              <DraggableField id="name"><h2 className="text-4xl font-playfair text-slate-900 mb-2">{displayData.name}</h2></DraggableField>
+              <DraggableField id="position"><p className="text-xs tracking-[0.2em] font-bold text-slate-400 uppercase">{displayData.position}</p></DraggableField>
             </div>
                 <div className="text-right" style={{ transform: `scale(${style.contentScale})`, transformOrigin: 'right top' }}>
                   <p className="text-[10px] font-mono text-slate-400 uppercase tracking-tighter">TAGLINE</p>
-                  <p className="text-xs font-bold text-slate-800" style={{ color: style.accentColor }}>{displayData.tagline}</p>
+                  <DraggableField id="tagline"><p className="text-xs font-bold text-slate-800" style={{ color: style.accentColor }}>{displayData.tagline}</p></DraggableField>
                 </div>
               </div>
 
               <div className="max-w-[85%] mt-4">
-                 <p className="leading-relaxed text-slate-600 font-medium" style={{ fontSize: `${s(11)}px` }}>{displayData.goal}</p>
+                 <DraggableField id="goal"><p className="leading-relaxed text-slate-600 font-medium" style={{ fontSize: `${s(11)}px` }}>{displayData.goal}</p></DraggableField>
               </div>
 
               <div className="flex items-center justify-between border-t border-slate-100 pt-6 mt-4">
                 <div className="space-y-1">
-                  <p className="font-bold flex items-center gap-2 text-slate-500 uppercase" style={{ fontSize: `${s(10)}px` }}><Phone size={s(12)} style={{ color: style.primaryColor }} /> {displayData.contact}</p>
-                  <p className="font-bold flex items-center gap-2 text-slate-500 uppercase" style={{ fontSize: `${s(10)}px` }}><Mail size={s(12)} style={{ color: style.primaryColor }} /> {displayData.email}</p>
+                  <DraggableField id="contact"><p className="font-bold flex items-center gap-2 text-slate-500 uppercase" style={{ fontSize: `${s(10)}px` }}><Phone size={s(12)} style={{ color: style.primaryColor }} /> {displayData.contact}</p></DraggableField>
+                  <DraggableField id="email"><p className="font-bold flex items-center gap-2 text-slate-500 uppercase" style={{ fontSize: `${s(10)}px` }}><Mail size={s(12)} style={{ color: style.primaryColor }} /> {displayData.email}</p></DraggableField>
                 </div>
                 <div className="space-y-1 text-right">
-                  <p className="font-mono font-medium text-slate-500 flex items-center justify-end gap-2" style={{ fontSize: `${s(10)}px` }}><Github size={s(12)} /> {displayData.github}</p>
-                  <p className="font-mono font-medium text-slate-500" style={{ fontSize: `${s(10)}px` }}>{displayData.blog}</p>
+                  <DraggableField id="github"><p className="font-mono font-medium text-slate-500 flex items-center justify-end gap-2" style={{ fontSize: `${s(10)}px` }}><Github size={s(12)} /> {displayData.github}</p></DraggableField>
+                  <DraggableField id="location"><p className="font-mono font-medium text-slate-500 flex items-center justify-end gap-2" style={{ fontSize: `${s(10)}px` }}><MapPin size={s(12)} /> {displayData.location}</p></DraggableField>
+                  <DraggableField id="blog"><p className="font-mono font-medium text-slate-500" style={{ fontSize: `${s(10)}px` }}>{displayData.blog}</p></DraggableField>
                 </div>
               </div>
             </div>
