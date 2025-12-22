@@ -1,1 +1,1 @@
-npm run sync-themes && git add types.ts components/themes/index.ts components/themes/Registry.tsx components/EditorPanel.tsx
+npm run sync-themes && git add types.ts components/themes/themes.generated.ts components/themes/Registry.tsx components/EditorPanel.tsx
