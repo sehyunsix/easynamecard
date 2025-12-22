@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { CardData, CardStyle, CardTheme, CardSize, CardElement } from '../types';
-import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as ImageIcon, Trash2, AlignLeft, AlignCenter, AlignRight, Bold, MapPin, Eye, EyeOff, Wand2, History, Save } from 'lucide-react';
+import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as ImageIcon, Trash2, AlignLeft, AlignCenter, AlignRight, Bold, MapPin, Eye, EyeOff, Wand2, History, Save, ChevronDown } from 'lucide-react';
 import { refineContent, suggestDesign, translateToEnglish } from '../services/geminiService';
 import CardPreview from './CardPreview';
+import CardThumbnail from './CardThumbnail';
 
 const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <div className="pt-2">
@@ -82,6 +83,8 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   const [isTranslating, setIsTranslating] = useState(false);
   const [profileName, setProfileName] = useState('');
   const [activeTab, setActiveTab] = useState<'info' | 'style' | 'back' | 'history'>('info');
+  const [themesPerPage, setThemesPerPage] = useState(20);
+  const [showAllThemes, setShowAllThemes] = useState(false);
 
   const handleTranslate = async () => {
     setIsTranslating(true);
@@ -1042,7 +1045,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
           <Section label="테마 선택">
             <div className="grid grid-cols-2 gap-4">
-              {themes.map((t) => (
+              {(showAllThemes ? themes : themes.slice(0, themesPerPage)).map((t) => (
                 <button
                   key={t.id}
                   onClick={() => updateStyleWithLayout(t.id)}
@@ -1050,7 +1053,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 >
                   <div className="w-full aspect-[1.75/1] bg-slate-50 rounded-xl overflow-hidden border border-slate-100 flex items-center justify-center pointer-events-none mb-1">
                     <div className="scale-[0.14] transform origin-center">
-                       <CardPreview
+                       <CardThumbnail
                           data={{
                             ...data,
                             name: 'NAME',
@@ -1074,8 +1077,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                             qrX: 85,
                             qrY: 20
                           }}
-                          viewMode="flip"
-                          onPositionChange={() => {}}
+                          side="front"
                        />
                     </div>
                   </div>
@@ -1086,6 +1088,23 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 </button>
               ))}
             </div>
+            {!showAllThemes && themes.length > themesPerPage && (
+              <button
+                onClick={() => setShowAllThemes(true)}
+                className="w-full mt-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2"
+              >
+                <ChevronDown size={16} />
+                {themes.length - themesPerPage}개 테마 더 보기
+              </button>
+            )}
+            {showAllThemes && (
+              <button
+                onClick={() => setShowAllThemes(false)}
+                className="w-full mt-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-sm transition-all"
+              >
+                접기
+              </button>
+            )}
           </Section>
 
           <Section label="콘텐츠 스케일 & QR 크기">

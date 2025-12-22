@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { CardData, CardStyle, CardElement } from './types';
 import EditorPanel from './components/EditorPanel';
 import CardPreview from './components/CardPreview';
+import CardThumbnail from './components/CardThumbnail';
 import { Sparkles, Printer, Download, Columns, LogIn, LogOut, User as UserIcon, Save, History, X, Trash2, QrCode } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { auth, googleProvider, db } from './firebase';
@@ -518,11 +519,10 @@ const App: React.FC = () => {
                       >
                         <div className="bg-slate-50 p-4 border-b border-slate-100 flex items-center justify-center min-h-[120px] overflow-hidden">
                           <div className="scale-[0.25] transform origin-center">
-                             <CardPreview
+                             <CardThumbnail
                                 data={card.data}
                                 style={card.style}
-                                viewMode="flip"
-                                onPositionChange={() => {}}
+                                side="front"
                              />
                           </div>
                         </div>
