@@ -6,7 +6,7 @@ import { Snowflake, Wind } from 'lucide-react';
 export const FrozenTundra: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#e0f2f1] text-[#006064] font-sans relative overflow-hidden border-[1px] border-white/50">
     <div className="absolute inset-0 bg-gradient-to-br from-white via-[#b2ebf2] to-[#80deea] opacity-50" />
-    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" 
+    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
          style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/pinstriped-suit.png")' }} />
     <div className="relative z-10 p-16 flex flex-col items-center justify-center text-center h-full space-y-8">
       <div className="w-20 h-20 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center border border-white/60 shadow-xl">

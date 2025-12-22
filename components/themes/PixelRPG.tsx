@@ -1,7 +1,7 @@
 // @label: 픽셀 RPG
 import React from 'react';
 import { ThemeComponent } from './ThemeTypes';
-import { Sword, Shield } from 'lucide-react';
+import { Sword, Shield, Heart } from 'lucide-react';
 
 export const PixelRPG: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#202020] text-white font-mono relative overflow-hidden border-[8px] border-[#404040]">

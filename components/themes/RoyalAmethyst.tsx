@@ -6,7 +6,7 @@ import { Crown, Sparkles } from 'lucide-react';
 export const RoyalAmethyst: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#2e1065] text-[#f5f3ff] font-serif relative overflow-hidden border-[2px] border-[#a78bfa]/30">
     <div className="absolute inset-0 bg-gradient-to-br from-[#4c1d95] via-[#2e1065] to-[#1e1b4b]" />
-    <div className="absolute inset-0 opacity-[0.05] pointer-events-none" 
+    <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
          style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/royal-line.png")' }} />
     <div className="relative z-10 p-16 flex flex-col items-center justify-between h-full text-center">
       <div className="flex flex-col items-center space-y-4">

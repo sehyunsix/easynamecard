@@ -8,7 +8,7 @@ export const DarkMatter: ThemeComponent = ({ displayData, style, renderDraggable
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#1e1b4b_0%,_#030014_70%)]" />
     <div className="absolute inset-0 opacity-20 pointer-events-none">
       {[...Array(15)].map((_, i) => (
-        <div key={i} className="absolute w-px h-px bg-white rounded-full animate-pulse" 
+        <div key={i} className="absolute w-px h-px bg-white rounded-full animate-pulse"
              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 3}s` }} />
       ))}
     </div>

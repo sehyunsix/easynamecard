@@ -5,7 +5,7 @@ import { Trees, Mountain } from 'lucide-react';
 
 export const DeepForest: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#0a1a0a] text-[#d4d4d8] font-serif relative overflow-hidden border-[15px] border-[#1a2e1a]">
-    <div className="absolute inset-0 opacity-20 pointer-events-none" 
+    <div className="absolute inset-0 opacity-20 pointer-events-none"
          style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/dark-wood.png")' }} />
     <div className="absolute bottom-[-10%] right-[-10%] opacity-10 text-emerald-900">
       <Trees size={400} />

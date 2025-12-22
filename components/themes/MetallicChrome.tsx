@@ -6,7 +6,7 @@ import { ShieldCheck, Activity } from 'lucide-react';
 export const MetallicChrome: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#1a1a1a] text-slate-300 font-mono relative overflow-hidden border-[1px] border-slate-700">
     <div className="absolute inset-0 bg-gradient-to-br from-slate-400/20 via-transparent to-slate-400/20" />
-    <div className="absolute inset-0 opacity-10 pointer-events-none" 
+    <div className="absolute inset-0 opacity-10 pointer-events-none"
          style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/brushed-alum.png")' }} />
     <div className="relative z-10 p-12 flex flex-col justify-between h-full">
       <div className="flex justify-between items-start border-b-2 border-slate-700 pb-6">
