@@ -5,7 +5,7 @@ import { Terminal, Cpu } from 'lucide-react';
 
 export const CyberGreen: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-black text-[#00ff00] font-mono relative overflow-hidden border-2 border-[#00ff00]/30">
-    <div className="absolute inset-0 opacity-20 pointer-events-none" 
+    <div className="absolute inset-0 opacity-20 pointer-events-none"
          style={{ backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px)', backgroundSize: '100% 3px' }} />
     <div className="relative z-10 p-10 flex flex-col justify-between h-full">
       <div className="space-y-4">

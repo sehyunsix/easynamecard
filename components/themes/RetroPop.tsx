@@ -5,7 +5,7 @@ import { Sparkles, Star } from 'lucide-react';
 
 export const RetroPop: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#ffeb3b] text-[#e91e63] font-black relative overflow-hidden border-[10px] border-[#2196f3]">
-    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" 
+    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
          style={{ backgroundImage: 'radial-gradient(#e91e63 2px, transparent 2px)', backgroundSize: '20px 20px' }} />
     <div className="relative z-10 p-8 flex flex-col justify-between h-full">
       <div className="space-y-2">

@@ -5,11 +5,11 @@ import { Ruler, Pencil } from 'lucide-react';
 
 export const BlueprintBlue: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#0a1f44] text-white/90 font-mono relative overflow-hidden border-2 border-white/20">
-    <div className="absolute inset-0 opacity-20 pointer-events-none" 
+    <div className="absolute inset-0 opacity-20 pointer-events-none"
          style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-    <div className="absolute inset-0 opacity-10 pointer-events-none" 
+    <div className="absolute inset-0 opacity-10 pointer-events-none"
          style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '8px 8px' }} />
-    
+
     <div className="relative z-10 p-12 flex flex-col justify-between h-full">
       <div className="border border-white/30 p-8 relative">
         <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-white" />

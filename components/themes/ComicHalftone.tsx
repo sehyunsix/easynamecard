@@ -5,7 +5,7 @@ import { Zap, MessageCircle } from 'lucide-react';
 
 export const ComicHalftone: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#facc15] text-black font-sans relative overflow-hidden border-8 border-black">
-    <div className="absolute inset-0 opacity-20 pointer-events-none" 
+    <div className="absolute inset-0 opacity-20 pointer-events-none"
          style={{ backgroundImage: 'radial-gradient(black 2px, transparent 0)', backgroundSize: '10px 10px' }} />
     <div className="relative z-10 p-8 h-full flex flex-col">
       <div className="flex-1 flex flex-col justify-center">
