@@ -15,7 +15,7 @@ export const CyberGreen: ThemeComponent = ({ displayData, style, renderDraggable
         </div>
         <div className="border-l-4 border-[#00ff00] pl-6 py-2">
           {renderDraggableField('name', <h2 className="text-6xl font-black uppercase tracking-widest drop-shadow-[0_0_10px_#00ff00] leading-none">{displayData.name}</h2>)}
-          {renderDraggableField('position', <p className="text-sm mt-2 opacity-70">>> {displayData.position.toUpperCase()}</p>)}
+          {renderDraggableField('position', <p className="text-sm mt-2 opacity-70">{`>> `}{displayData.position.toUpperCase()}</p>)}
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 text-[10px] bg-[#00ff00]/5 p-4 border border-[#00ff00]/20">
