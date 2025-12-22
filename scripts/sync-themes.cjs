@@ -12,7 +12,7 @@ function sync() {
     const componentName = f.replace('.tsx', '');
     const id = componentName.toLowerCase();
     const content = fs.readFileSync(path.join(THEMES_DIR, f), 'utf-8');
-    
+
     const labelMatch = content.match(/\/\/ @label:\s*(.+)/);
     let label = labelMatch ? labelMatch[1].trim() : componentName;
 
@@ -22,11 +22,11 @@ function sync() {
   themes.sort((a, b) => a.id.localeCompare(b.id));
 
   const imports = themes.map(t => `import { ${t.componentName} } from './${t.componentName}';`).join('\n');
-  
+
   const themeType = `export type CardTheme =\n  | ${themes.map(t => `'${t.id}'`).join('\n  | ')};`;
-  
+
   const themeMap = `export const themeMap: Record<string, any> = {\n${themes.map(t => `  '${t.id}': ${t.componentName},`).join('\n')}\n};`;
-  
+
   const themeMetadata = `export const themesMetadata: { id: CardTheme; label: string }[] = [\n${themes.map(t => `  { id: '${t.id}', label: '${t.label}' },`).join('\n')}\n];`;
 
   const fileContent = `// THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.
