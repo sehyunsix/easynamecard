@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-themes": "node scripts/sync-themes.cjs",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@google/genai": "^1.34.0",
@@ -20,6 +22,7 @@
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "husky": "^8.0.0"
   }
 }

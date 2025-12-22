@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardData, CardStyle } from '../types';
+import { CardData, CardStyle } from '../../types';
 
 export interface ThemeProps {
   data: CardData;
