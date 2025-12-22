@@ -57,8 +57,10 @@ import { CyberpunkRed } from './CyberpunkRed';
 import { CyberRed } from './CyberRed';
 import { Dark } from './Dark';
 import { DarkBotanical } from './DarkBotanical';
+import { DarkMatter } from './DarkMatter';
 import { DataFlow } from './DataFlow';
 import { DeepCrimson } from './DeepCrimson';
+import { DeepForest } from './DeepForest';
 import { DeepSeaPearl } from './DeepSeaPearl';
 import { Denim } from './Denim';
 import { DesertOasis } from './DesertOasis';
@@ -74,6 +76,7 @@ import { FloraBotanica } from './FloraBotanica';
 import { Forest } from './Forest';
 import { ForestCanopy } from './ForestCanopy';
 import { FrostedMint } from './FrostedMint';
+import { FrozenTundra } from './FrozenTundra';
 import { Futuristic } from './Futuristic';
 import { FuturisticGlass } from './FuturisticGlass';
 import { FuturisticWhite } from './FuturisticWhite';
@@ -117,6 +120,7 @@ import { Marble } from './Marble';
 import { MarbleObsidian } from './MarbleObsidian';
 import { Matrix } from './Matrix';
 import { Medal } from './Medal';
+import { MetallicChrome } from './MetallicChrome';
 import { MetalSteel } from './MetalSteel';
 import { Midnight } from './Midnight';
 import { MidnightConstellation } from './MidnightConstellation';
@@ -144,6 +148,7 @@ import { Newspaper } from './Newspaper';
 import { NewspaperClassic } from './NewspaperClassic';
 import { Note } from './Note';
 import { Ocean } from './Ocean';
+import { OldMap } from './OldMap';
 import { OldNewspaper } from './OldNewspaper';
 import { Organic } from './Organic';
 import { OrganicClay } from './OrganicClay';
@@ -155,6 +160,7 @@ import { Pastel } from './Pastel';
 import { PastelDreams } from './PastelDreams';
 import { PastelSoftGlow } from './PastelSoftGlow';
 import { Patchwork } from './Patchwork';
+import { PeachyKeen } from './PeachyKeen';
 import { Pixel } from './Pixel';
 import { PixelAdventure } from './PixelAdventure';
 import { Pixelart } from './Pixelart';
@@ -163,6 +169,7 @@ import { PixelRPG } from './PixelRPG';
 import { Poker } from './Poker';
 import { Polaroid } from './Polaroid';
 import { Pop } from './Pop';
+import { PopArtGeometric } from './PopArtGeometric';
 import { PopRetro } from './PopRetro';
 import { PopVibrant } from './PopVibrant';
 import { PrismShard } from './PrismShard';
@@ -176,6 +183,7 @@ import { RetroFuture } from './RetroFuture';
 import { RetroPop } from './RetroPop';
 import { RetroTerminal } from './RetroTerminal';
 import { Royal } from './Royal';
+import { RoyalAmethyst } from './RoyalAmethyst';
 import { Rust } from './Rust';
 import { Safari } from './Safari';
 import { Scroll } from './Scroll';
@@ -185,6 +193,7 @@ import { SketchCharcoalPro } from './SketchCharcoalPro';
 import { Slate } from './Slate';
 import { Soft } from './Soft';
 import { SoftPastel } from './SoftPastel';
+import { SolarFlare } from './SolarFlare';
 import { Space } from './Space';
 import { Stainedglass } from './Stainedglass';
 import { Stamp } from './Stamp';
@@ -192,6 +201,7 @@ import { Stark } from './Stark';
 import { SteelPlate } from './SteelPlate';
 import { Sticker } from './Sticker';
 import { StuccoWhite } from './StuccoWhite';
+import { SunsetBoulevard } from './SunsetBoulevard';
 import { Swiss } from './Swiss';
 import { Tech } from './Tech';
 import { TechBlueprint } from './TechBlueprint';
@@ -279,8 +289,10 @@ export type CardTheme =
   | 'cyberred'
   | 'dark'
   | 'darkbotanical'
+  | 'darkmatter'
   | 'dataflow'
   | 'deepcrimson'
+  | 'deepforest'
   | 'deepseapearl'
   | 'denim'
   | 'desertoasis'
@@ -296,6 +308,7 @@ export type CardTheme =
   | 'forest'
   | 'forestcanopy'
   | 'frostedmint'
+  | 'frozentundra'
   | 'futuristic'
   | 'futuristicglass'
   | 'futuristicwhite'
@@ -339,6 +352,7 @@ export type CardTheme =
   | 'marbleobsidian'
   | 'matrix'
   | 'medal'
+  | 'metallicchrome'
   | 'metalsteel'
   | 'midnight'
   | 'midnightconstellation'
@@ -366,6 +380,7 @@ export type CardTheme =
   | 'newspaperclassic'
   | 'note'
   | 'ocean'
+  | 'oldmap'
   | 'oldnewspaper'
   | 'organic'
   | 'organicclay'
@@ -377,6 +392,7 @@ export type CardTheme =
   | 'pasteldreams'
   | 'pastelsoftglow'
   | 'patchwork'
+  | 'peachykeen'
   | 'pixel'
   | 'pixeladventure'
   | 'pixelart'
@@ -385,6 +401,7 @@ export type CardTheme =
   | 'poker'
   | 'polaroid'
   | 'pop'
+  | 'popartgeometric'
   | 'popretro'
   | 'popvibrant'
   | 'prismshard'
@@ -398,6 +415,7 @@ export type CardTheme =
   | 'retropop'
   | 'retroterminal'
   | 'royal'
+  | 'royalamethyst'
   | 'rust'
   | 'safari'
   | 'scroll'
@@ -407,6 +425,7 @@ export type CardTheme =
   | 'slate'
   | 'soft'
   | 'softpastel'
+  | 'solarflare'
   | 'space'
   | 'stainedglass'
   | 'stamp'
@@ -414,6 +433,7 @@ export type CardTheme =
   | 'steelplate'
   | 'sticker'
   | 'stuccowhite'
+  | 'sunsetboulevard'
   | 'swiss'
   | 'tech'
   | 'techblueprint'
@@ -501,8 +521,10 @@ export const themeMap: Record<string, any> = {
   'cyberred': CyberRed,
   'dark': Dark,
   'darkbotanical': DarkBotanical,
+  'darkmatter': DarkMatter,
   'dataflow': DataFlow,
   'deepcrimson': DeepCrimson,
+  'deepforest': DeepForest,
   'deepseapearl': DeepSeaPearl,
   'denim': Denim,
   'desertoasis': DesertOasis,
@@ -518,6 +540,7 @@ export const themeMap: Record<string, any> = {
   'forest': Forest,
   'forestcanopy': ForestCanopy,
   'frostedmint': FrostedMint,
+  'frozentundra': FrozenTundra,
   'futuristic': Futuristic,
   'futuristicglass': FuturisticGlass,
   'futuristicwhite': FuturisticWhite,
@@ -561,6 +584,7 @@ export const themeMap: Record<string, any> = {
   'marbleobsidian': MarbleObsidian,
   'matrix': Matrix,
   'medal': Medal,
+  'metallicchrome': MetallicChrome,
   'metalsteel': MetalSteel,
   'midnight': Midnight,
   'midnightconstellation': MidnightConstellation,
@@ -588,6 +612,7 @@ export const themeMap: Record<string, any> = {
   'newspaperclassic': NewspaperClassic,
   'note': Note,
   'ocean': Ocean,
+  'oldmap': OldMap,
   'oldnewspaper': OldNewspaper,
   'organic': Organic,
   'organicclay': OrganicClay,
@@ -599,6 +624,7 @@ export const themeMap: Record<string, any> = {
   'pasteldreams': PastelDreams,
   'pastelsoftglow': PastelSoftGlow,
   'patchwork': Patchwork,
+  'peachykeen': PeachyKeen,
   'pixel': Pixel,
   'pixeladventure': PixelAdventure,
   'pixelart': Pixelart,
@@ -607,6 +633,7 @@ export const themeMap: Record<string, any> = {
   'poker': Poker,
   'polaroid': Polaroid,
   'pop': Pop,
+  'popartgeometric': PopArtGeometric,
   'popretro': PopRetro,
   'popvibrant': PopVibrant,
   'prismshard': PrismShard,
@@ -620,6 +647,7 @@ export const themeMap: Record<string, any> = {
   'retropop': RetroPop,
   'retroterminal': RetroTerminal,
   'royal': Royal,
+  'royalamethyst': RoyalAmethyst,
   'rust': Rust,
   'safari': Safari,
   'scroll': Scroll,
@@ -629,6 +657,7 @@ export const themeMap: Record<string, any> = {
   'slate': Slate,
   'soft': Soft,
   'softpastel': SoftPastel,
+  'solarflare': SolarFlare,
   'space': Space,
   'stainedglass': Stainedglass,
   'stamp': Stamp,
@@ -636,6 +665,7 @@ export const themeMap: Record<string, any> = {
   'steelplate': SteelPlate,
   'sticker': Sticker,
   'stuccowhite': StuccoWhite,
+  'sunsetboulevard': SunsetBoulevard,
   'swiss': Swiss,
   'tech': Tech,
   'techblueprint': TechBlueprint,
@@ -724,8 +754,10 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'cyberred', label: '사이버 레드' },
   { id: 'dark', label: 'Dark' },
   { id: 'darkbotanical', label: 'DarkBotanical' },
+  { id: 'darkmatter', label: '다크 매터' },
   { id: 'dataflow', label: 'DataFlow' },
   { id: 'deepcrimson', label: 'DeepCrimson' },
+  { id: 'deepforest', label: '딥 포레스트' },
   { id: 'deepseapearl', label: 'DeepSeaPearl' },
   { id: 'denim', label: 'Denim' },
   { id: 'desertoasis', label: 'DesertOasis' },
@@ -741,6 +773,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'forest', label: 'Forest' },
   { id: 'forestcanopy', label: 'ForestCanopy' },
   { id: 'frostedmint', label: 'FrostedMint' },
+  { id: 'frozentundra', label: '프로즌 툰드라' },
   { id: 'futuristic', label: 'Futuristic' },
   { id: 'futuristicglass', label: 'FuturisticGlass' },
   { id: 'futuristicwhite', label: 'FuturisticWhite' },
@@ -784,6 +817,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'marbleobsidian', label: 'MarbleObsidian' },
   { id: 'matrix', label: 'Matrix' },
   { id: 'medal', label: 'Medal' },
+  { id: 'metallicchrome', label: '메탈릭 크롬' },
   { id: 'metalsteel', label: 'MetalSteel' },
   { id: 'midnight', label: 'Midnight' },
   { id: 'midnightconstellation', label: 'MidnightConstellation' },
@@ -811,6 +845,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'newspaperclassic', label: 'NewspaperClassic' },
   { id: 'note', label: 'Note' },
   { id: 'ocean', label: 'Ocean' },
+  { id: 'oldmap', label: '고지도' },
   { id: 'oldnewspaper', label: '옛날 신문' },
   { id: 'organic', label: 'Organic' },
   { id: 'organicclay', label: '오가닉 클레이' },
@@ -822,6 +857,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'pasteldreams', label: 'PastelDreams' },
   { id: 'pastelsoftglow', label: 'PastelSoftGlow' },
   { id: 'patchwork', label: 'Patchwork' },
+  { id: 'peachykeen', label: '피치 킨' },
   { id: 'pixel', label: 'Pixel' },
   { id: 'pixeladventure', label: 'PixelAdventure' },
   { id: 'pixelart', label: 'Pixelart' },
@@ -830,6 +866,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'poker', label: 'Poker' },
   { id: 'polaroid', label: 'Polaroid' },
   { id: 'pop', label: 'Pop' },
+  { id: 'popartgeometric', label: '팝아트 지오메트릭' },
   { id: 'popretro', label: 'PopRetro' },
   { id: 'popvibrant', label: 'PopVibrant' },
   { id: 'prismshard', label: 'PrismShard' },
@@ -843,6 +880,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'retropop', label: '레트로 팝' },
   { id: 'retroterminal', label: 'RetroTerminal' },
   { id: 'royal', label: 'Royal' },
+  { id: 'royalamethyst', label: '로열 애머시스트' },
   { id: 'rust', label: 'Rust' },
   { id: 'safari', label: 'Safari' },
   { id: 'scroll', label: 'Scroll' },
@@ -852,6 +890,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'slate', label: 'Slate' },
   { id: 'soft', label: 'Soft' },
   { id: 'softpastel', label: '소프트 파스텔' },
+  { id: 'solarflare', label: '솔라 플레어' },
   { id: 'space', label: 'Space' },
   { id: 'stainedglass', label: 'Stainedglass' },
   { id: 'stamp', label: 'Stamp' },
@@ -859,6 +898,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'steelplate', label: 'SteelPlate' },
   { id: 'sticker', label: 'Sticker' },
   { id: 'stuccowhite', label: 'StuccoWhite' },
+  { id: 'sunsetboulevard', label: '선셋 불러바드' },
   { id: 'swiss', label: 'Swiss' },
   { id: 'tech', label: 'Tech' },
   { id: 'techblueprint', label: 'TechBlueprint' },
