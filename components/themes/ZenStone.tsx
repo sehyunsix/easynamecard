@@ -5,7 +5,7 @@ import { Circle } from 'lucide-react';
 
 export const ZenStone: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#e5e7eb] text-[#374151] font-serif relative overflow-hidden">
-    <div className="absolute inset-0 opacity-20 pointer-events-none" 
+    <div className="absolute inset-0 opacity-20 pointer-events-none"
          style={{ backgroundImage: 'radial-gradient(#9ca3af 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
     <div className="relative z-10 p-16 flex flex-col items-center justify-between h-full text-center">
       <div className="w-24 h-24 bg-[#d1d5db] rounded-full shadow-inner flex items-center justify-center relative overflow-hidden">

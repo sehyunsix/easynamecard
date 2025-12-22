@@ -5,6 +5,7 @@ import { Github, Globe, Mail, Phone, Sparkles, Loader2, QrCode, Type, Image as I
 import { refineContent, suggestDesign, translateToEnglish } from '../services/geminiService';
 import CardPreview from './CardPreview';
 import CardThumbnail from './CardThumbnail';
+import { themesMetadata } from './themes/themes.generated';
 
 const Section: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <div className="pt-2">
@@ -159,9 +160,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
       }
     };
 
-    // If image, we might want to prompt upload immediately, but for now just placeholder
-    // Or we can reuse the file upload logic if we want
-
     updateData('customElements', [...data.customElements, newElement]);
     onSelectElement(newElement.id);
   };
@@ -170,7 +168,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     const updatedElements = data.customElements.map(el => {
       if (el.id !== id) return el;
 
-      // Check if updates are for style or top-level properties
       const styleUpdates: any = {};
       const propUpdates: any = {};
 
@@ -202,238 +199,15 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
   const handleRefine = async (type: 'goal' | 'goalEn') => {
     setLoading(type);
-    // If we're refining/generating the English goal, use the Korean goal as the source for translation
     const sourceContent = type === 'goalEn' ? data.goal : (data[type as keyof CardData] as string || '');
     const result = await refineContent(type, sourceContent, data.positionEn || data.position);
     updateData(type, result);
     setLoading(null);
   };
 
-  const themes: { id: CardTheme; label: string }[] = [
-    { id: 'abstractpaint', label: 'AbstractPaint' },
-    { id: 'abstractwave', label: '앱스트랙트 웨이브' },
-    { id: 'actionpanel', label: '액션 패널' },
-    { id: 'agedscroll', label: '고대 양피지' },
-    { id: 'architect', label: '아키텍트' },
-    { id: 'architectmonochrome', label: 'ArchitectMonochrome' },
-    { id: 'arcticwhite', label: 'ArcticWhite' },
-    { id: 'artdeco', label: '아르데코' },
-    { id: 'artdecogold', label: '아르데코 골드' },
-    { id: 'auroraborealis', label: 'AuroraBorealis' },
-    { id: 'auroranight', label: '오로라 나이트' },
-    { id: 'bamboo', label: '대나무' },
-    { id: 'bauhaus', label: '바우하우스' },
-    { id: 'bento', label: '벤토' },
-    { id: 'bentocleancut', label: 'BentoCleanCut' },
-    { id: 'blueprint', label: '블루프린트' },
-    { id: 'blueprintblue', label: '블루프린트 블루' },
-    { id: 'blueprintred', label: 'BlueprintRed' },
-    { id: 'blueprintwhite', label: 'BlueprintWhite' },
-    { id: 'bold', label: '볼드' },
-    { id: 'botanical', label: '보타니컬' },
-    { id: 'botanicalart', label: 'BotanicalArt' },
-    { id: 'brutalist', label: '브루탈리스트' },
-    { id: 'brutalistcolor', label: 'BrutalistColor' },
-    { id: 'brutalistraw', label: 'BrutalistRaw' },
-    { id: 'candy', label: '캔디' },
-    { id: 'candypop', label: '캔디 팝' },
-    { id: 'carbon', label: '카본' },
-    { id: 'carbonsport', label: '카본 스포츠' },
-    { id: 'cardboard', label: '카드보드' },
-    { id: 'cassette', label: '카세트' },
-    { id: 'celestialgold', label: 'CelestialGold' },
-    { id: 'certificate', label: '상장' },
-    { id: 'chalk', label: '초크' },
-    { id: 'charcoalsketch', label: 'CharcoalSketch' },
-    { id: 'chess', label: '체스' },
-    { id: 'circuit', label: '회로' },
-    { id: 'classic', label: '클래식' },
-    { id: 'clay', label: '클레이' },
-    { id: 'comic', label: '코믹' },
-    { id: 'comicaction', label: 'ComicAction' },
-    { id: 'comichalftone', label: '코믹 할프톤' },
-    { id: 'concrete', label: '콘크리트' },
-    { id: 'copperplate', label: 'CopperPlate' },
-    { id: 'cork', label: '코르크' },
-    { id: 'cosmicdust', label: '코스믹 더스트' },
-    { id: 'creative', label: '크리에이티브' },
-    { id: 'creativecollage', label: 'CreativeCollage' },
-    { id: 'cyanotype', label: '청사진' },
-    { id: 'cyber', label: '사이버' },
-    { id: 'cybergreen', label: '사이버 그린' },
-    { id: 'cybergrid', label: 'CyberGrid' },
-    { id: 'cyberpulse', label: 'CyberPulse' },
-    { id: 'cyberpunkred', label: 'CyberpunkRed' },
-    { id: 'cyberred', label: '사이버 레드' },
-    { id: 'dark', label: '다크' },
-    { id: 'darkbotanical', label: 'DarkBotanical' },
-    { id: 'dataflow', label: '데이터 플로우' },
-    { id: 'deepcrimson', label: 'DeepCrimson' },
-    { id: 'deepseapearl', label: 'DeepSeaPearl' },
-    { id: 'denim', label: '데님' },
-    { id: 'desertoasis', label: 'DesertOasis' },
-    { id: 'desertsand', label: 'DesertSand' },
-    { id: 'diamond', label: '다이아몬드' },
-    { id: 'eco', label: '에코' },
-    { id: 'ecofriendly', label: 'EcoFriendly' },
-    { id: 'electricblue', label: 'ElectricBlue' },
-    { id: 'elegant', label: '엘레강트' },
-    { id: 'elegantdamask', label: 'ElegantDamask' },
-    { id: 'embroidery', label: '자수' },
-    { id: 'florabotanica', label: '플로라 보타니카' },
-    { id: 'forest', label: '포레스트' },
-    { id: 'forestcanopy', label: 'ForestCanopy' },
-    { id: 'frostedmint', label: 'FrostedMint' },
-    { id: 'futuristic', label: '퓨처리스틱' },
-    { id: 'futuristicglass', label: 'FuturisticGlass' },
-    { id: 'futuristicwhite', label: 'FuturisticWhite' },
-    { id: 'gameboy', label: '게임보이' },
-    { id: 'gazette', label: '가제트' },
-    { id: 'geometric', label: '지오메트릭' },
-    { id: 'geometricvivid', label: 'GeometricVivid' },
-    { id: 'glamgold', label: 'GlamGold' },
-    { id: 'glasscard', label: '글래스 카드' },
-    { id: 'glassmorphism', label: '글래스모피즘' },
-    { id: 'glitch', label: '글리치' },
-    { id: 'glowsign', label: '글로우 사인' },
-    { id: 'goldenluxury', label: '골든 럭셔리' },
-    { id: 'goldleaf', label: '금박' },
-    { id: 'gothic', label: '고딕' },
-    { id: 'gradient', label: '그라디언트' },
-    { id: 'graffiti', label: '그래피티' },
-    { id: 'graphpaper', label: '그래프 용지' },
-    { id: 'holographic', label: '홀로그래픽' },
-    { id: 'honey', label: '허니' },
-    { id: 'ice', label: '아이스' },
-    { id: 'indigodye', label: 'IndigoDye' },
-    { id: 'industrial', label: '인더스트리얼' },
-    { id: 'industrialrust', label: '인더스트리얼 러스트' },
-    { id: 'inksplatter', label: '잉크 스플래터' },
-    { id: 'inkwash', label: 'InkWash' },
-    { id: 'junglevibe', label: '정글 바이브' },
-    { id: 'kawaiipastel', label: '카와이 파스텔' },
-    { id: 'lava', label: '라바' },
-    { id: 'leather', label: '가죽' },
-    { id: 'liquidgold', label: 'LiquidGold' },
-    { id: 'luxury', label: '럭셔리' },
-    { id: 'luxuryblack', label: '럭셔리 블랙' },
-    { id: 'luxurymarble', label: 'LuxuryMarble' },
-    { id: 'luxuryvelvetgold', label: 'LuxuryVelvetGold' },
-    { id: 'magazine', label: '매거진' },
-    { id: 'magical', label: '매지컬' },
-    { id: 'manga', label: '만화' },
-    { id: 'map', label: '지도' },
-    { id: 'marble', label: '마블' },
-    { id: 'marbleobsidian', label: 'MarbleObsidian' },
-    { id: 'matrix', label: '매트릭스' },
-    { id: 'medal', label: '메달' },
-    { id: 'metalsteel', label: 'MetalSteel' },
-    { id: 'midnight', label: '미드나잇' },
-    { id: 'midnightconstellation', label: 'MidnightConstellation' },
-    { id: 'minimal', label: '미니멀' },
-    { id: 'minimalblack', label: '미니멀블랙' },
-    { id: 'minimalistdarkred', label: 'MinimalistDarkRed' },
-    { id: 'minimalistline', label: '미니멀리스트 라인' },
-    { id: 'minimalistteal', label: 'MinimalistTeal' },
-    { id: 'minimalistwarm', label: 'MinimalistWarm' },
-    { id: 'minimalistzenstone', label: 'MinimalistZenStone' },
-    { id: 'modern', label: '모던' },
-    { id: 'modernartdeco', label: 'ModernArtDeco' },
-    { id: 'modernbauhaus', label: '모던 바우하우스' },
-    { id: 'modernbrutalist', label: '모던 브루탈리스트' },
-    { id: 'modernscandi', label: 'ModernScandi' },
-    { id: 'monochromebold', label: 'MonochromeBold' },
-    { id: 'mosaic', label: '모자이크' },
-    { id: 'nebula', label: '네뷸라' },
-    { id: 'neon', label: '네온' },
-    { id: 'neoncity', label: '네온 시티' },
-    { id: 'neoncyberpulse', label: 'NeonCyberPulse' },
-    { id: 'neondreams', label: '네온 드림' },
-    { id: 'neonvibe', label: 'NeonVibe' },
-    { id: 'newspaper', label: '신문' },
-    { id: 'newspaperclassic', label: 'NewspaperClassic' },
-    { id: 'note', label: '노트' },
-    { id: 'ocean', label: '오션' },
-    { id: 'oldnewspaper', label: '옛날 신문' },
-    { id: 'organic', label: '오가닉' },
-    { id: 'organicclay', label: '오가닉 클레이' },
-    { id: 'organicterra', label: 'OrganicTerra' },
-    { id: 'origami', label: '오리가미' },
-    { id: 'paper', label: '페이퍼' },
-    { id: 'passport', label: '여권' },
-    { id: 'pastel', label: '파스텔' },
-    { id: 'pasteldreams', label: 'PastelDreams' },
-    { id: 'pastelsoftglow', label: 'PastelSoftGlow' },
-    { id: 'patchwork', label: '패치워크' },
-    { id: 'pixel', label: '픽셀' },
-    { id: 'pixeladventure', label: 'PixelAdventure' },
-    { id: 'pixelart', label: '픽셀아트' },
-    { id: 'pixelcity', label: 'PixelCity' },
-    { id: 'pixelrpg', label: '픽셀 RPG' },
-    { id: 'poker', label: '포커' },
-    { id: 'polaroid', label: '폴라로이드' },
-    { id: 'pop', label: '팝' },
-    { id: 'popretro', label: 'PopRetro' },
-    { id: 'popvibrant', label: 'PopVibrant' },
-    { id: 'prismshard', label: '프리즘 샤드' },
-    { id: 'professional', label: '프로페셔널' },
-    { id: 'professionalnavy', label: 'ProfessionalNavy' },
-    { id: 'quietzen', label: '고요한 젠' },
-    { id: 'receipt', label: '영수증' },
-    { id: 'retro', label: '레트로' },
-    { id: 'retrocassettetape', label: 'RetroCassetteTape' },
-    { id: 'retrofuture', label: 'RetroFuture' },
-    { id: 'retropop', label: '레트로 팝' },
-    { id: 'retroterminal', label: 'RetroTerminal' },
-    { id: 'royal', label: '로열' },
-    { id: 'rust', label: '러스트' },
-    { id: 'safari', label: '사파리' },
-    { id: 'scroll', label: '스크롤' },
-    { id: 'sketch', label: '스케치' },
-    { id: 'sketchbook', label: '스케치북' },
-    { id: 'sketchcharcoalpro', label: 'SketchCharcoalPro' },
-    { id: 'slate', label: '슬레이트' },
-    { id: 'soft', label: '소프트' },
-    { id: 'softpastel', label: '소프트 파스텔' },
-    { id: 'space', label: '스페이스' },
-    { id: 'stainedglass', label: '스테인드글라스' },
-    { id: 'stamp', label: '우표' },
-    { id: 'stark', label: '스타크' },
-    { id: 'steelplate', label: '스틸 플레이트' },
-    { id: 'sticker', label: '스티커' },
-    { id: 'stuccowhite', label: 'StuccoWhite' },
-    { id: 'swiss', label: '스위스' },
-    { id: 'tech', label: '테크' },
-    { id: 'techblueprint', label: 'TechBlueprint' },
-    { id: 'techgridblue', label: 'TechGridBlue' },
-    { id: 'techno', label: '테크노' },
-    { id: 'terminal80s', label: '80년대 터미널' },
-    { id: 'terrazzo', label: '테라조' },
-    { id: 'ticket', label: '티켓' },
-    { id: 'typewriter', label: '타자기' },
-    { id: 'urbanindustrial', label: 'UrbanIndustrial' },
-    { id: 'vaporwave', label: '베이퍼웨이브' },
-    { id: 'velvet', label: '벨벳' },
-    { id: 'vhs', label: 'VHS' },
-    { id: 'vibrantblob', label: 'VibrantBlob' },
-    { id: 'vintage', label: '빈티지' },
-    { id: 'vintagenewspaperads', label: 'VintageNewspaperAds' },
-    { id: 'vintagetravel', label: 'VintageTravel' },
-    { id: 'vintagetypewriterink', label: 'VintageTypewriterInk' },
-    { id: 'vinyl', label: '바이닐' },
-    { id: 'volcanicash', label: 'VolcanicAsh' },
-    { id: 'warmwoodgrain', label: 'WarmWoodGrain' },
-    { id: 'washi', label: '와시' },
-    { id: 'watercolor', label: '수채화' },
-    { id: 'whitemarble', label: '화이트 마블' },
-    { id: 'wood', label: '우드' },
-    { id: 'woodebony', label: 'WoodEbony' },
-    { id: 'zen', label: '젠' },
-    { id: 'zenstone', label: '젠 스톤' },
-  ];
+  const themes = themesMetadata;
 
   const updateStyleWithLayout = (theme: CardTheme) => {
-    // Define default positions for each theme to "naturally align" elements
     const defaultPositions: Record<string, { x: number; y: number; visible: boolean }> = {
       name: { x: 0, y: 0, visible: true },
       position: { x: 0, y: 0, visible: true },
@@ -445,7 +219,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
       goal: { x: 0, y: 0, visible: true },
     };
 
-    // Reset offsets when changing themes to allow the theme's natural layout to take over
     const newFieldSettings = { ...data.fieldSettings };
     Object.keys(defaultPositions).forEach(field => {
       newFieldSettings[field] = {
@@ -526,18 +299,14 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                                     <div
                                       className={`relative transition-all duration-500 w-[504px] h-[288px] rounded-md shadow-sm overflow-hidden bg-white`}
                                     >
-                                      {/* Simplified Actual Preview */}
                                       <div className="w-full h-full pointer-events-none">
                                         {(() => {
-                                          // We can't easily import CardPreview here due to circular dependency or complexity
-                                          // but we can at least reflect the theme's colors and basic structure
                                           const primaryColor = card.style.primaryColor;
                                           const accentColor = card.style.accentColor;
                                           const theme = card.style.theme;
 
                                           return (
                                             <div className="w-full h-full relative">
-                                              {/* Theme-specific background highlights */}
                                               {theme === 'modern' && <div className="h-2 w-full flex"><div className="flex-1" style={{backgroundColor: primaryColor}}/><div className="flex-1" style={{backgroundColor: accentColor}}/></div>}
                                               {theme === 'minimal' && <div className="absolute right-0 top-0 bottom-0 w-1.5" style={{backgroundColor: primaryColor}}/>}
                                               {theme === 'professional' && <div className="absolute left-0 top-0 bottom-0 w-4" style={{backgroundColor: primaryColor}}/>}
@@ -596,7 +365,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
         <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-300">
           <Section label="내 프로필 관리">
              <div className="space-y-3">
-                {/* Profile Save Input */}
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -617,7 +385,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                   </button>
                 </div>
 
-                {/* Profile List */}
                 {userProfiles.length > 0 && (
                   <div className="flex flex-wrap gap-2 pt-2">
                     {userProfiles.map((profile) => (
@@ -1195,7 +962,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
           <Section label="색상 설정">
             <div className="space-y-4">
-              {/* Color Presets */}
               <div>
                 <label className="text-[10px] font-bold text-slate-400 mb-2 block uppercase">추천 색상 조합</label>
                 <div className="grid grid-cols-3 gap-2">
@@ -1222,7 +988,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 </div>
               </div>
 
-              {/* Custom Color Pickers */}
               <div className="flex gap-4 pt-2 border-t border-slate-100">
               <div className="flex-1">
                   <label className="text-[10px] font-bold text-slate-400 mb-1 block uppercase">직접 선택 (주요)</label>

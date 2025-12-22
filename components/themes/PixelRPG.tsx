@@ -6,7 +6,7 @@ import { Sword, Shield } from 'lucide-react';
 export const PixelRPG: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#202020] text-white font-mono relative overflow-hidden border-[8px] border-[#404040]">
     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pixel-weave.png')] opacity-10 pointer-events-none" />
-    
+
     <div className="relative z-10 p-8 flex flex-col h-full uppercase tracking-tighter">
       <div className="flex justify-between items-start mb-8 border-b-4 border-[#404040] pb-4">
         <div className="space-y-1">
@@ -20,13 +20,13 @@ export const PixelRPG: ThemeComponent = ({ displayData, style, renderDraggableFi
           <Heart size={32} fill="currentColor" />
         </div>
       </div>
-      
+
       <div className="flex-1 space-y-4">
         <div className="bg-[#101010] border-4 border-[#404040] p-4 relative">
           <div className="absolute -top-3 left-4 bg-[#202020] px-2 text-[10px] font-black text-yellow-400 border-2 border-[#404040]">CLASS_INFO</div>
           {renderDraggableField('position', <p className="text-xl font-black text-blue-400">{displayData.position}</p>)}
         </div>
-        
+
         <div className="bg-[#101010] border-4 border-[#404040] p-4 relative">
           <div className="absolute -top-3 left-4 bg-[#202020] px-2 text-[10px] font-black text-yellow-400 border-2 border-[#404040]">CONTACT_DATA</div>
           <div className="grid grid-cols-1 gap-1 text-[11px] font-bold">
@@ -35,7 +35,7 @@ export const PixelRPG: ThemeComponent = ({ displayData, style, renderDraggableFi
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-between items-end mt-4">
         <div className="flex gap-1">
           {[...Array(5)].map((_, i) => <div key={i} className="w-4 h-4 bg-yellow-400 border-2 border-black" />)}

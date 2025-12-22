@@ -8,7 +8,7 @@ export const ModernBrutalist: ThemeComponent = ({ displayData, style, renderDrag
     <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/concrete-wall.png')]" />
     <div className="absolute top-[10%] right-[10%] w-32 h-32 bg-red-600 rotate-12 -z-0" />
     <div className="absolute bottom-[-5%] left-[20%] w-48 h-12 bg-blue-600 -rotate-6 -z-0" />
-    
+
     <div className="relative z-10 p-12 flex flex-col justify-between h-full">
       <div className="space-y-0">
         {renderDraggableField('name', <h2 className="text-8xl font-black uppercase tracking-tighter leading-[0.75] mb-6">{displayData.name}</h2>)}

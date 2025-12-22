@@ -5,7 +5,7 @@ import { Zap, AlertTriangle } from 'lucide-react';
 
 export const CyberRed: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#0a0000] text-[#ff0000] font-mono relative overflow-hidden border-4 border-[#ff0000]/20">
-    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" 
+    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
          style={{ backgroundImage: 'linear-gradient(rgba(255, 0, 0, 0.2) 1px, transparent 1px)', backgroundSize: '100% 4px' }} />
     <div className="relative z-10 p-10 flex flex-col justify-between h-full">
       <div className="flex justify-between items-start">

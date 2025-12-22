@@ -9,7 +9,7 @@ export const IndustrialRust: ThemeComponent = ({ displayData, style, renderDragg
     <div className="absolute top-4 left-4 opacity-10">
       <Settings size={200} className="animate-spin-slow" />
     </div>
-    
+
     <div className="relative z-10 p-12 flex flex-col justify-between h-full">
       <div className="space-y-4">
         <div className="flex items-center gap-3">
@@ -19,7 +19,7 @@ export const IndustrialRust: ThemeComponent = ({ displayData, style, renderDragg
         {renderDraggableField('name', <h2 className="text-7xl font-black uppercase italic tracking-tighter text-[#e2e2e2] drop-shadow-[0_4px_0_#d48d5d] leading-none">{displayData.name}</h2>)}
         {renderDraggableField('position', <p className="text-lg font-bold bg-[#d48d5d] text-[#1a1a1a] px-4 py-1 inline-block uppercase italic">{displayData.position}</p>)}
       </div>
-      
+
       <div className="grid grid-cols-2 gap-12 text-[10px] font-black uppercase border-t-2 border-[#d48d5d]/20 pt-8">
         <div className="space-y-3">
           {renderDraggableField('email', <p className="flex items-center gap-3"><Shield size={14} /> ADDR: {displayData.email}</p>)}

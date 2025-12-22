@@ -6,10 +6,10 @@ import { Palmtree, Waves } from 'lucide-react';
 export const Vaporwave: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => (
   <div className="w-full h-full bg-[#ff71ce] text-[#01cdfe] font-sans relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-[#05ffa1]/20 to-[#b967ff]/20" />
-    <div className="absolute bottom-0 left-0 w-full h-32 opacity-30 pointer-events-none" 
+    <div className="absolute bottom-0 left-0 w-full h-32 opacity-30 pointer-events-none"
          style={{ backgroundImage: 'linear-gradient(transparent 50%, #01cdfe 50%)', backgroundSize: '100% 4px' }} />
     <div className="absolute top-[20%] right-[-10%] w-64 h-64 bg-[#fffb96] rounded-full blur-3xl opacity-40" />
-    
+
     <div className="relative z-10 p-12 flex flex-col justify-between h-full">
       <div className="flex justify-between items-start">
         <div className="space-y-2">
