@@ -22,8 +22,8 @@ export const DeepForest: ThemeComponent = ({ displayData, style, renderDraggable
       </div>
       <div className="grid grid-cols-2 gap-8 text-[11px] font-bold tracking-wide border-t border-emerald-900/50 pt-8">
         <div className="space-y-2">
-          {renderDraggableField('email', <p className="hover:text-emerald-400 transition-colors">>> {displayData.email}</p>)}
-          {renderDraggableField('contact', <p className="hover:text-emerald-400 transition-colors">>> {displayData.contact}</p>)}
+          {renderDraggableField('email', <p className="hover:text-emerald-400 transition-colors">{" >> "}{displayData.email}</p>)}
+          {renderDraggableField('contact', <p className="hover:text-emerald-400 transition-colors">{" >> "}{displayData.contact}</p>)}
         </div>
         <div className="text-right flex flex-col justify-end items-end space-y-2">
           {renderDraggableField('location', <p className="italic opacity-60">{displayData.location}</p>)}

@@ -4,6 +4,9 @@ ProCard AI는 Gemini AI를 활용하여 누구나 손쉽게 전문적인 명함�
 
 ![Banner](https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6)
 
+### 🎨 200+ 다양한 테마 갤러리
+![Themes Gallery](./themes-gallery.png)
+
 ## ✨ 주요 기능
 
 - **🤖 AI 기반 디자인 및 콘텐츠**: Gemini AI를 통해 명함의 커리어 목표를 최적화하고, 사용자 데이터에 맞는 최적의 디자인 테마를 추천받을 수 있습니다.
