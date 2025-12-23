@@ -242,6 +242,14 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     { id: 'square', label: '정사각형 (2.5x2.5)' },
   ];
 
+  const roundedOptions: { id: CardStyle['rounded']; label: string }[] = [
+    { id: 'none', label: '직각' },
+    { id: 'sm', label: '약간 둥글게' },
+    { id: 'md', label: '중간' },
+    { id: 'lg', label: '많이 둥글게' },
+    { id: 'full', label: '완전 둥글게' },
+  ];
+
   const colorPresets = [
     { name: 'Navy & Blue', primary: '#1e3a8a', accent: '#3b82f6' },
     { name: 'Black & Gray', primary: '#18181b', accent: '#71717a' },
@@ -297,7 +305,11 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                               <div className="h-24 bg-slate-50 flex items-center justify-center overflow-hidden border-b border-slate-100">
                                  <div className="scale-[0.2] transform origin-center">
                                     <div
-                                      className={`relative transition-all duration-500 w-[504px] h-[288px] rounded-md shadow-sm overflow-hidden bg-white`}
+                                      className={`relative transition-all duration-500 w-[504px] h-[288px] ${roundedOptions.find(o => o.id === card.style.rounded)?.id === 'none' ? 'rounded-none' : 
+                                        card.style.rounded === 'sm' ? 'rounded-sm' :
+                                        card.style.rounded === 'md' ? 'rounded-md' :
+                                        card.style.rounded === 'lg' ? 'rounded-2xl' :
+                                        card.style.rounded === 'full' ? 'rounded-[40px]' : 'rounded-none'} shadow-sm overflow-hidden bg-white`}
                                     >
                                       <div className="w-full h-full pointer-events-none">
                                         {(() => {
@@ -955,6 +967,20 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                   className={`w-full px-4 py-2 text-left text-sm font-medium rounded-lg border transition-all ${style.size === s.id ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}
                 >
                   {s.label}
+                </button>
+              ))}
+            </div>
+          </Section>
+
+          <Section label="카드 모서리">
+            <div className="grid grid-cols-2 gap-2">
+              {roundedOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => updateStyle('rounded', opt.id)}
+                  className={`px-3 py-2 text-xs font-medium rounded-md border transition-all ${style.rounded === opt.id ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}`}
+                >
+                  {opt.label}
                 </button>
               ))}
             </div>

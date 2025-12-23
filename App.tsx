@@ -233,7 +233,7 @@ const App: React.FC = () => {
     primaryColor: '#3b82f6',
     accentColor: '#1d4ed8',
     size: 'standard',
-    rounded: 'md',
+    rounded: 'none',
     contentScale: 1.0,
     qrSize: 64,
     qrX: 85,
@@ -394,15 +394,15 @@ const App: React.FC = () => {
 
       const frontImg = frontCanvas.toDataURL('image/jpeg', 1.0);
       const backImg = backCanvas.toDataURL('image/jpeg', 1.0);
-      
+
       const cardWidth = 90;
       const cardHeight = 50;
       const margin = 10;
-      
+
       // Single page with both sides side-by-side
       const pdfWidth = (cardWidth * 2) + (margin * 3); // left, middle, right margins
       const pdfHeight = cardHeight + (margin * 2); // top, bottom margins
-      
+
       const doc = new jsPDF({
         orientation: 'l',
         unit: 'mm',
@@ -411,7 +411,7 @@ const App: React.FC = () => {
 
       // Front Side
       doc.addImage(frontImg, 'JPEG', margin, margin, cardWidth, cardHeight);
-      
+
       // Back Side (Next to Front)
       doc.addImage(backImg, 'JPEG', margin + cardWidth + margin, margin, cardWidth, cardHeight);
 
