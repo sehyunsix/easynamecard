@@ -306,7 +306,7 @@ const App: React.FC = () => {
 
   const downloadPDF = async (side: 'front' | 'back') => {
     const elementId = side === 'front' ? 'card-front' : 'card-back';
-    
+
     // Deselect any active element before capturing
     setSelectedElementId(null);
     await new Promise(resolve => setTimeout(resolve, 150));
@@ -329,11 +329,11 @@ const App: React.FC = () => {
       if (wasHidden) element.classList.add('hidden');
 
       const imgData = canvas.toDataURL('image/jpeg', 1.0);
-      
+
       // PDF dimensions in mm (90x50 standard)
       const pdfWidth = 90;
       const pdfHeight = 50;
-      
+
       const doc = new jsPDF({
         orientation: cardStyle.size === 'vertical' ? 'p' : 'l',
         unit: 'mm',
@@ -353,6 +353,71 @@ const App: React.FC = () => {
 
   const handleDownloadFrontPDF = () => downloadPDF('front');
   const handleDownloadBackPDF = () => downloadPDF('back');
+
+  const downloadAllPDF = async () => {
+    if (cardData.backSideType === 'none') {
+      handleDownloadFrontPDF();
+      return;
+    }
+
+    // Deselect any active element before capturing
+    setSelectedElementId(null);
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    try {
+      const frontElement = document.getElementById('card-front');
+      const backElement = document.getElementById('card-back');
+      if (!frontElement || !backElement) return;
+
+      const wasBackHidden = backElement.classList.contains('hidden');
+      if (wasBackHidden) backElement.classList.remove('hidden');
+
+      // Capture Front
+      const frontCanvas = await html2canvas(frontElement, {
+        scale: 4,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      // Capture Back
+      const backCanvas = await html2canvas(backElement, {
+        scale: 4,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      if (wasBackHidden) backElement.classList.add('hidden');
+
+      const frontImg = frontCanvas.toDataURL('image/jpeg', 1.0);
+      const backImg = backCanvas.toDataURL('image/jpeg', 1.0);
+      
+      const pdfWidth = 90;
+      const pdfHeight = 50;
+      
+      const doc = new jsPDF({
+        orientation: cardStyle.size === 'vertical' ? 'p' : 'l',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight]
+      });
+
+      // Page 1: Front
+      doc.addImage(frontImg, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      
+      // Page 2: Back
+      doc.addPage([pdfWidth, pdfHeight], cardStyle.size === 'vertical' ? 'p' : 'l');
+      doc.addImage(backImg, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+
+      doc.save(`${cardData.name}_full_print.pdf`);
+      alert('양면 통합 인쇄용 PDF가 생성되었습니다.\n\n[출고 가이드]\n· 1페이지: 앞면 / 2페이지: 뒷면\n· 작업 사이즈: 90mm x 50mm\n· 모든 요소 자동 래스터화 완료');
+    } catch (error) {
+      console.error('Failed to download All PDF:', error);
+      alert('통합 PDF 생성에 실패했습니다.');
+    }
+  };
 
 
   return (
@@ -500,11 +565,11 @@ const App: React.FC = () => {
                 뒷면 PNG
               </button>
               <button
-                onClick={handleDownloadBackPDF}
-                className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-6 py-2.5 rounded-full font-semibold hover:bg-blue-100 transition-all shadow-sm text-blue-700"
+                onClick={downloadAllPDF}
+                className="flex items-center gap-2 bg-indigo-600 border border-indigo-700 px-6 py-2.5 rounded-full font-semibold hover:bg-indigo-700 transition-all shadow-md text-white"
               >
                 <Printer size={18} />
-                뒷면 인쇄용 PDF
+                양면 통합 PDF
               </button>
             </>
           )}
@@ -548,7 +613,7 @@ const App: React.FC = () => {
           <p className="text-sm mb-4">
             💡 TIP: '양면 펼쳐보기'를 선택하면 앞/뒷면을 동시에 확인하고 이미지로 저장할 수 있습니다.
           </p>
-          
+
           <div className="bg-white p-6 rounded-2xl border border-slate-200 text-left">
             <h4 className="text-xs font-bold text-slate-800 uppercase tracking-widest mb-3 flex items-center gap-2">
               <Printer size={14} className="text-blue-600" />
