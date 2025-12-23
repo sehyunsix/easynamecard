@@ -4,7 +4,7 @@ import { ThemeComponent } from './ThemeTypes';
 
 export const BinaryMatrix: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => {
   const binaryString = "01001000 01001001 01010010 01000101 00100000 01001101 01000101"; // "HIRE ME"
-  
+
   return (
     <div className="w-full h-full bg-[#000000] text-[#00ff41] font-mono relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 text-[8px] leading-[8px] break-all p-2 select-none pointer-events-none uppercase">

@@ -10,7 +10,7 @@ export const QuantAlpha: ThemeComponent = ({ displayData, style, renderDraggable
       <div className="absolute -right-10 -bottom-20 opacity-5 text-[300px] font-serif pointer-events-none">
         α
       </div>
-      
+
       <div className="absolute inset-0 p-8 flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <div className="space-y-1">

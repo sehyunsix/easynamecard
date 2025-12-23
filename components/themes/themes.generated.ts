@@ -5,6 +5,7 @@ import { AbstractWave } from './AbstractWave';
 import { ActionPanel } from './ActionPanel';
 import { AgedScroll } from './AgedScroll';
 import { AlgorithmCode } from './AlgorithmCode';
+import { AlikeBrand } from './AlikeBrand';
 import { Architect } from './Architect';
 import { ArchitectMonochrome } from './ArchitectMonochrome';
 import { ArcticWhite } from './ArcticWhite';
@@ -50,6 +51,7 @@ import { Cork } from './Cork';
 import { CosmicDust } from './CosmicDust';
 import { Creative } from './Creative';
 import { CreativeCollage } from './CreativeCollage';
+import { CreativeSlice } from './CreativeSlice';
 import { Cyanotype } from './Cyanotype';
 import { Cyber } from './Cyber';
 import { CyberGreen } from './CyberGreen';
@@ -68,6 +70,7 @@ import { Denim } from './Denim';
 import { DesertOasis } from './DesertOasis';
 import { DesertSand } from './DesertSand';
 import { Diamond } from './Diamond';
+import { DynamicItalic } from './DynamicItalic';
 import { Eco } from './Eco';
 import { EcoFriendly } from './EcoFriendly';
 import { ElectricBlue } from './ElectricBlue';
@@ -140,6 +143,7 @@ import { Modern } from './Modern';
 import { ModernArtDeco } from './ModernArtDeco';
 import { ModernBauhaus } from './ModernBauhaus';
 import { ModernBrutalist } from './ModernBrutalist';
+import { ModernImpact } from './ModernImpact';
 import { ModernScandi } from './ModernScandi';
 import { MonochromeBold } from './MonochromeBold';
 import { Mosaic } from './Mosaic';
@@ -156,6 +160,7 @@ import { Note } from './Note';
 import { Ocean } from './Ocean';
 import { OldMap } from './OldMap';
 import { OldNewspaper } from './OldNewspaper';
+import { OrangeBold } from './OrangeBold';
 import { Organic } from './Organic';
 import { OrganicClay } from './OrganicClay';
 import { OrganicTerra } from './OrganicTerra';
@@ -247,6 +252,7 @@ export type CardTheme =
   | 'actionpanel'
   | 'agedscroll'
   | 'algorithmcode'
+  | 'alikebrand'
   | 'architect'
   | 'architectmonochrome'
   | 'arcticwhite'
@@ -292,6 +298,7 @@ export type CardTheme =
   | 'cosmicdust'
   | 'creative'
   | 'creativecollage'
+  | 'creativeslice'
   | 'cyanotype'
   | 'cyber'
   | 'cybergreen'
@@ -310,6 +317,7 @@ export type CardTheme =
   | 'desertoasis'
   | 'desertsand'
   | 'diamond'
+  | 'dynamicitalic'
   | 'eco'
   | 'ecofriendly'
   | 'electricblue'
@@ -382,6 +390,7 @@ export type CardTheme =
   | 'modernartdeco'
   | 'modernbauhaus'
   | 'modernbrutalist'
+  | 'modernimpact'
   | 'modernscandi'
   | 'monochromebold'
   | 'mosaic'
@@ -398,6 +407,7 @@ export type CardTheme =
   | 'ocean'
   | 'oldmap'
   | 'oldnewspaper'
+  | 'orangebold'
   | 'organic'
   | 'organicclay'
   | 'organicterra'
@@ -489,6 +499,7 @@ export const themeMap: Record<string, any> = {
   'actionpanel': ActionPanel,
   'agedscroll': AgedScroll,
   'algorithmcode': AlgorithmCode,
+  'alikebrand': AlikeBrand,
   'architect': Architect,
   'architectmonochrome': ArchitectMonochrome,
   'arcticwhite': ArcticWhite,
@@ -534,6 +545,7 @@ export const themeMap: Record<string, any> = {
   'cosmicdust': CosmicDust,
   'creative': Creative,
   'creativecollage': CreativeCollage,
+  'creativeslice': CreativeSlice,
   'cyanotype': Cyanotype,
   'cyber': Cyber,
   'cybergreen': CyberGreen,
@@ -552,6 +564,7 @@ export const themeMap: Record<string, any> = {
   'desertoasis': DesertOasis,
   'desertsand': DesertSand,
   'diamond': Diamond,
+  'dynamicitalic': DynamicItalic,
   'eco': Eco,
   'ecofriendly': EcoFriendly,
   'electricblue': ElectricBlue,
@@ -624,6 +637,7 @@ export const themeMap: Record<string, any> = {
   'modernartdeco': ModernArtDeco,
   'modernbauhaus': ModernBauhaus,
   'modernbrutalist': ModernBrutalist,
+  'modernimpact': ModernImpact,
   'modernscandi': ModernScandi,
   'monochromebold': MonochromeBold,
   'mosaic': Mosaic,
@@ -640,6 +654,7 @@ export const themeMap: Record<string, any> = {
   'ocean': Ocean,
   'oldmap': OldMap,
   'oldnewspaper': OldNewspaper,
+  'orangebold': OrangeBold,
   'organic': Organic,
   'organicclay': OrganicClay,
   'organicterra': OrganicTerra,
@@ -732,6 +747,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'actionpanel', label: 'ActionPanel' },
   { id: 'agedscroll', label: 'AgedScroll' },
   { id: 'algorithmcode', label: '알고리즘 코드' },
+  { id: 'alikebrand', label: '얼라이크 브랜드' },
   { id: 'architect', label: 'Architect' },
   { id: 'architectmonochrome', label: 'ArchitectMonochrome' },
   { id: 'arcticwhite', label: 'ArcticWhite' },
@@ -777,6 +793,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'cosmicdust', label: 'CosmicDust' },
   { id: 'creative', label: 'Creative' },
   { id: 'creativecollage', label: 'CreativeCollage' },
+  { id: 'creativeslice', label: '크리에이티브 슬라이스' },
   { id: 'cyanotype', label: 'Cyanotype' },
   { id: 'cyber', label: 'Cyber' },
   { id: 'cybergreen', label: '사이버 그린' },
@@ -795,6 +812,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'desertoasis', label: 'DesertOasis' },
   { id: 'desertsand', label: 'DesertSand' },
   { id: 'diamond', label: 'Diamond' },
+  { id: 'dynamicitalic', label: '다이내믹 이탤릭' },
   { id: 'eco', label: 'Eco' },
   { id: 'ecofriendly', label: 'EcoFriendly' },
   { id: 'electricblue', label: 'ElectricBlue' },
@@ -867,6 +885,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'modernartdeco', label: 'ModernArtDeco' },
   { id: 'modernbauhaus', label: 'ModernBauhaus' },
   { id: 'modernbrutalist', label: '모던 브루탈리스트' },
+  { id: 'modernimpact', label: '모던 임팩트' },
   { id: 'modernscandi', label: 'ModernScandi' },
   { id: 'monochromebold', label: 'MonochromeBold' },
   { id: 'mosaic', label: 'Mosaic' },
@@ -883,6 +902,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'ocean', label: 'Ocean' },
   { id: 'oldmap', label: '고지도' },
   { id: 'oldnewspaper', label: '옛날 신문' },
+  { id: 'orangebold', label: '오렌지 볼드' },
   { id: 'organic', label: 'Organic' },
   { id: 'organicclay', label: '오가닉 클레이' },
   { id: 'organicterra', label: 'OrganicTerra' },

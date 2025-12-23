@@ -8,7 +8,7 @@ export const MathematicalProof: ThemeComponent = ({ displayData, style, renderDr
       <div className="absolute top-4 left-4 text-[10px] font-mono opacity-50 italic">
         Lemma 1.1: Development Efficiency
       </div>
-      
+
       <div className="space-y-8">
         <div className="space-y-1">
           {renderDraggableField('name', <h2 className="text-4xl font-black text-[#073642]">{displayData.name}</h2>)}
