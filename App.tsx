@@ -6,6 +6,7 @@ import CardPreview from './components/CardPreview';
 import CardThumbnail from './components/CardThumbnail';
 import { Sparkles, Printer, Download, Columns, LogIn, LogOut, User as UserIcon, Save, History, X, Trash2, QrCode } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { auth, googleProvider, db } from './firebase';
 import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, getDocs, addDoc, deleteDoc, orderBy } from 'firebase/firestore';
@@ -303,6 +304,56 @@ const App: React.FC = () => {
   const handleDownloadFront = () => downloadImage('card-front', `${cardData.name}_front.png`);
   const handleDownloadBack = () => downloadImage('card-back', `${cardData.name}_back.png`);
 
+  const downloadPDF = async (side: 'front' | 'back') => {
+    const elementId = side === 'front' ? 'card-front' : 'card-back';
+    
+    // Deselect any active element before capturing
+    setSelectedElementId(null);
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    try {
+      const wasHidden = element.classList.contains('hidden');
+      if (wasHidden) element.classList.remove('hidden');
+
+      const canvas = await html2canvas(element, {
+        scale: 4, // Higher scale for better print quality (approx 300dpi-400dpi)
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      if (wasHidden) element.classList.add('hidden');
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      
+      // PDF dimensions in mm (90x50 standard)
+      const pdfWidth = 90;
+      const pdfHeight = 50;
+      
+      const doc = new jsPDF({
+        orientation: cardStyle.size === 'vertical' ? 'p' : 'l',
+        unit: 'mm',
+        format: [pdfWidth, pdfHeight]
+      });
+
+      // Fill the entire page with the card image
+      doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      doc.save(`${cardData.name}_${side}_print.pdf`);
+
+      alert('인쇄용 PDF가 생성되었습니다.\n\n[출고 가이드]\n· 작업 사이즈: 90mm x 50mm\n· 해상도: 300dpi 이상 (자동 최적화됨)\n· 색상: CMYK 변환 권장 (출력소 확인 필요)\n· 1개 파일당 1개 디자인 원칙 준수');
+    } catch (error) {
+      console.error('Failed to download PDF:', error);
+      alert('PDF 생성에 실패했습니다.');
+    }
+  };
+
+  const handleDownloadFrontPDF = () => downloadPDF('front');
+  const handleDownloadBackPDF = () => downloadPDF('back');
+
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
@@ -428,17 +479,34 @@ const App: React.FC = () => {
             className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm text-slate-700"
           >
             <Download size={18} />
-            앞면 PNG 저장
+            앞면 PNG
+          </button>
+
+          <button
+            onClick={handleDownloadFrontPDF}
+            className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-6 py-2.5 rounded-full font-semibold hover:bg-blue-100 transition-all shadow-sm text-blue-700"
+          >
+            <Printer size={18} />
+            앞면 인쇄용 PDF
           </button>
 
           {cardData.backSideType !== 'none' && (
-            <button
-              onClick={handleDownloadBack}
-              className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm text-slate-700"
-            >
-              <Download size={18} />
-              뒷면 PNG 저장
-            </button>
+            <>
+              <button
+                onClick={handleDownloadBack}
+                className="flex items-center gap-2 bg-white border border-slate-300 px-6 py-2.5 rounded-full font-semibold hover:bg-slate-50 transition-all shadow-sm text-slate-700"
+              >
+                <Download size={18} />
+                뒷면 PNG
+              </button>
+              <button
+                onClick={handleDownloadBackPDF}
+                className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-6 py-2.5 rounded-full font-semibold hover:bg-blue-100 transition-all shadow-sm text-blue-700"
+              >
+                <Printer size={18} />
+                뒷면 인쇄용 PDF
+              </button>
+            </>
           )}
         </div>
 
@@ -476,10 +544,25 @@ const App: React.FC = () => {
           />
         </div>
 
-        <div className="mt-12 text-center no-print text-slate-400 max-w-md">
-          <p className="text-sm">
+        <div className="mt-12 text-center no-print text-slate-400 max-w-2xl">
+          <p className="text-sm mb-4">
             💡 TIP: '양면 펼쳐보기'를 선택하면 앞/뒷면을 동시에 확인하고 이미지로 저장할 수 있습니다.
           </p>
+          
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 text-left">
+            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Printer size={14} className="text-blue-600" />
+              인쇄 전 확인사항 (90mm x 50mm 규격)
+            </h4>
+            <ul className="text-[11px] text-slate-500 space-y-1.5 list-disc pl-4">
+              <li><strong>한 상품당 한 개의 디자인</strong>만 출력됩니다. (앞/뒤 별도 PDF 저장)</li>
+              <li>작업 사이즈는 <strong>90mm x 50mm</strong> 표준 규격으로 자동 내보내기 됩니다.</li>
+              <li>해상도는 실제 크기의 <strong>400% (약 300dpi 이상)</strong>로 최적화되어 저장됩니다.</li>
+              <li>모든 글자와 그래픽은 인쇄 사고 방지를 위해 <strong>자동 래스터화(그림화)</strong> 처리됩니다.</li>
+              <li>색상은 RGB로 작업되나, 인쇄 시 CMYK로 변환될 수 있으므로 출력소 확인이 필요합니다.</li>
+              <li>검정색 텍스트는 가독성을 위해 진한 검정(C0 M0 Y0 K100 대응)을 권장합니다.</li>
+            </ul>
+          </div>
         </div>
       </main>
 

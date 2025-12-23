@@ -4,14 +4,14 @@ import { ThemeComponent } from './ThemeTypes';
 
 export const MathematicalProof: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => {
   return (
-    <div 
+    <div
       className="w-full h-full bg-[#fdf6e3] text-[#586e75] font-serif relative overflow-hidden p-12 border-[16px] border-double"
       style={{ borderColor: `${style.primaryColor}20` }}
     >
       <div className="absolute top-4 left-4 text-[10px] font-mono opacity-50 italic">
         Lemma 1.1: Development Efficiency
       </div>
-      
+
       <div className="space-y-8">
         <div className="space-y-1">
           {renderDraggableField('name', <h2 className="text-4xl font-black" style={{ color: style.primaryColor }}>{displayData.name}</h2>)}
@@ -35,7 +35,7 @@ export const MathematicalProof: ThemeComponent = ({ displayData, style, renderDr
       </div>
 
       <div className="absolute bottom-12 right-12 flex flex-col items-end gap-4">
-        <div 
+        <div
           className="text-[60px] leading-none font-bold opacity-5 select-none pointer-events-none"
           style={{ color: style.primaryColor }}
         >

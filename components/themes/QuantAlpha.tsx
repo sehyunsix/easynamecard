@@ -7,13 +7,13 @@ export const QuantAlpha: ThemeComponent = ({ displayData, style, renderDraggable
   return (
     <div className="w-full h-full bg-[#0a192f] text-[#ccd6f6] font-sans relative overflow-hidden">
       {/* Alpha Symbol Background */}
-      <div 
+      <div
         className="absolute -right-10 -bottom-20 opacity-5 text-[300px] font-serif pointer-events-none"
         style={{ color: style.primaryColor }}
       >
         α
       </div>
-      
+
       <div className="absolute inset-0 p-8 flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
@@ -23,7 +23,7 @@ export const QuantAlpha: ThemeComponent = ({ displayData, style, renderDraggable
           <TrendingUp style={{ color: style.primaryColor, opacity: 0.5 }} size={32} />
         </div>
 
-        <div 
+        <div
           className="grid grid-cols-2 gap-x-8 gap-y-2 text-[10px] font-mono border-t pt-6"
           style={{ borderColor: `${style.primaryColor}33` }}
         >

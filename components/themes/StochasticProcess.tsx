@@ -21,7 +21,7 @@ export const StochasticProcess: ThemeComponent = ({ displayData, style, renderDr
         </div>
 
         <div className="flex justify-between items-end">
-          <div 
+          <div
             className="grid grid-cols-2 gap-x-8 gap-y-2 text-[10px] font-medium opacity-80 border-t pt-6"
             style={{ borderColor: `${style.primaryColor}33` }}
           >

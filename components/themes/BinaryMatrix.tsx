@@ -4,10 +4,10 @@ import { ThemeComponent } from './ThemeTypes';
 
 export const BinaryMatrix: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => {
   const binaryString = "01001000 01001001 01010010 01000101 00100000 01001101 01000101"; // "HIRE ME"
-  
+
   return (
     <div className="w-full h-full bg-[#000000] font-mono relative overflow-hidden" style={{ color: style.primaryColor }}>
-      <div 
+      <div
         className="absolute inset-0 opacity-10 text-[8px] leading-[8px] break-all p-2 select-none pointer-events-none uppercase"
         style={{ color: style.primaryColor }}
       >
@@ -15,7 +15,7 @@ export const BinaryMatrix: ThemeComponent = ({ displayData, style, renderDraggab
       </div>
 
       <div className="absolute inset-0 p-12 flex flex-col justify-center items-center text-center space-y-6">
-        <div 
+        <div
           className="space-y-2 border-y py-6 px-10"
           style={{ borderColor: `${style.primaryColor}4d` }}
         >

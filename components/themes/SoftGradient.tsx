@@ -7,18 +7,18 @@ export const SoftGradient: ThemeComponent = ({ displayData, style, renderDraggab
   return (
     <div className="w-full h-full bg-white font-sans relative overflow-hidden">
       {/* Soft Gradient Background using theme colors */}
-      <div 
-        className="absolute inset-0 opacity-20" 
-        style={{ 
-          background: `radial-gradient(circle at top right, ${style.primaryColor} 0%, transparent 70%), radial-gradient(circle at bottom left, ${style.accentColor} 0%, transparent 70%)` 
-        }} 
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          background: `radial-gradient(circle at top right, ${style.primaryColor} 0%, transparent 70%), radial-gradient(circle at bottom left, ${style.accentColor} 0%, transparent 70%)`
+        }}
       />
-      <div 
-        className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] blur-[80px] rounded-full opacity-30" 
+      <div
+        className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] blur-[80px] rounded-full opacity-30"
         style={{ backgroundColor: style.primaryColor }}
       />
-      <div 
-        className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] blur-[60px] rounded-full opacity-20" 
+      <div
+        className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] blur-[60px] rounded-full opacity-20"
         style={{ backgroundColor: style.accentColor }}
       />
 
@@ -26,7 +26,7 @@ export const SoftGradient: ThemeComponent = ({ displayData, style, renderDraggab
         <div className="flex justify-between items-start">
           <div className="space-y-2">
             {renderDraggableField('name', <h2 className="text-4xl font-black text-slate-800 tracking-tight">{displayData.name}</h2>)}
-            <div 
+            <div
               className="inline-block px-4 py-1.5 rounded-full border shadow-sm backdrop-blur-sm"
               style={{ backgroundColor: `${style.primaryColor}10`, borderColor: `${style.primaryColor}20` }}
             >
@@ -41,7 +41,7 @@ export const SoftGradient: ThemeComponent = ({ displayData, style, renderDraggab
         <div className="space-y-6">
           {displayData.goal && renderDraggableField('goal', (
             <div className="bg-white/60 backdrop-blur-md p-5 rounded-2xl border border-white shadow-sm flex items-center gap-4">
-              <div 
+              <div
                 className="w-8 h-8 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: `${style.primaryColor}15`, color: style.primaryColor }}
               >

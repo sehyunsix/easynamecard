@@ -29,7 +29,7 @@ export const NeuralNode: ThemeComponent = ({ displayData, style, renderDraggable
         </div>
 
         <div className="flex justify-between items-end">
-          <div 
+          <div
             className="space-y-2 text-[10px] font-mono tracking-tight text-slate-400 border-l pl-6"
             style={{ borderColor: `${style.primaryColor}80` }}
           >
@@ -38,8 +38,8 @@ export const NeuralNode: ThemeComponent = ({ displayData, style, renderDraggable
             {displayData.location && renderDraggableField('location', <div className="flex items-center gap-2"><span style={{ color: style.primaryColor }}>[L]</span> {displayData.location}</div>)}
           </div>
           <div className="relative group">
-            <div 
-              className="absolute inset-0 blur-xl opacity-10 group-hover:opacity-20 transition-opacity" 
+            <div
+              className="absolute inset-0 blur-xl opacity-10 group-hover:opacity-20 transition-opacity"
               style={{ backgroundColor: style.primaryColor }}
             />
             {renderQRCodeElement(isBack ? 'back' : 'front')}

@@ -4,12 +4,12 @@ import { ThemeComponent } from './ThemeTypes';
 
 export const QuantTerminal: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => {
   return (
-    <div 
+    <div
       className="w-full h-full bg-[#0c0c0c] font-mono relative overflow-hidden border-2 p-10 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
       style={{ color: style.primaryColor, borderColor: `${style.primaryColor}22` }}
     >
       {/* Terminal Header */}
-      <div 
+      <div
         className="absolute top-0 left-0 w-full h-6 flex items-center px-3 gap-1.5 border-b"
         style={{ backgroundColor: `${style.primaryColor}11`, borderColor: `${style.primaryColor}22` }}
       >
@@ -58,7 +58,7 @@ export const QuantTerminal: ThemeComponent = ({ displayData, style, renderDragga
         </div>
       </div>
 
-      <div 
+      <div
         className="absolute bottom-8 right-8 w-20 h-20 p-1 border"
         style={{ backgroundColor: `${style.primaryColor}05`, borderColor: `${style.primaryColor}33` }}
       >

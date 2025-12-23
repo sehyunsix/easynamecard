@@ -9,7 +9,7 @@ export const PrecisionGrid: ThemeComponent = ({ displayData, style, renderDragga
       {/* Precision Grid Lines using theme color */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: `linear-gradient(${style.primaryColor} 1px, transparent 1px), linear-gradient(90deg, ${style.primaryColor} 1px, transparent 1px)`, backgroundSize: '10px 10px' }} />
       <div className="absolute inset-0 opacity-[0.1] pointer-events-none" style={{ backgroundImage: `linear-gradient(${style.primaryColor} 1px, transparent 1px), linear-gradient(90deg, ${style.primaryColor} 1px, transparent 1px)`, backgroundSize: '50px 50px' }} />
-      
+
       {/* Coordinate Markers */}
       <div className="absolute top-1 left-1 text-[8px] opacity-30 select-none">X:0.00 Y:0.00</div>
       <div className="absolute top-1 right-1 text-[8px] opacity-30 select-none">X:1.00 Y:0.00</div>

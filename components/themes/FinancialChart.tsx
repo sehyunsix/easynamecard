@@ -8,7 +8,7 @@ export const FinancialChart: ThemeComponent = ({ displayData, style, renderDragg
     <div className="w-full h-full bg-white text-slate-900 font-sans relative overflow-hidden">
       {/* Background Grid and Trend Lines */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-      
+
       <div className="absolute bottom-0 left-0 w-full h-1/3 flex items-end gap-1 px-4 pb-2 opacity-10 pointer-events-none">
         {[40, 70, 45, 90, 65, 80, 55, 100, 75, 85, 60].map((h, i) => (
           <div key={i} className="flex-1 rounded-t-sm" style={{ height: `${h}%`, backgroundColor: style.primaryColor }} />

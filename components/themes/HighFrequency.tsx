@@ -8,16 +8,16 @@ export const HighFrequency: ThemeComponent = ({ displayData, style, renderDragga
     <div className="w-full h-full bg-[#111111] text-white font-sans relative overflow-hidden">
       {/* Dynamic Sharp Lines Background using theme color */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div 
-          className="absolute top-[20%] -left-[10%] w-[120%] h-[1px] rotate-12 opacity-30" 
+        <div
+          className="absolute top-[20%] -left-[10%] w-[120%] h-[1px] rotate-12 opacity-30"
           style={{ background: `linear-gradient(to right, transparent, ${style.primaryColor}, transparent)` }}
         />
-        <div 
-          className="absolute top-[40%] -left-[10%] w-[120%] h-[1px] -rotate-6 opacity-40" 
+        <div
+          className="absolute top-[40%] -left-[10%] w-[120%] h-[1px] -rotate-6 opacity-40"
           style={{ background: `linear-gradient(to right, transparent, ${style.accentColor}, transparent)` }}
         />
-        <div 
-          className="absolute top-[70%] -left-[10%] w-[120%] h-[1px] rotate-3 opacity-20" 
+        <div
+          className="absolute top-[70%] -left-[10%] w-[120%] h-[1px] rotate-3 opacity-20"
           style={{ background: `linear-gradient(to right, transparent, ${style.primaryColor}, transparent)` }}
         />
       </div>
@@ -33,7 +33,7 @@ export const HighFrequency: ThemeComponent = ({ displayData, style, renderDragga
 
         <div className="flex justify-between items-end">
           <div className="space-y-4">
-            <div 
+            <div
               className="text-[9px] font-black text-black px-2 py-0.5 inline-block skew-x-[-10deg]"
               style={{ backgroundColor: style.accentColor }}
             >
