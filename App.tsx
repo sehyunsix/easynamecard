@@ -395,24 +395,28 @@ const App: React.FC = () => {
       const frontImg = frontCanvas.toDataURL('image/jpeg', 1.0);
       const backImg = backCanvas.toDataURL('image/jpeg', 1.0);
       
-      const pdfWidth = 90;
-      const pdfHeight = 50;
+      const cardWidth = 90;
+      const cardHeight = 50;
+      const margin = 10;
+      
+      // Single page with both sides side-by-side
+      const pdfWidth = (cardWidth * 2) + (margin * 3); // left, middle, right margins
+      const pdfHeight = cardHeight + (margin * 2); // top, bottom margins
       
       const doc = new jsPDF({
-        orientation: cardStyle.size === 'vertical' ? 'p' : 'l',
+        orientation: 'l',
         unit: 'mm',
         format: [pdfWidth, pdfHeight]
       });
 
-      // Page 1: Front
-      doc.addImage(frontImg, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      // Front Side
+      doc.addImage(frontImg, 'JPEG', margin, margin, cardWidth, cardHeight);
       
-      // Page 2: Back
-      doc.addPage([pdfWidth, pdfHeight], cardStyle.size === 'vertical' ? 'p' : 'l');
-      doc.addImage(backImg, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      // Back Side (Next to Front)
+      doc.addImage(backImg, 'JPEG', margin + cardWidth + margin, margin, cardWidth, cardHeight);
 
-      doc.save(`${cardData.name}_full_print.pdf`);
-      alert('양면 통합 인쇄용 PDF가 생성되었습니다.\n\n[출고 가이드]\n· 1페이지: 앞면 / 2페이지: 뒷면\n· 작업 사이즈: 90mm x 50mm\n· 모든 요소 자동 래스터화 완료');
+      doc.save(`${cardData.name}_side_by_side_print.pdf`);
+      alert('나란히 배치된 인쇄용 PDF가 생성되었습니다.\n\n[출고 가이드]\n· 한 페이지에 앞/뒷면이 나란히 배치됨\n· 각 카드 사이즈: 90mm x 50mm\n· 중앙 마진: 10mm');
     } catch (error) {
       console.error('Failed to download All PDF:', error);
       alert('통합 PDF 생성에 실패했습니다.');
