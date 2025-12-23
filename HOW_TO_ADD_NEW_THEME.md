@@ -297,3 +297,6 @@ import { Github, Mail, Phone, MapPin, Globe, Sparkles } from 'lucide-react';
 
 **참고**: 기존 테마를 참고하려면 `components/themes/Modern.tsx`, `Minimal.tsx` 등을 확인하세요!
 
+
+
+

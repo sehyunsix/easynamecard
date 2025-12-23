@@ -38,3 +38,6 @@ export const RoyalAmethyst: ThemeComponent = ({ displayData, style, renderDragga
   </div>
 );
 
+
+
+

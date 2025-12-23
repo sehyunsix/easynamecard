@@ -32,3 +32,6 @@ export const ModernBrutalist: ThemeComponent = ({ displayData, style, renderDrag
   </div>
 );
 
+
+
+

@@ -35,3 +35,6 @@ export const GoldenLuxury: ThemeComponent = ({ displayData, style, renderDraggab
   </div>
 );
 
+
+
+

@@ -40,3 +40,6 @@ export const InkSplatter: ThemeComponent = ({ displayData, style, renderDraggabl
   </div>
 );
 
+
+
+

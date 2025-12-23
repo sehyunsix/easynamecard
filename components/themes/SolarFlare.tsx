@@ -30,3 +30,6 @@ export const SolarFlare: ThemeComponent = ({ displayData, style, renderDraggable
   </div>
 );
 
+
+
+

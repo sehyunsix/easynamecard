@@ -33,3 +33,6 @@ export const AbstractWave: ThemeComponent = ({ displayData, style, renderDraggab
   </div>
 );
 
+
+
+

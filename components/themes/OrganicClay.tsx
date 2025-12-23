@@ -28,3 +28,6 @@ export const OrganicClay: ThemeComponent = ({ displayData, style, renderDraggabl
   </div>
 );
 
+
+
+

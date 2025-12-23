@@ -26,3 +26,6 @@ export const SoftPastel: ThemeComponent = ({ displayData, style, renderDraggable
   </div>
 );
 
+
+
+

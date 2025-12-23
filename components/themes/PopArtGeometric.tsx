@@ -35,3 +35,6 @@ export const PopArtGeometric: ThemeComponent = ({ displayData, style, renderDrag
   </div>
 );
 
+
+
+

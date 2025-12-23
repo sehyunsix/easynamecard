@@ -4,6 +4,7 @@ import { AbstractPaint } from './AbstractPaint';
 import { AbstractWave } from './AbstractWave';
 import { ActionPanel } from './ActionPanel';
 import { AgedScroll } from './AgedScroll';
+import { AlgorithmCode } from './AlgorithmCode';
 import { Architect } from './Architect';
 import { ArchitectMonochrome } from './ArchitectMonochrome';
 import { ArcticWhite } from './ArcticWhite';
@@ -15,6 +16,7 @@ import { Bamboo } from './Bamboo';
 import { Bauhaus } from './Bauhaus';
 import { Bento } from './Bento';
 import { BentoCleanCut } from './BentoCleanCut';
+import { BinaryMatrix } from './BinaryMatrix';
 import { Blueprint } from './Blueprint';
 import { BlueprintBlue } from './BlueprintBlue';
 import { BlueprintRed } from './BlueprintRed';
@@ -72,6 +74,7 @@ import { ElectricBlue } from './ElectricBlue';
 import { Elegant } from './Elegant';
 import { ElegantDamask } from './ElegantDamask';
 import { Embroidery } from './Embroidery';
+import { FinancialChart } from './FinancialChart';
 import { FloraBotanica } from './FloraBotanica';
 import { Forest } from './Forest';
 import { ForestCanopy } from './ForestCanopy';
@@ -95,6 +98,7 @@ import { Gothic } from './Gothic';
 import { Gradient } from './Gradient';
 import { Graffiti } from './Graffiti';
 import { GraphPaper } from './GraphPaper';
+import { HighFrequency } from './HighFrequency';
 import { Holographic } from './Holographic';
 import { Honey } from './Honey';
 import { Ice } from './Ice';
@@ -118,6 +122,7 @@ import { Manga } from './Manga';
 import { Map } from './Map';
 import { Marble } from './Marble';
 import { MarbleObsidian } from './MarbleObsidian';
+import { MathematicalProof } from './MathematicalProof';
 import { Matrix } from './Matrix';
 import { Medal } from './Medal';
 import { MetallicChrome } from './MetallicChrome';
@@ -144,6 +149,7 @@ import { NeonCity } from './NeonCity';
 import { NeonCyberPulse } from './NeonCyberPulse';
 import { NeonDreams } from './NeonDreams';
 import { NeonVibe } from './NeonVibe';
+import { NeuralNode } from './NeuralNode';
 import { Newspaper } from './Newspaper';
 import { NewspaperClassic } from './NewspaperClassic';
 import { Note } from './Note';
@@ -172,9 +178,12 @@ import { Pop } from './Pop';
 import { PopArtGeometric } from './PopArtGeometric';
 import { PopRetro } from './PopRetro';
 import { PopVibrant } from './PopVibrant';
+import { PrecisionGrid } from './PrecisionGrid';
 import { PrismShard } from './PrismShard';
 import { Professional } from './Professional';
 import { ProfessionalNavy } from './ProfessionalNavy';
+import { QuantAlpha } from './QuantAlpha';
+import { QuantTerminal } from './QuantTerminal';
 import { QuietZen } from './QuietZen';
 import { Receipt } from './Receipt';
 import { Retro } from './Retro';
@@ -200,6 +209,7 @@ import { Stamp } from './Stamp';
 import { Stark } from './Stark';
 import { SteelPlate } from './SteelPlate';
 import { Sticker } from './Sticker';
+import { StochasticProcess } from './StochasticProcess';
 import { StuccoWhite } from './StuccoWhite';
 import { SunsetBoulevard } from './SunsetBoulevard';
 import { Swiss } from './Swiss';
@@ -236,6 +246,7 @@ export type CardTheme =
   | 'abstractwave'
   | 'actionpanel'
   | 'agedscroll'
+  | 'algorithmcode'
   | 'architect'
   | 'architectmonochrome'
   | 'arcticwhite'
@@ -247,6 +258,7 @@ export type CardTheme =
   | 'bauhaus'
   | 'bento'
   | 'bentocleancut'
+  | 'binarymatrix'
   | 'blueprint'
   | 'blueprintblue'
   | 'blueprintred'
@@ -304,6 +316,7 @@ export type CardTheme =
   | 'elegant'
   | 'elegantdamask'
   | 'embroidery'
+  | 'financialchart'
   | 'florabotanica'
   | 'forest'
   | 'forestcanopy'
@@ -327,6 +340,7 @@ export type CardTheme =
   | 'gradient'
   | 'graffiti'
   | 'graphpaper'
+  | 'highfrequency'
   | 'holographic'
   | 'honey'
   | 'ice'
@@ -350,6 +364,7 @@ export type CardTheme =
   | 'map'
   | 'marble'
   | 'marbleobsidian'
+  | 'mathematicalproof'
   | 'matrix'
   | 'medal'
   | 'metallicchrome'
@@ -376,6 +391,7 @@ export type CardTheme =
   | 'neoncyberpulse'
   | 'neondreams'
   | 'neonvibe'
+  | 'neuralnode'
   | 'newspaper'
   | 'newspaperclassic'
   | 'note'
@@ -404,9 +420,12 @@ export type CardTheme =
   | 'popartgeometric'
   | 'popretro'
   | 'popvibrant'
+  | 'precisiongrid'
   | 'prismshard'
   | 'professional'
   | 'professionalnavy'
+  | 'quantalpha'
+  | 'quantterminal'
   | 'quietzen'
   | 'receipt'
   | 'retro'
@@ -432,6 +451,7 @@ export type CardTheme =
   | 'stark'
   | 'steelplate'
   | 'sticker'
+  | 'stochasticprocess'
   | 'stuccowhite'
   | 'sunsetboulevard'
   | 'swiss'
@@ -468,6 +488,7 @@ export const themeMap: Record<string, any> = {
   'abstractwave': AbstractWave,
   'actionpanel': ActionPanel,
   'agedscroll': AgedScroll,
+  'algorithmcode': AlgorithmCode,
   'architect': Architect,
   'architectmonochrome': ArchitectMonochrome,
   'arcticwhite': ArcticWhite,
@@ -479,6 +500,7 @@ export const themeMap: Record<string, any> = {
   'bauhaus': Bauhaus,
   'bento': Bento,
   'bentocleancut': BentoCleanCut,
+  'binarymatrix': BinaryMatrix,
   'blueprint': Blueprint,
   'blueprintblue': BlueprintBlue,
   'blueprintred': BlueprintRed,
@@ -536,6 +558,7 @@ export const themeMap: Record<string, any> = {
   'elegant': Elegant,
   'elegantdamask': ElegantDamask,
   'embroidery': Embroidery,
+  'financialchart': FinancialChart,
   'florabotanica': FloraBotanica,
   'forest': Forest,
   'forestcanopy': ForestCanopy,
@@ -559,6 +582,7 @@ export const themeMap: Record<string, any> = {
   'gradient': Gradient,
   'graffiti': Graffiti,
   'graphpaper': GraphPaper,
+  'highfrequency': HighFrequency,
   'holographic': Holographic,
   'honey': Honey,
   'ice': Ice,
@@ -582,6 +606,7 @@ export const themeMap: Record<string, any> = {
   'map': Map,
   'marble': Marble,
   'marbleobsidian': MarbleObsidian,
+  'mathematicalproof': MathematicalProof,
   'matrix': Matrix,
   'medal': Medal,
   'metallicchrome': MetallicChrome,
@@ -608,6 +633,7 @@ export const themeMap: Record<string, any> = {
   'neoncyberpulse': NeonCyberPulse,
   'neondreams': NeonDreams,
   'neonvibe': NeonVibe,
+  'neuralnode': NeuralNode,
   'newspaper': Newspaper,
   'newspaperclassic': NewspaperClassic,
   'note': Note,
@@ -636,9 +662,12 @@ export const themeMap: Record<string, any> = {
   'popartgeometric': PopArtGeometric,
   'popretro': PopRetro,
   'popvibrant': PopVibrant,
+  'precisiongrid': PrecisionGrid,
   'prismshard': PrismShard,
   'professional': Professional,
   'professionalnavy': ProfessionalNavy,
+  'quantalpha': QuantAlpha,
+  'quantterminal': QuantTerminal,
   'quietzen': QuietZen,
   'receipt': Receipt,
   'retro': Retro,
@@ -664,6 +693,7 @@ export const themeMap: Record<string, any> = {
   'stark': Stark,
   'steelplate': SteelPlate,
   'sticker': Sticker,
+  'stochasticprocess': StochasticProcess,
   'stuccowhite': StuccoWhite,
   'sunsetboulevard': SunsetBoulevard,
   'swiss': Swiss,
@@ -701,6 +731,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'abstractwave', label: '앱스트랙트 웨이브' },
   { id: 'actionpanel', label: 'ActionPanel' },
   { id: 'agedscroll', label: 'AgedScroll' },
+  { id: 'algorithmcode', label: '알고리즘 코드' },
   { id: 'architect', label: 'Architect' },
   { id: 'architectmonochrome', label: 'ArchitectMonochrome' },
   { id: 'arcticwhite', label: 'ArcticWhite' },
@@ -712,6 +743,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'bauhaus', label: 'Bauhaus' },
   { id: 'bento', label: 'Bento' },
   { id: 'bentocleancut', label: 'BentoCleanCut' },
+  { id: 'binarymatrix', label: '바이너리 매트릭스' },
   { id: 'blueprint', label: 'Blueprint' },
   { id: 'blueprintblue', label: '블루프린트 블루' },
   { id: 'blueprintred', label: 'BlueprintRed' },
@@ -769,6 +801,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'elegant', label: 'Elegant' },
   { id: 'elegantdamask', label: 'ElegantDamask' },
   { id: 'embroidery', label: 'Embroidery' },
+  { id: 'financialchart', label: '파이낸셜 차트' },
   { id: 'florabotanica', label: 'FloraBotanica' },
   { id: 'forest', label: 'Forest' },
   { id: 'forestcanopy', label: 'ForestCanopy' },
@@ -792,6 +825,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'gradient', label: 'Gradient' },
   { id: 'graffiti', label: 'Graffiti' },
   { id: 'graphpaper', label: 'GraphPaper' },
+  { id: 'highfrequency', label: '하이 프리퀀시' },
   { id: 'holographic', label: 'Holographic' },
   { id: 'honey', label: 'Honey' },
   { id: 'ice', label: 'Ice' },
@@ -815,6 +849,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'map', label: 'Map' },
   { id: 'marble', label: 'Marble' },
   { id: 'marbleobsidian', label: 'MarbleObsidian' },
+  { id: 'mathematicalproof', label: '수학적 증명' },
   { id: 'matrix', label: 'Matrix' },
   { id: 'medal', label: 'Medal' },
   { id: 'metallicchrome', label: '메탈릭 크롬' },
@@ -841,6 +876,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'neoncyberpulse', label: 'NeonCyberPulse' },
   { id: 'neondreams', label: 'NeonDreams' },
   { id: 'neonvibe', label: 'NeonVibe' },
+  { id: 'neuralnode', label: '뉴럴 노드' },
   { id: 'newspaper', label: 'Newspaper' },
   { id: 'newspaperclassic', label: 'NewspaperClassic' },
   { id: 'note', label: 'Note' },
@@ -869,9 +905,12 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'popartgeometric', label: '팝아트 지오메트릭' },
   { id: 'popretro', label: 'PopRetro' },
   { id: 'popvibrant', label: 'PopVibrant' },
+  { id: 'precisiongrid', label: '정밀 그리드' },
   { id: 'prismshard', label: 'PrismShard' },
   { id: 'professional', label: 'Professional' },
   { id: 'professionalnavy', label: 'ProfessionalNavy' },
+  { id: 'quantalpha', label: '퀀트 알파' },
+  { id: 'quantterminal', label: '퀀트 터미널' },
   { id: 'quietzen', label: 'QuietZen' },
   { id: 'receipt', label: 'Receipt' },
   { id: 'retro', label: 'Retro' },
@@ -897,6 +936,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'stark', label: 'Stark' },
   { id: 'steelplate', label: 'SteelPlate' },
   { id: 'sticker', label: 'Sticker' },
+  { id: 'stochasticprocess', label: '스토캐스틱 프로세스' },
   { id: 'stuccowhite', label: 'StuccoWhite' },
   { id: 'sunsetboulevard', label: '선셋 불러바드' },
   { id: 'swiss', label: 'Swiss' },

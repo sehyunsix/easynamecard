@@ -35,3 +35,6 @@ export const Minimal: ThemeComponent = ({
   </div>
 );
 
+
+
+

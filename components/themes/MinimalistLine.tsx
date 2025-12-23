@@ -28,3 +28,6 @@ export const MinimalistLine: ThemeComponent = ({ displayData, style, renderDragg
   </div>
 );
 
+
+
+

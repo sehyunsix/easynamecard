@@ -37,3 +37,6 @@ export const ArtDecoGold: ThemeComponent = ({ displayData, style, renderDraggabl
   </div>
 );
 
+
+
+

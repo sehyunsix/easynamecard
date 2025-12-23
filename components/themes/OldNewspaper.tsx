@@ -46,3 +46,6 @@ export const OldNewspaper: ThemeComponent = ({ displayData, style, renderDraggab
   </div>
 );
 
+
+
+
