@@ -6,14 +6,14 @@ export const DynamicItalic: ThemeComponent = ({ displayData, style, renderDragga
   return (
     <div className="w-full h-full bg-[#1a1a1a] text-white font-sans relative overflow-hidden">
       {/* Dynamic Slanted Background */}
-      <div className="absolute top-0 right-0 w-[60%] h-full bg-[#f27420] -skew-x-12 translate-x-1/4" />
-
+      <div className="absolute top-0 right-0 w-[60%] h-full -skew-x-12 translate-x-1/4" style={{ backgroundColor: style.primaryColor }} />
+      
       <div className="absolute inset-0 p-12 flex flex-col justify-center">
         <div className="space-y-0 -ml-4">
           {renderDraggableField('name', <h1 className="text-8xl font-black italic tracking-tighter uppercase leading-[0.8] mb-2">{displayData.name}</h1>)}
           <div className="flex items-center gap-4">
-            <div className="h-2 w-20 bg-[#f27420]" />
-            {renderDraggableField('position', <p className="text-xl font-black italic uppercase tracking-widest text-[#f27420]">{displayData.position}</p>)}
+            <div className="h-2 w-20" style={{ backgroundColor: style.primaryColor }} />
+            {renderDraggableField('position', <p className="text-xl font-black italic uppercase tracking-widest" style={{ color: style.primaryColor }}>{displayData.position}</p>)}
           </div>
         </div>
 

@@ -7,27 +7,33 @@ export const QuantAlpha: ThemeComponent = ({ displayData, style, renderDraggable
   return (
     <div className="w-full h-full bg-[#0a192f] text-[#ccd6f6] font-sans relative overflow-hidden">
       {/* Alpha Symbol Background */}
-      <div className="absolute -right-10 -bottom-20 opacity-5 text-[300px] font-serif pointer-events-none">
+      <div 
+        className="absolute -right-10 -bottom-20 opacity-5 text-[300px] font-serif pointer-events-none"
+        style={{ color: style.primaryColor }}
+      >
         α
       </div>
-
+      
       <div className="absolute inset-0 p-8 flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
-            {renderDraggableField('name', <h1 className="text-3xl font-bold tracking-tight text-[#64ffda]">{displayData.name}</h1>)}
-            {renderDraggableField('position', <p className="text-sm font-medium text-[#8892b0] uppercase tracking-widest">{displayData.position}</p>)}
+            {renderDraggableField('name', <h1 className="text-3xl font-bold tracking-tight" style={{ color: style.primaryColor }}>{displayData.name}</h1>)}
+            {renderDraggableField('position', <p className="text-sm font-medium uppercase tracking-widest opacity-70">{displayData.position}</p>)}
           </div>
-          <TrendingUp className="text-[#64ffda] opacity-50" size={32} />
+          <TrendingUp style={{ color: style.primaryColor, opacity: 0.5 }} size={32} />
         </div>
 
-        <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-[10px] font-mono border-t border-[#233554] pt-6">
+        <div 
+          className="grid grid-cols-2 gap-x-8 gap-y-2 text-[10px] font-mono border-t pt-6"
+          style={{ borderColor: `${style.primaryColor}33` }}
+        >
           <div className="space-y-1">
-            {displayData.contact && renderDraggableField('contact', <p>CALL: {displayData.contact}</p>)}
-            {displayData.email && renderDraggableField('email', <p>MAIL: {displayData.email}</p>)}
+            {displayData.contact && renderDraggableField('contact', <p><span style={{ color: style.primaryColor }}>CALL:</span> {displayData.contact}</p>)}
+            {displayData.email && renderDraggableField('email', <p><span style={{ color: style.primaryColor }}>MAIL:</span> {displayData.email}</p>)}
           </div>
           <div className="space-y-1">
-            {displayData.github && renderDraggableField('github', <p>GIT: {displayData.github}</p>)}
-            {displayData.location && renderDraggableField('location', <p>LOC: {displayData.location}</p>)}
+            {displayData.github && renderDraggableField('github', <p><span style={{ color: style.primaryColor }}>GIT:</span> {displayData.github}</p>)}
+            {displayData.location && renderDraggableField('location', <p><span style={{ color: style.primaryColor }}>LOC:</span> {displayData.location}</p>)}
           </div>
         </div>
       </div>

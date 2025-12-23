@@ -4,7 +4,7 @@ import { ThemeComponent } from './ThemeTypes';
 
 export const CreativeSlice: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => {
   return (
-    <div className="w-full h-full bg-[#f27420] text-white font-sans relative overflow-hidden">
+    <div className="w-full h-full text-white font-sans relative overflow-hidden" style={{ backgroundColor: style.primaryColor }}>
       {/* Visual Slices */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-[-50%] left-[-10%] w-[120%] h-[100%] bg-black/10 -rotate-12" />
@@ -13,7 +13,7 @@ export const CreativeSlice: ThemeComponent = ({ displayData, style, renderDragga
 
       <div className="absolute inset-0 p-12 flex flex-col justify-between items-start">
         <div className="w-full">
-          <div className="bg-white text-[#f27420] px-6 py-4 inline-block mb-4 shadow-2xl">
+          <div className="bg-white px-6 py-4 inline-block mb-4 shadow-2xl" style={{ color: style.primaryColor }}>
             {renderDraggableField('name', <h1 className="text-6xl font-black italic uppercase tracking-tighter leading-none">{displayData.name}</h1>)}
           </div>
           <div className="pl-2">

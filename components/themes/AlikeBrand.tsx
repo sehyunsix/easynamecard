@@ -4,10 +4,10 @@ import { ThemeComponent } from './ThemeTypes';
 
 export const AlikeBrand: ThemeComponent = ({ displayData, style, renderDraggableField, renderQRCodeElement, s, isBack }) => {
   return (
-    <div className="w-full h-full bg-[#f27420] text-white font-sans relative overflow-hidden">
+    <div className="w-full h-full text-white font-sans relative overflow-hidden" style={{ backgroundColor: style.primaryColor }}>
       {/* Background Accent */}
       <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-
+      
       <div className="absolute inset-0 p-12 flex flex-col justify-between">
         <div className="flex flex-col items-center justify-center flex-1 space-y-2">
           {renderDraggableField('name', <h1 className="text-6xl font-black italic tracking-tighter uppercase leading-none">{displayData.name}</h1>)}
