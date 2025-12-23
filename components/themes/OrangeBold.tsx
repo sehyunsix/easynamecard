@@ -6,7 +6,7 @@ export const OrangeBold: ThemeComponent = ({ displayData, style, renderDraggable
   return (
     <div className="w-full h-full bg-white text-[#f27420] font-sans relative overflow-hidden">
       <div className="absolute top-0 right-0 w-1/3 h-full bg-[#f27420]" />
-      
+
       <div className="absolute inset-0 p-12 flex flex-col justify-between">
         <div className="space-y-4">
           <div className="relative">

@@ -7,7 +7,7 @@ export const ModernImpact: ThemeComponent = ({ displayData, style, renderDraggab
     <div className="w-full h-full bg-white text-black font-sans relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-4 bg-[#f27420]" />
       <div className="absolute bottom-0 left-0 w-full h-4 bg-[#f27420]" />
-      
+
       <div className="absolute inset-0 p-16 flex flex-col justify-between">
         <div className="space-y-2">
           {renderDraggableField('name', <h2 className="text-6xl font-black italic uppercase tracking-tighter leading-none border-b-8 border-black pb-4">{displayData.name}</h2>)}

@@ -206,6 +206,7 @@ import { Sketchbook } from './Sketchbook';
 import { SketchCharcoalPro } from './SketchCharcoalPro';
 import { Slate } from './Slate';
 import { Soft } from './Soft';
+import { SoftGradient } from './SoftGradient';
 import { SoftPastel } from './SoftPastel';
 import { SolarFlare } from './SolarFlare';
 import { Space } from './Space';
@@ -453,6 +454,7 @@ export type CardTheme =
   | 'sketchcharcoalpro'
   | 'slate'
   | 'soft'
+  | 'softgradient'
   | 'softpastel'
   | 'solarflare'
   | 'space'
@@ -700,6 +702,7 @@ export const themeMap: Record<string, any> = {
   'sketchcharcoalpro': SketchCharcoalPro,
   'slate': Slate,
   'soft': Soft,
+  'softgradient': SoftGradient,
   'softpastel': SoftPastel,
   'solarflare': SolarFlare,
   'space': Space,
@@ -948,6 +951,7 @@ export const themesMetadata: { id: CardTheme; label: string }[] = [
   { id: 'sketchcharcoalpro', label: 'SketchCharcoalPro' },
   { id: 'slate', label: 'Slate' },
   { id: 'soft', label: 'Soft' },
+  { id: 'softgradient', label: '소프트 그라디언트' },
   { id: 'softpastel', label: '소프트 파스텔' },
   { id: 'solarflare', label: '솔라 플레어' },
   { id: 'space', label: 'Space' },

@@ -7,7 +7,7 @@ export const DynamicItalic: ThemeComponent = ({ displayData, style, renderDragga
     <div className="w-full h-full bg-[#1a1a1a] text-white font-sans relative overflow-hidden">
       {/* Dynamic Slanted Background */}
       <div className="absolute top-0 right-0 w-[60%] h-full bg-[#f27420] -skew-x-12 translate-x-1/4" />
-      
+
       <div className="absolute inset-0 p-12 flex flex-col justify-center">
         <div className="space-y-0 -ml-4">
           {renderDraggableField('name', <h1 className="text-8xl font-black italic tracking-tighter uppercase leading-[0.8] mb-2">{displayData.name}</h1>)}
